@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}30 MCQ Test Result - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}" style="margin-bottom: 8px;">
+            <i class="fa-solid {% if passed %}fa-circle-check{% else %}fa-circle-xmark{% endif %}"></i>
+            {% if passed %}Round 1 Cleared{% else %}Cutoff Not Reached (60% Required){% endif %}
+        </div>
+        <h1>30 MCQ Test Scorecard</h1>
+        <p>Technology Track: <strong style="color: white;">{{ test.technology }}</strong> &bull; Completed on {{ test.started_at|date:"M d, Y" }}</p>
+    </div>
+    <div style="display: flex; gap: 14px; align-items: center;">
+        <a href="{% url 'select_tech' %}" class="btn-secondary">
+            <i class="fa-solid fa-rotate-right"></i> Retake Test
+        </a>
+        <a href="{% url 'ai_interview' %}" class="btn-emerald">
+            Proceed to AI Interview <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Score Overview Card -->
+<div class="glass-card" style="margin-bottom: 28px; padding: 32px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 28px;">
+        <div style="display: flex; align-items: center; gap: 28px; flex: 1; min-width: 320px;">
+            <div style="width: 110px; height: 110px; border-radius: 50%; background: conic-gradient({% if passed %}#10b981{% else %}#f43f5e{% endif %} {{ test.total_score }}%, rgba(255,255,255,0.08) 0); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); flex-shrink: 0;">
+                <div style="width: 86px; height: 86px; border-radius: 50%; background: #0a0f1d; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ test.total_score }}%</div>
+                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 4px;">Score</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <span class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}">
+                        {{ test.correct_count }} / {{ test.total_questions }} Questions Correct
+                    </span>
+                    <span class="badge badge-violet">
+                        Threshold: 60%
+                    </span>
+                </div>
+                <h3 style="font-size: 20px; color: white; margin-bottom: 6px;">
+                    {% if passed %}
+                        Congratulations! You have cleared the Technical MCQ Round.
+                    {% else %}
+                        Technical Cutoff Not Met. Review detailed solutions below and retry.
+                    {% endif %}
+                </h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+                    Your performance in this 30-question placement assessment has been recorded in your placement profile readiness index.
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align: right; flex-shrink: 0;">
+            <a href="{% url 'ai_interview' %}" class="btn-primary" style="height: 48px; padding: 0 28px; font-size: 15px;">
+                Proceed to Online AI Interview <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                Step 3 of your Placement Preparation
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Question by Question Review -->
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; flex-wrap: wrap; gap: 14px;">
+        <div>
+            <h3 style="font-size: 20px; color: white;">Comprehensive Solutions & Gemini Explanations</h3>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Review all 30 questions, your chosen responses, and verified solutions.</p>
+        </div>
+        <div style="display: flex; gap: 10px; font-size: 13px;">
+            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> {{ test.correct_count }} Correct</span>
+            <span class="badge badge-rose"><i class="fa-solid fa-xmark"></i> {{ test.total_questions|add:"-1"|default:0 }} Mistakes</span>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+        {% for a in answers %}
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid {% if a.is_correct %}rgba(16, 185, 129, 0.3){% else %}rgba(244, 63, 94, 0.3){% endif %}; border-radius: 14px; padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-weight: 800; font-size: 14px; color: var(--text-muted);">#{{ forloop.counter }}</span>
+                        <span class="badge badge-violet" style="font-size: 11px;">{{ a.question.topic }}</span>
+                    </div>
+                    {% if a.is_correct %}
+                        <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Correct (+3.33 pts)</span>
+                    {% else %}
+                        <span class="badge badge-rose"><i class="fa-solid fa-xmark"></i> Incorrect (0 pts)</span>
+                    {% endif %}
+                </div>
+
+                <h4 style="font-size: 16.5px; color: white; margin-bottom: 18px; font-weight: 600; line-height: 1.5; white-space: pre-wrap;">{{ a.question.question_text }}</h4>
+
+                <div class="grid-2" style="margin-bottom: 16px;">
+                    <div style="padding: 12px 16px; border-radius: 10px; background: {% if a.is_correct %}rgba(16, 185, 129, 0.1){% else %}rgba(244, 63, 94, 0.1){% endif %}; border: 1px solid {% if a.is_correct %}rgba(16, 185, 129, 0.25){% else %}rgba(244, 63, 94, 0.25){% endif %};">
+                        <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Your Answer:</strong>
+                        <div style="color: white; margin-top: 4px; font-size: 14px;">{{ a.student_answer|default:"(No Answer Selected)" }}</div>
+                    </div>
+
+                    <div style="padding: 12px 16px; border-radius: 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);">
+                        <strong style="color: #10b981; font-size: 11px; text-transform: uppercase;">Correct Answer:</strong>
+                        <div style="color: white; margin-top: 4px; font-size: 14px;">{{ a.question.correct_answer }}</div>
+                    </div>
+                </div>
+
+                {% if a.question.explanation %}
+                <div style="background: rgba(0, 0, 0, 0.25); border-left: 3px solid var(--accent-blue); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13.5px; color: #cbd5e1; line-height: 1.5;">
+                    <strong style="color: var(--accent-blue);"><i class="fa-solid fa-lightbulb me-1"></i> Explanation:</strong> {{ a.question.explanation }}
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--border-subtle);">
+        <a href="{% url 'ai_interview' %}" class="btn-primary" style="height: 48px; padding: 0 36px; font-size: 15.5px;">
+            Continue to Online AI Interview <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}

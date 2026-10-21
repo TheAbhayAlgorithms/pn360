@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<!-- Topbar Header -->
+<div class="topbar">
+    <div class="topbar-title">
+        <h1>Welcome back, {{ user.username }}</h1>
+        <p>Placement Preparation Journey &bull; Track: <strong style="color: var(--accent-blue);">{{ profile.technology|default:"Software Engineering" }}</strong></p>
+    </div>
+    <div style="display: flex; gap: 16px; align-items: center;">
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 8px 18px; display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right;">
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Overall Readiness</div>
+                <div style="font-size: 20px; font-weight: 800; color: {% if progress.overall_readiness >= 75 %}#10b981{% elif progress.overall_readiness >= 50 %}#38bdf8{% else %}#f59e0b{% endif %}; font-family: 'Outfit', sans-serif; line-height: 1;">
+                    {{ progress.overall_readiness|default:0 }}%
+                </div>
+            </div>
+            <div style="width: 34px; height: 34px; border-radius: 50%; background: conic-gradient({% if progress.overall_readiness >= 75 %}#10b981{% elif progress.overall_readiness >= 50 %}#38bdf8{% else %}#f59e0b{% endif %} {{ progress.overall_readiness|default:0 }}%, rgba(255,255,255,0.08) 0); display: flex; align-items: center; justify-content: center;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #0a0f1d;"></div>
+            </div>
+        </div>
+        <a href="#resume-section" class="btn-primary" style="height: 48px;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Resume
+        </a>
+    </div>
+</div>
+
+<!-- 3-STAGE PLACEMENT PREPARATION PIPELINE -->
+<div class="roadmap-container">
+    <!-- Stage 1 -->
+    <div class="roadmap-card {% if progress.resume_completed %}completed{% else %}active{% endif %}">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="roadmap-step-num">1</div>
+                {% if progress.resume_completed %}
+                    <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> ATS: {{ progress.resume_score }}%</span>
+                {% else %}
+                    <span class="badge badge-amber"><i class="fa-solid fa-clock"></i> Action Required</span>
+                {% endif %}
+            </div>
+            <h3 style="font-size: 19px; margin-bottom: 8px; color: white;">Resume ATS Analysis</h3>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                Extracts keywords and benchmarks against your target role with Gemini ATS scoring, adding and removing recommendations.
+            </p>
+        </div>
+        <div>
+            {% if latest_resume %}
+                <a href="{% url 'resume_result' latest_resume.id %}" class="btn-secondary" style="width: 100%;">
+                    View Latest ATS Report &rarr;
+                </a>
+            {% else %}
+                <a href="#resume-section" class="btn-primary" style="width: 100%;">
+                    Upload Resume Now &rarr;
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="roadmap-card {% if progress.mock_passed %}completed{% elif progress.resume_completed %}active{% endif %}">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="roadmap-step-num">2</div>
+                {% if progress.mock_passed %}
+                    <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Passed: {{ progress.mock_score }}%</span>
+                {% elif progress.mock_score > 0 %}
+                    <span class="badge badge-rose"><i class="fa-solid fa-rotate-right"></i> Retake ({{ progress.mock_score }}%)</span>
+                {% else %}
+                    <span class="badge badge-cyan"><i class="fa-solid fa-hourglass-start"></i> Ready</span>
+                {% endif %}
+            </div>
+            <h3 style="font-size: 19px; margin-bottom: 8px; color: white;">30 MCQ Placement Test</h3>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                Test your programming and algorithmic prowess with 30 dynamically generated placement preparation MCQs.
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'select_tech' %}" class="btn-emerald" style="width: 100%;">
+                {% if progress.mock_passed %}Retake 30 MCQs &rarr;{% else %}Start 30 MCQ Test &rarr;{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="roadmap-card {% if progress.interview_passed %}completed{% elif progress.mock_passed %}active{% endif %}">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="roadmap-step-num">3</div>
+                {% if progress.interview_passed %}
+                    <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Score: {{ progress.interview_score }}%</span>
+                {% else %}
+                    <span class="badge badge-violet"><i class="fa-solid fa-shield-halved"></i> Proctor Monitored</span>
+                {% endif %}
+            </div>
+            <h3 style="font-size: 19px; margin-bottom: 8px; color: white;">Online AI Interview</h3>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                Full technical & behavioral round with live camera proctoring (3-warning limit) and Gemini voice evaluation.
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'ai_interview' %}" class="btn-primary" style="width: 100%;">
+                Enter AI Interview Room &rarr;
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 1: RESUME UPLOAD & ATS CHECKER -->
+<div class="glass-card" id="resume-section" style="margin-bottom: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px;">
+        <div>
+            <h3 style="font-size: 20px; color: white; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-file-pdf" style="color: var(--accent-blue);"></i> Step 1: Submit Resume for Gemini ATS Scoring
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">
+                Select your target job role below, upload your PDF/DOCX resume, and receive real-time Gemini recommendations.
+            </p>
+        </div>
+        {% if latest_resume %}
+            <span class="badge badge-cyan" style="font-size: 13px;">Latest ATS: {{ latest_resume.ats_score }}%</span>
+        {% endif %}
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="upload_resume" value="1">
+
+        <div class="grid-2" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">
+                    <i class="fa-solid fa-briefcase" style="color: var(--accent-blue);"></i> Select Target Job Role
+                </label>
+                <select name="job_id" class="form-control">
+                    {% for job in jobs %}
+                        <option value="{{ job.id }}">{{ job.title }} &bull; {{ job.company }} ({{ job.salary }})</option>
+                    {% empty %}
+                        <option value="">Software Development Engineer - General</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">
+                    <i class="fa-solid fa-upload" style="color: var(--accent-emerald);"></i> Choose Resume File (.PDF, .DOCX, .TXT)
+                </label>
+                <input type="file" name="resume" accept=".pdf,.docx,.doc,.txt" required class="form-control">
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn-primary" style="height: 48px; padding: 0 32px; font-size: 15px;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Analyze Resume With Gemini ATS
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- SECTION 2: CHARTS & TEST SCHEDULER -->
+<div class="grid-2" style="grid-template-columns: 1.6fr 1fr; margin-bottom: 30px;">
+    <!-- Performance Analytics -->
+    <div class="glass-card" style="display: flex; flex-direction: column;">
+        <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 19px; color: white; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-chart-line" style="color: var(--accent-emerald);"></i> Preparation Progress Analytics
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                Tracking historical performance across your 30 MCQ Tests and Proctored Interviews
+            </p>
+        </div>
+        <div style="position: relative; flex: 1; min-height: 280px;">
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Test Scheduler -->
+    <div class="glass-card" style="display: flex; flex-direction: column;">
+        <div style="margin-bottom: 18px;">
+            <h3 style="font-size: 19px; color: white; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-calendar-check" style="color: var(--accent-violet);"></i> Schedule Mock Test
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                Book your next preparation assessment slot
+            </p>
+        </div>
+
+        <form method="POST" action="{% url 'schedule_test' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Assessment Type</label>
+                <select name="type" class="form-control">
+                    <option value="30 MCQ Placement Test">30 MCQ Placement Test</option>
+                    <option value="Proctored AI Online Interview">Proctored AI Online Interview</option>
+                    <option value="Full Placement Simulation">Full Placement Simulation</option>
+                </select>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" required class="form-control">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Time</label>
+                    <input type="time" name="time" required class="form-control">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-secondary" style="width: 100%; height: 46px;">
+                <i class="fa-solid fa-calendar-plus"></i> Set Assessment Slot
+            </button>
+        </form>
+
+        {% if scheduled_tests %}
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Upcoming Appointments</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    {% for test in scheduled_tests %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <span style="color: var(--text-primary);"><i class="fa-regular fa-clock me-1" style="color: var(--accent-blue);"></i> {{ test.type }}</span>
+                            <span style="color: #38bdf8; font-weight: 600;">{{ test.date }} @ {{ test.time }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const mockData = {{ mock_scores|safe }};
+    const interviewData = {{ interview_scores|safe }};
+    const maxLen = Math.max(mockData.length, interviewData.length, 1);
+    const labels = Array.from({length: maxLen}, (_, i) => "Attempt " + (i + 1));
+
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '30 MCQ Score (%)',
+                    data: mockData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2.5,
+                    tension: 0.35,
+                    fill: true,
+                    pointBackgroundColor: '#10b981',
+                    pointRadius: 4
+                },
+                {
+                    label: 'AI Interview Score (%)',
+                    data: interviewData,
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 2.5,
+                    tension: 0.35,
+                    fill: true,
+                    pointBackgroundColor: '#38bdf8',
+                    pointRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 } }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#64748b' }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#64748b' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Placement Nexus 360 - Complete AI Placement Preparation{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    {% if not user.is_authenticated %}
+    <!-- Public Navigation Bar for Non-Logged-In Visitors -->
+    <header class="top-navbar">
+        <a href="{% url 'home' %}" class="logo-container" style="margin-bottom: 0;">
+            <div class="logo-icon">
+                <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div>
+                <div class="logo-text">NEXUS 360</div>
+                <div class="logo-sub">Placement AI</div>
+            </div>
+        </a>
+
+        <div class="top-navbar-links">
+            <a href="{% url 'home' %}" class="btn-secondary" style="height: 40px; padding: 0 18px; font-size: 13.5px;">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+            <a href="{% url 'login' %}" class="btn-secondary" style="height: 40px; padding: 0 18px; font-size: 13.5px;">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+            </a>
+            <a href="{% url 'register' %}" class="btn-primary" style="height: 40px; padding: 0 20px; font-size: 13.5px;">
+                <i class="fa-solid fa-user-plus"></i> Register Free
+            </a>
+        </div>
+    </header>
+    {% endif %}
+
+    <div class="app-wrapper" style="{% if not user.is_authenticated %}flex-direction: column;{% endif %}">
+        {% if user.is_authenticated %}
+        <!-- Authenticated Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'dashboard' %}" class="logo-container">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div>
+                    <div class="logo-text">NEXUS 360</div>
+                    <div class="logo-sub">Placement AI</div>
+                </div>
+            </a>
+
+            <nav class="menu">
+                <div class="nav-section-title">Preparation Stages</div>
+                <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="{% url 'dashboard' %}#resume-section" class="{% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
+                    <i class="fa-solid fa-file-shield"></i> 1. Resume ATS
+                </a>
+                <a href="{% url 'select_tech' %}" class="{% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
+                    <i class="fa-solid fa-list-check"></i> 2. 30 MCQ Test
+                </a>
+                <a href="{% url 'ai_interview' %}" class="{% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result' %}active{% endif %}">
+                    <i class="fa-solid fa-video"></i> 3. AI Interview
+                </a>
+
+                <div class="nav-section-title">Community & Stats</div>
+                <a href="{% url 'leaderboard' %}" class="{% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
+                    <i class="fa-solid fa-trophy"></i> Leaderboard
+                </a>
+
+                {% if user.is_staff or user.is_superuser %}
+                    <div class="nav-section-title">Administration</div>
+                    <a href="{% url 'admin_home' %}" class="{% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
+                        <i class="fa-solid fa-sliders"></i> Admin Portal
+                    </a>
+                {% endif %}
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-card">
+                    <div class="user-mini-avatar">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <div class="user-mini-info">
+                        <div class="user-mini-name">{{ user.username }}</div>
+                        <div class="user-mini-role">{{ user.email|truncatechars:18 }}</div>
+                    </div>
+                    <a href="{% url 'logout' %}" title="Logout" style="color: var(--text-muted); text-decoration: none; padding: 6px;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        {% endif %}
+
+        <!-- Main Content Area -->
+        <main class="{% if user.is_authenticated %}main{% else %}main-public{% endif %}">
+            <!-- Messages & Notifications -->
+            {% if messages %}
+                <div class="messages-container" style="margin-bottom: 24px;">
+                    {% for message in messages %}
+                        <div class="alert-box {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-warning{% endif %}">
+                            <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% else %}fa-triangle-exclamation{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

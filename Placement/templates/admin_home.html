@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Portal - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-cyan" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-sliders"></i> Placement Coordinator Console
+        </div>
+        <h1>Platform Administration</h1>
+        <p>Manage campus job descriptions, review student progress, and monitor interview sessions.</p>
+    </div>
+    <div style="display: flex; gap: 14px; align-items: center;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="{% url 'add_job' %}" class="btn-primary">
+            <i class="fa-solid fa-plus"></i> Add New Job Role
+        </a>
+    </div>
+</div>
+
+<!-- Stats Counters -->
+<div class="grid-3" style="margin-bottom: 30px;">
+    <div class="glass-card" style="padding: 24px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Registered Students</div>
+        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; margin-top: 6px; line-height: 1;">{{ total_students }}</div>
+    </div>
+    <div class="glass-card" style="padding: 24px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Active Job Descriptions</div>
+        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-blue); margin-top: 6px; line-height: 1;">{{ total_jobs }}</div>
+    </div>
+    <div class="glass-card" style="padding: 24px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Resumes Analyzed</div>
+        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-emerald); margin-top: 6px; line-height: 1;">{{ total_resumes }}</div>
+    </div>
+</div>
+
+<!-- Job Descriptions Management -->
+<div class="glass-card" style="margin-bottom: 32px; padding: 28px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px;">
+        <div>
+            <h3 style="font-size: 19px; color: white;">Target Job Openings & Descriptions</h3>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 2px;">Used by Gemini ATS to evaluate candidate resumes</p>
+        </div>
+        <a href="{% url 'add_job' %}" class="btn-primary" style="height: 40px; font-size: 13.5px; padding: 0 18px;">
+            <i class="fa-solid fa-plus"></i> Create Job Role
+        </a>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 12px; text-transform: uppercase;">
+                    <th style="padding: 14px 16px;">Role Title</th>
+                    <th style="padding: 14px 16px;">Company</th>
+                    <th style="padding: 14px 16px;">Package</th>
+                    <th style="padding: 14px 16px;">Location</th>
+                    <th style="padding: 14px 16px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in jobs %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ j.title }}</td>
+                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">{{ j.company }}</td>
+                        <td style="padding: 14px 16px; color: #10b981; font-weight: 600; vertical-align: middle;">{{ j.salary }}</td>
+                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">{{ j.location }}</td>
+                        <td style="padding: 14px 16px; text-align: right; vertical-align: middle;">
+                            <a href="{% url 'delete_job' j.id %}" onclick="return confirm('Delete this job listing?')" style="color: #f43f5e; text-decoration: none; font-size: 13px; font-weight: 600;">
+                                <i class="fa-solid fa-trash me-1"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No job listings created.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Student Roster -->
+<div class="glass-card" style="padding: 28px;">
+    <h3 style="font-size: 19px; color: white; margin-bottom: 18px;">Candidate Roster</h3>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 12px; text-transform: uppercase;">
+                    <th style="padding: 14px 16px;">Candidate Name</th>
+                    <th style="padding: 14px 16px;">Email</th>
+                    <th style="padding: 14px 16px;">Target Track</th>
+                    <th style="padding: 14px 16px;">Joined</th>
+                    <th style="padding: 14px 16px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ s.username }}</td>
+                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">{{ s.email }}</td>
+                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">{{ s.profile.technology|default:"General SDE" }}</td>
+                        <td style="padding: 14px 16px; color: var(--text-muted); font-size: 13px; vertical-align: middle;">{{ s.date_joined|date:"M d, Y" }}</td>
+                        <td style="padding: 14px 16px; text-align: right; vertical-align: middle;">
+                            <a href="{% url 'delete_student' s.id %}" onclick="return confirm('Remove student account?')" style="color: #f43f5e; text-decoration: none; font-size: 13px; font-weight: 600;">
+                                <i class="fa-solid fa-user-xmark me-1"></i> Remove
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No registered candidates.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

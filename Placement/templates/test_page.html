@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}30 MCQ Placement Test - Placement Nexus 360{% endblock %}
+
+{% block extra_head %}
+<style>
+    .palette-btn {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        font-weight: 700;
+        font-size: 13.5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .palette-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+    .palette-btn.active {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+        color: white;
+    }
+    .palette-btn.answered {
+        background: #10b981;
+        border-color: #10b981;
+        color: white;
+    }
+    .palette-btn.marked {
+        background: #f59e0b;
+        border-color: #f59e0b;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="{% url 'submit_test' test.id %}" id="examForm">
+    {% csrf_token %}
+
+    <!-- Exam Header Bar -->
+    <div class="glass-card" style="margin-bottom: 24px; padding: 18px 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                    <span class="badge badge-cyan">30 MCQ Technical Assessment</span>
+                    <span class="badge badge-violet">{{ test.technology }}</span>
+                </div>
+                <h2 style="font-size: 20px; color: white; margin: 0;">Campus Placement Round 1</h2>
+            </div>
+
+            <!-- Timer & Live Counters -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="text-align: right;">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Answered</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #10b981; line-height: 1;">
+                        <span id="answeredCount">0</span> / {{ total_count }}
+                    </div>
+                </div>
+
+                <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 12px;">
+                    <i class="fa-regular fa-clock" style="color: var(--accent-blue); font-size: 18px;"></i>
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Time Remaining</div>
+                        <div id="countdownTimer" style="font-size: 18px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1.1;">30:00</div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="confirmSubmit()" class="btn-emerald" style="height: 44px; padding: 0 20px; font-size: 14px;">
+                    Submit Exam <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Layout: Question View + Question Palette -->
+    <div style="display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start;">
+        
+        <!-- Question Pane -->
+        <div class="glass-card" style="padding: 32px;">
+            {% for q in questions %}
+                <div class="question-container" id="q_pane_{{ forloop.counter }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <span class="badge badge-cyan" style="font-size: 13px;">
+                            Question {{ forloop.counter }} of {{ total_count }}
+                        </span>
+                        <span class="badge badge-violet">{{ q.topic }}</span>
+                    </div>
+
+                    <h3 style="font-size: 18px; font-weight: 600; line-height: 1.6; color: white; margin-bottom: 24px; white-space: pre-wrap;">{{ q.question_text }}</h3>
+
+                    <!-- 4 Options with clean top-aligned radios -->
+                    <div class="options-group">
+                        {% if q.option1 %}
+                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option1|escapejs }}', this)">
+                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option1 }}" onchange="markAnswered({{ forloop.counter }})">
+                            <span><strong>A)</strong> {{ q.option1 }}</span>
+                        </label>
+                        {% endif %}
+
+                        {% if q.option2 %}
+                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option2|escapejs }}', this)">
+                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option2 }}" onchange="markAnswered({{ forloop.counter }})">
+                            <span><strong>B)</strong> {{ q.option2 }}</span>
+                        </label>
+                        {% endif %}
+
+                        {% if q.option3 %}
+                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option3|escapejs }}', this)">
+                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option3 }}" onchange="markAnswered({{ forloop.counter }})">
+                            <span><strong>C)</strong> {{ q.option3 }}</span>
+                        </label>
+                        {% endif %}
+
+                        {% if q.option4 %}
+                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option4|escapejs }}', this)">
+                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option4 }}" onchange="markAnswered({{ forloop.counter }})">
+                            <span><strong>D)</strong> {{ q.option4 }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+
+                    <!-- Bottom Navigation Bar -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 12px;">
+                        <button type="button" class="btn-secondary" onclick="prevQuestion()" style="height: 44px;" {% if forloop.first %}disabled style="opacity: 0.5;"{% endif %}>
+                            <i class="fa-solid fa-arrow-left"></i> Previous
+                        </button>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn-secondary" onclick="clearCurrentSelection({{ forloop.counter }}, {{ q.id }})" style="height: 44px; font-size: 13px;">
+                                <i class="fa-solid fa-eraser"></i> Clear
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="toggleReview({{ forloop.counter }})" style="height: 44px; font-size: 13px; color: #f59e0b;">
+                                <i class="fa-regular fa-bookmark"></i> Review Later
+                            </button>
+                        </div>
+
+                        {% if forloop.last %}
+                        <button type="button" class="btn-emerald" onclick="confirmSubmit()" style="height: 44px;">
+                            Review & Submit <i class="fa-solid fa-check"></i>
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn-primary" onclick="nextQuestion()" style="height: 44px;">
+                            Next Question <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Question Palette Pane -->
+        <div class="glass-card" style="padding: 24px;">
+            <h4 style="font-size: 16px; color: white; margin-bottom: 12px;">Question Navigator</h4>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; font-size: 11px; flex-wrap: wrap;">
+                <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #10b981;"></span> Answered</span>
+                <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #f59e0b;"></span> Marked</span>
+                <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: rgba(255,255,255,0.08);"></span> Unanswered</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+                {% for q in questions %}
+                    <button type="button" id="palette_{{ forloop.counter }}" class="palette-btn {% if forloop.first %}active{% endif %}" onclick="jumpToQuestion({{ forloop.counter }})">
+                        {{ forloop.counter }}
+                    </button>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                    <i class="fa-solid fa-shield-halved me-1" style="color: var(--accent-blue);"></i>
+                    Proctoring Notice: Switching tabs or closing this window will register an exam warning.
+                </div>
+                <button type="button" onclick="confirmSubmit()" class="btn-emerald" style="width: 100%; height: 44px; justify-content: center;">
+                    Submit All 30 MCQs
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    let currentQ = 1;
+    const totalQ = {{ total_count }};
+    const answeredSet = new Set();
+    const markedSet = new Set();
+
+    function jumpToQuestion(num) {
+        document.getElementById(`q_pane_${currentQ}`).style.display = 'none';
+        document.getElementById(`palette_${currentQ}`).classList.remove('active');
+
+        currentQ = num;
+
+        document.getElementById(`q_pane_${currentQ}`).style.display = 'block';
+        document.getElementById(`palette_${currentQ}`).classList.add('active');
+    }
+
+    function nextQuestion() {
+        if (currentQ < totalQ) {
+            jumpToQuestion(currentQ + 1);
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 1) {
+            jumpToQuestion(currentQ - 1);
+        }
+    }
+
+    function selectOption(qNum, val, rowElem) {
+        const pane = document.getElementById(`q_pane_${qNum}`);
+        pane.querySelectorAll('.option-row').forEach(r => r.classList.remove('selected'));
+        rowElem.classList.add('selected');
+        const radio = rowElem.querySelector('input[type="radio"]');
+        if (radio) {
+            radio.checked = true;
+            markAnswered(qNum);
+        }
+    }
+
+    function markAnswered(qNum) {
+        answeredSet.add(qNum);
+        const btn = document.getElementById(`palette_${qNum}`);
+        btn.classList.add('answered');
+        btn.classList.remove('marked');
+        document.getElementById('answeredCount').innerText = answeredSet.size;
+    }
+
+    function clearCurrentSelection(qNum, qId) {
+        const pane = document.getElementById(`q_pane_${qNum}`);
+        pane.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        pane.querySelectorAll('.option-row').forEach(r => r.classList.remove('selected'));
+
+        answeredSet.delete(qNum);
+        const btn = document.getElementById(`palette_${qNum}`);
+        btn.classList.remove('answered');
+        document.getElementById('answeredCount').innerText = answeredSet.size;
+    }
+
+    function toggleReview(qNum) {
+        const btn = document.getElementById(`palette_${qNum}`);
+        if (markedSet.has(qNum)) {
+            markedSet.delete(qNum);
+            btn.classList.remove('marked');
+            if (answeredSet.has(qNum)) {
+                btn.classList.add('answered');
+            }
+        } else {
+            markedSet.add(qNum);
+            btn.classList.add('marked');
+            btn.classList.remove('answered');
+        }
+    }
+
+    // Countdown Timer (30 minutes)
+    let timeLeft = 30 * 60;
+    const timerElem = document.getElementById('countdownTimer');
+    const timerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        timerElem.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+        if (timeLeft <= 300) {
+            timerElem.style.color = '#f43f5e';
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Your 30 MCQ test is submitting automatically.");
+            document.getElementById('examForm').submit();
+        }
+    }, 1000);
+
+    function confirmSubmit() {
+        const answered = answeredSet.size;
+        if (confirm(`You have answered ${answered} of ${totalQ} questions. Are you sure you wish to submit your assessment?`)) {
+            clearInterval(timerInterval);
+            document.getElementById('examForm').submit();
+        }
+    }
+
+    // Tab Switch Detection (Proctoring)
+    let tabSwitches = 0;
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            tabSwitches++;
+            alert(`Proctoring Warning: Tab switch detected (${tabSwitches}/3). Stay on this window during the examination.`);
+        }
+    });
+</script>
+{% endblock %}

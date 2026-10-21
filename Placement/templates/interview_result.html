@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Interview Report - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}" style="margin-bottom: 8px;">
+            <i class="fa-solid {% if passed %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+            {% if passed %}Interview Round Cleared{% else %}Cutoff Not Reached (60% Required){% endif %}
+        </div>
+        <h1>AI Technical & HR Interview Evaluation</h1>
+        <p>Target Role: <strong style="color: white;">{{ session.technology }}</strong> &bull; Completed on {{ session.created_at|date:"M d, Y" }}</p>
+    </div>
+    <div style="display: flex; gap: 14px; align-items: center;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">
+            <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+        <a href="{% url 'ai_interview' %}" class="btn-primary">
+            <i class="fa-solid fa-rotate-right"></i> Retake Interview
+        </a>
+    </div>
+</div>
+
+<!-- Score Overview Card -->
+<div class="glass-card" style="margin-bottom: 28px; padding: 32px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 28px;">
+        <div style="display: flex; align-items: center; gap: 28px; flex: 1; min-width: 320px;">
+            <div style="width: 110px; height: 110px; border-radius: 50%; background: conic-gradient({% if passed %}#10b981{% else %}#f43f5e{% endif %} {{ session.score|default:0 }}%, rgba(255,255,255,0.08) 0); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); flex-shrink: 0;">
+                <div style="width: 86px; height: 86px; border-radius: 50%; background: #0a0f1d; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ session.score|default:0 }}%</div>
+                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 4px;">Average</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <span class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}">
+                        Interview Status: {% if passed %}Selected / Shortlisted{% else %}Requires Polishing{% endif %}
+                    </span>
+                    <span class="badge badge-cyan">
+                        Proctor Verified: Zero Fatal Violations
+                    </span>
+                </div>
+                <h3 style="font-size: 20px; color: white; margin-bottom: 6px;">
+                    {% if passed %}
+                        Strong Performance! You demonstrated depth, articulation, and structural clarity.
+                    {% else %}
+                        Fair Effort! Enhance technical depth, structure answers with STAR, and review Gemini tips below.
+                    {% endif %}
+                </h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+                    Overall Placement Readiness Index: <strong style="color: #38bdf8;">{{ progress.overall_readiness }}%</strong>
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align: right; flex-shrink: 0;">
+            <a href="{% url 'leaderboard' %}" class="btn-emerald" style="height: 48px; padding: 0 28px; font-size: 15px;">
+                <i class="fa-solid fa-trophy"></i> View Campus Leaderboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Question by Question Evaluation Breakdown -->
+<div class="glass-card">
+    <div style="margin-bottom: 26px;">
+        <h3 style="font-size: 20px; color: white; margin-bottom: 4px;">Transcript & Gemini Speech Evaluation Breakdown</h3>
+        <p style="color: var(--text-secondary); font-size: 13.5px;">Review the exact transcripts recorded from your speech, the evaluation score, and actionable improvements for each question.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        {% for a in answers %}
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                    <span class="badge badge-cyan">Question {{ forloop.counter }}</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="badge {% if a.score >= 70 %}badge-emerald{% elif a.score >= 50 %}badge-cyan{% else %}badge-rose{% endif %}">
+                            Score: {{ a.score }}%
+                        </span>
+                        <span style="font-size: 14px; font-weight: 700; color: white;">{{ a.verdict }}</span>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 17px; color: white; margin-bottom: 16px; font-weight: 600; line-height: 1.5;">
+                    {{ a.question_text }}
+                </h4>
+
+                <!-- Spoken Transcript -->
+                <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+                        <i class="fa-solid fa-microphone me-1" style="color: var(--accent-blue);"></i> Candidate Spoken Response:
+                    </div>
+                    <p style="font-size: 14px; color: #f1f5f9; line-height: 1.6; margin: 0; font-style: italic;">
+                        "{{ a.spoken_text|default:"(No audible speech recorded)" }}"
+                    </p>
+                </div>
+
+                <!-- Gemini Feedback Grid -->
+                <div class="grid-2" style="align-items: stretch;">
+                    <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; border-radius: 0 10px 10px 0; padding: 14px 18px; display: flex; flex-direction: column;">
+                        <div style="font-size: 11px; font-weight: 700; color: #34d399; margin-bottom: 6px;">
+                            <i class="fa-solid fa-circle-check me-1"></i> What You Did Well:
+                        </div>
+                        <p style="font-size: 13.5px; color: #e2e8f0; line-height: 1.5; margin: 0; flex: 1;">
+                            {{ a.feedback }}
+                        </p>
+                    </div>
+
+                    <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 14px 18px; display: flex; flex-direction: column;">
+                        <div style="font-size: 11px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
+                            <i class="fa-solid fa-lightbulb me-1"></i> Gemini Suggestions to Improve:
+                        </div>
+                        <p style="font-size: 13.5px; color: #cbd5e1; line-height: 1.5; margin: 0; flex: 1;">
+                            {{ a.improvement_tips }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+                No questions recorded for this session.
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--border-subtle);">
+        <a href="{% url 'dashboard' %}" class="btn-primary" style="height: 48px; padding: 0 36px; font-size: 15px;">
+            <i class="fa-solid fa-house"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

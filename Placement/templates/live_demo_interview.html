@@ -1,0 +1,571 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Live AI Interview - Placement Nexus 360{% endblock %}
+
+{% block extra_head %}
+<!-- TensorFlow & BlazeFace for High-Speed Client-Side Face Detection -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7/dist/blazeface.min.js"></script>
+
+<style>
+    .camera-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #000;
+        border: 2px solid var(--border-subtle);
+        aspect-ratio: 4 / 3;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    #cameraVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1); /* Mirror camera */
+    }
+    #proctorCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: scaleX(-1);
+        pointer-events: none;
+    }
+    .proctor-overlay {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        right: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+        pointer-events: none;
+    }
+    .warning-counter-pill {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        color: #fb7185;
+        font-weight: 700;
+        font-size: 13.5px;
+        padding: 8px 18px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        line-height: 1;
+    }
+    .audio-wave {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 26px;
+    }
+    .audio-bar {
+        width: 4px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--accent-blue);
+        transition: height 0.1s ease;
+    }
+    .listening .audio-bar:nth-child(1) { animation: waveBar 0.8s infinite 0.1s; }
+    .listening .audio-bar:nth-child(2) { animation: waveBar 0.8s infinite 0.2s; }
+    .listening .audio-bar:nth-child(3) { animation: waveBar 0.8s infinite 0.3s; }
+    .listening .audio-bar:nth-child(4) { animation: waveBar 0.8s infinite 0.4s; }
+    .listening .audio-bar:nth-child(5) { animation: waveBar 0.8s infinite 0.25s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-rose" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-circle-dot fa-beat-fade"></i> Live Proctored Interview Session
+        </div>
+        <h1>AI Technical & HR Round</h1>
+        <p>Target Track: <strong style="color: white;">{{ session.technology }}</strong> &bull; Candidate: {{ user.username }}</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px;">
+        <div id="warningCounterBox" class="warning-counter-pill">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Warnings: <strong id="warnCount" style="color: white; font-size: 15px;">0</strong> / 3</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main Interview Interface: Camera / Proctoring + Active Question Card -->
+<div style="display: grid; grid-template-columns: 460px 1fr; gap: 26px; margin-bottom: 24px; align-items: start;">
+    
+    <!-- LEFT COLUMN: Proctoring Video & Warnings -->
+    <div>
+        <div class="camera-wrapper" id="cameraBox">
+            <video id="cameraVideo" autoplay playsinline muted></video>
+            <canvas id="proctorCanvas"></canvas>
+
+            <div class="proctor-overlay">
+                <div id="proctorBadge" class="badge badge-emerald" style="pointer-events: auto; background: rgba(16, 185, 129, 0.9); backdrop-filter: blur(8px); color: white;">
+                    <i class="fa-solid fa-shield-check"></i> Initializing Proctor...
+                </div>
+            </div>
+        </div>
+
+        <!-- Proctoring Status Box -->
+        <div class="glass-card" style="margin-top: 18px; padding: 20px 22px;">
+            <h4 style="font-size: 15px; color: white; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-eye" style="color: var(--accent-blue);"></i> Proctoring Monitor
+            </h4>
+            <div id="statusMessage" style="font-size: 13.5px; color: #cbd5e1; line-height: 1.5;">
+                Keep your face visible and centered. The proctoring system continuously verifies single-candidate presence.
+            </div>
+
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+                <span><i class="fa-solid fa-user me-1"></i> Single Face Rule</span>
+                <span><i class="fa-solid fa-ban me-1"></i> 3 Warnings = Auto Discard</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Active Question, Voice Recognition & Gemini Evaluation -->
+    <div>
+        <!-- Question Card -->
+        <div class="glass-card" style="padding: 30px; margin-bottom: 22px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <span class="badge badge-cyan" id="qNumberBadge">Question 1 of 5</span>
+                <span class="badge badge-violet" id="qCategoryBadge">Category: Introduction</span>
+            </div>
+
+            <h3 id="currentQuestionText" style="font-size: 21px; color: white; line-height: 1.5; margin-bottom: 18px; font-weight: 600;">
+                Loading question...
+            </h3>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="speakQuestion()" class="btn-secondary" style="height: 40px; font-size: 13.5px; padding: 0 18px;">
+                    <i class="fa-solid fa-volume-high"></i> Read Question Aloud
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Answer & Live Transcription Card -->
+        <div class="glass-card" style="padding: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h4 style="font-size: 17px; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-microphone-lines" style="color: var(--accent-emerald);"></i> Your Answer (Voice / Text)
+                </h4>
+                
+                <div id="audioVisualizer" class="audio-wave">
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                </div>
+            </div>
+
+            <!-- Live Spoken Transcript Textarea -->
+            <textarea id="transcriptInput" rows="5" class="form-control" placeholder="Click 'Start Speaking' and speak clearly into your microphone, or type your answer here..." style="font-size: 14.5px; line-height: 1.6; resize: vertical; margin-bottom: 18px;"></textarea>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="micBtn" onclick="toggleSpeech()" class="btn-primary" style="height: 46px; padding: 0 22px; font-size: 14px;">
+                        <i class="fa-solid fa-microphone"></i> <span id="micBtnText">Start Speaking</span>
+                    </button>
+                    <button type="button" onclick="clearTranscript()" class="btn-secondary" style="height: 46px; padding: 0 18px; font-size: 14px;">
+                        <i class="fa-solid fa-eraser"></i> Clear
+                    </button>
+                </div>
+
+                <button type="button" id="submitAnswerBtn" onclick="submitCurrentAnswer()" class="btn-emerald" style="height: 46px; padding: 0 28px; font-size: 14.5px; font-weight: 700;">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Answer & Evaluate with Gemini
+                </button>
+            </div>
+
+            <!-- Live Gemini Answer Feedback Box (Appears after submission) -->
+            <div id="evalResultBox" style="display: none; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border-subtle);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="badge badge-emerald" id="evalScoreBadge" style="font-size: 14px;">Score: 85%</span>
+                        <span style="font-weight: 700; color: white; font-size: 15px;" id="evalVerdict">Strong Answer</span>
+                    </div>
+                    <button type="button" onclick="nextQuestionStep()" class="btn-primary" style="height: 42px; padding: 0 22px; font-size: 14px;">
+                        Next Question <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; margin-bottom: 14px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 6px;"><i class="fa-solid fa-circle-check me-1"></i> Gemini Feedback:</div>
+                    <p id="evalFeedbackText" style="font-size: 13.5px; color: #f1f5f9; line-height: 1.6; margin: 0;"></p>
+                </div>
+
+                <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 14px 18px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;"><i class="fa-solid fa-lightbulb me-1"></i> How to Improve:</div>
+                    <p id="evalImprovementText" style="font-size: 13.5px; color: #cbd5e1; line-height: 1.6; margin: 0;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const questions = {{ questions_json|safe }};
+    const sessionId = {{ session.id }};
+    const csrfToken = "{{ csrf_token }}";
+
+    let currentQIdx = 0;
+    let warningCount = 0;
+    const MAX_WARNINGS = 3;
+    let isTestDiscarded = false;
+
+    // =========================================================================
+    // 1. WEBCAM & CLIENT-SIDE PROCTORING (FACE DETECTION)
+    // =========================================================================
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('proctorCanvas');
+    const ctx = canvas.getContext('2d');
+    const proctorBadge = document.getElementById('proctorBadge');
+    const statusMsg = document.getElementById('statusMessage');
+    const warnBox = document.getElementById('warningCounterBox');
+    const warnText = document.getElementById('warnCount');
+
+    let blazefaceModel = null;
+    let consecutiveViolationCount = 0;
+
+    // Start Video Stream
+    async function initCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+                audio: true
+            });
+            video.srcObject = stream;
+            await video.play();
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+
+            loadFaceModel();
+        } catch (err) {
+            console.error("Camera access error:", err);
+            proctorBadge.className = "badge badge-rose";
+            proctorBadge.innerHTML = '<i class="fa-solid fa-camera-slash"></i> Camera Error';
+            statusMsg.innerHTML = '<span style="color: #fb7185;">Camera access was denied or unavailable. Please enable camera permissions to proceed.</span>';
+        }
+    }
+
+    // Load BlazeFace Model
+    async function loadFaceModel() {
+        proctorBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading AI Proctor...';
+        try {
+            if (window.blazeface) {
+                blazefaceModel = await blazeface.load();
+                proctorBadge.className = "badge badge-emerald";
+                proctorBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Face Verified';
+                startProctoringLoop();
+            } else {
+                startCanvasLuminanceFallback();
+            }
+        } catch (e) {
+            console.warn("BlazeFace load fallback:", e);
+            startCanvasLuminanceFallback();
+        }
+    }
+
+    // Continuous Proctoring Detection Loop
+    function startProctoringLoop() {
+        setInterval(async () => {
+            if (isTestDiscarded || !blazefaceModel || video.paused || video.ended) return;
+
+            try {
+                const predictions = await blazefaceModel.estimateFaces(video, false);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (predictions.length === 1) {
+                    // Exactly 1 Face Detected (Normal)
+                    consecutiveViolationCount = 0;
+                    proctorBadge.className = "badge badge-emerald";
+                    proctorBadge.innerHTML = '<i class="fa-solid fa-shield-check"></i> Candidate Face Verified';
+                    statusMsg.innerHTML = '<span style="color: #34d399;">Proctoring Active: Candidate face verified and properly framed.</span>';
+                    
+                    // Draw bounding box
+                    const start = predictions[0].topLeft;
+                    const end = predictions[0].bottomRight;
+                    const size = [end[0] - start[0], end[1] - start[1]];
+                    ctx.strokeStyle = '#10b981';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(start[0], start[1], size[0], size[1]);
+
+                } else if (predictions.length === 0) {
+                    // Out of Range (No Face)
+                    consecutiveViolationCount++;
+                    proctorBadge.className = "badge badge-rose";
+                    proctorBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No Face Detected!';
+                    statusMsg.innerHTML = '<span style="color: #fb7185; font-weight: 600;">Warning: Face is out of camera range! Please stay in frame.</span>';
+
+                    if (consecutiveViolationCount >= 4) { // ~3 seconds out of frame
+                        consecutiveViolationCount = 0;
+                        triggerProctorWarning("Face out of camera range.");
+                    }
+                } else {
+                    // Multiple Faces Detected
+                    consecutiveViolationCount++;
+                    proctorBadge.className = "badge badge-rose";
+                    proctorBadge.innerHTML = '<i class="fa-solid fa-users"></i> Multiple Faces Detected!';
+                    statusMsg.innerHTML = '<span style="color: #fb7185; font-weight: 600;">Warning: Multiple people detected in camera! Only the candidate may be in frame.</span>';
+
+                    if (consecutiveViolationCount >= 4) {
+                        consecutiveViolationCount = 0;
+                        triggerProctorWarning("Multiple faces detected in camera frame.");
+                    }
+                }
+            } catch (err) {
+                console.error("Proctoring frame error:", err);
+            }
+        }, 600);
+    }
+
+    // Canvas Fallback if Model doesn't load
+    function startCanvasLuminanceFallback() {
+        proctorBadge.className = "badge badge-cyan";
+        proctorBadge.innerHTML = '<i class="fa-solid fa-video"></i> Camera Active';
+    }
+
+    // Trigger Warning & Check Disqualification Limit
+    function triggerProctorWarning(reason) {
+        if (isTestDiscarded) return;
+
+        warningCount++;
+        warnText.innerText = warningCount;
+        warnBox.style.background = 'rgba(244, 63, 94, 0.3)';
+        warnBox.style.borderColor = '#f43f5e';
+
+        // Play alert audio beep
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+        } catch(e) {}
+
+        if (warningCount >= MAX_WARNINGS) {
+            discardInterview(reason);
+        } else {
+            alert(`PROCTORING WARNING ${warningCount}/${MAX_WARNINGS}!\n\nReason: ${reason}\n\nPlease stay centered in the camera. Accumulating 3 warnings will automatically discard and terminate your test!`);
+        }
+    }
+
+    // Discard Test Automatically upon 3 warnings
+    async function discardInterview(reason) {
+        if (isTestDiscarded) return;
+        isTestDiscarded = true;
+
+        alert(`TEST DISCARDED!\n\nYou have received 3 proctoring warnings (${reason}).\nYour interview has been automatically discarded and invalidated.`);
+
+        try {
+            const resp = await fetch(`/api/interview/${sessionId}/discard/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ reason: `Disqualified: 3 warnings reached (${reason})` })
+            });
+            const data = await resp.json();
+            window.location.href = data.redirect_url || `/interview-discarded/${sessionId}/`;
+        } catch (e) {
+            window.location.href = `/interview-discarded/${sessionId}/`;
+        }
+    }
+
+    // Tab Switch / Blur Monitoring
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && !isTestDiscarded) {
+            triggerProctorWarning("Candidate switched tab or left browser window.");
+        }
+    });
+
+    // =========================================================================
+    // 2. QUESTION DISPLAY & SPEECH RECOGNITION
+    // =========================================================================
+    function loadQuestion(idx) {
+        if (idx >= questions.length) {
+            finishEntireInterview();
+            return;
+        }
+
+        const q = questions[idx];
+        document.getElementById('qNumberBadge').innerText = `Question ${idx + 1} of ${questions.length}`;
+        document.getElementById('qCategoryBadge').innerText = q.category || 'Engineering';
+        document.getElementById('currentQuestionText').innerText = q.question;
+
+        // Reset answer card
+        document.getElementById('transcriptInput').value = '';
+        document.getElementById('evalResultBox').style.display = 'none';
+        document.getElementById('submitAnswerBtn').disabled = false;
+        document.getElementById('submitAnswerBtn').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Answer & Evaluate with Gemini';
+    }
+
+    // Text to Speech for Question
+    function speakQuestion() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const text = document.getElementById('currentQuestionText').innerText;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 0.95;
+            window.speechSynthesis.speak(utter);
+        }
+    }
+
+    // Speech to Text (Web Speech API)
+    let recognition = null;
+    let isListening = false;
+    const transcriptInput = document.getElementById('transcriptInput');
+    const micBtnText = document.getElementById('micBtnText');
+    const audioVis = document.getElementById('audioVisualizer');
+
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRec();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = function() {
+            isListening = true;
+            micBtnText.innerText = "Listening... (Click to Stop)";
+            audioVis.classList.add('listening');
+        };
+
+        recognition.onresult = function(event) {
+            let finalStr = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalStr += event.results[i][0].transcript + ' ';
+                }
+            }
+            if (finalStr) {
+                transcriptInput.value = (transcriptInput.value + ' ' + finalStr).trim();
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.warn("Speech recognition notice:", event.error);
+        };
+
+        recognition.onend = function() {
+            isListening = false;
+            micBtnText.innerText = "Start Speaking";
+            audioVis.classList.remove('listening');
+        };
+    }
+
+    function toggleSpeech() {
+        if (!recognition) {
+            alert("Speech recognition is not supported in this browser. You can type your answer directly in the box.");
+            return;
+        }
+
+        if (isListening) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    }
+
+    function clearTranscript() {
+        transcriptInput.value = '';
+    }
+
+    // =========================================================================
+    // 3. SUBMIT ANSWER & GEMINI EVALUATION
+    // =========================================================================
+    async function submitCurrentAnswer() {
+        if (isListening && recognition) {
+            recognition.stop();
+        }
+
+        const answerText = transcriptInput.value.trim();
+        if (!answerText || answerText.length < 5) {
+            alert("Please speak or write your answer before submitting.");
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitAnswerBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Evaluating with Gemini...';
+
+        const q = questions[currentQIdx];
+
+        try {
+            const resp = await fetch(`/api/interview/${sessionId}/evaluate/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    question_text: q.question,
+                    spoken_transcript: answerText
+                })
+            });
+
+            const data = await resp.json();
+
+            if (data.status === 'success') {
+                // Show Gemini Evaluation Card
+                document.getElementById('evalResultBox').style.display = 'block';
+                document.getElementById('evalScoreBadge').innerText = `Score: ${data.score}%`;
+                document.getElementById('evalVerdict').innerText = data.verdict;
+                document.getElementById('evalFeedbackText').innerText = data.feedback;
+                document.getElementById('evalImprovementText').innerText = data.improvement_tips;
+
+                submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Evaluated';
+            } else {
+                alert("Evaluation error: " + (data.message || "Failed to evaluate"));
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Retry Submit';
+            }
+        } catch (e) {
+            console.error("Evaluation exception:", e);
+            alert("Network error communicating with evaluator.");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Answer';
+        }
+    }
+
+    function nextQuestionStep() {
+        currentQIdx++;
+        loadQuestion(currentQIdx);
+    }
+
+    // Complete Entire Interview Session
+    async function finishEntireInterview() {
+        try {
+            const resp = await fetch(`/api/interview/${sessionId}/finish/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            });
+            const data = await resp.json();
+            window.location.href = data.redirect_url || `/interview-result/${sessionId}/`;
+        } catch (e) {
+            window.location.href = `/interview-result/${sessionId}/`;
+        }
+    }
+
+    // Initialize on Load
+    window.addEventListener('DOMContentLoaded', () => {
+        initCamera();
+        loadQuestion(0);
+    });
+</script>
+{% endblock %}

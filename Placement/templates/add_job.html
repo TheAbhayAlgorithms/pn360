@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Target Job - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-cyan" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-plus"></i> New Role Configuration
+        </div>
+        <h1>Create Target Job Opening</h1>
+        <p>Define job descriptions used for Gemini ATS scoring and student matching.</p>
+    </div>
+    <a href="{% url 'admin_home' %}" class="btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Admin Console
+    </a>
+</div>
+
+<div class="center-container" style="max-width: 740px;">
+    <div class="glass-card" style="padding: 36px 32px;">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="grid-2" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">
+                        <i class="fa-solid fa-briefcase" style="color: var(--accent-blue);"></i> Job Title
+                    </label>
+                    <input type="text" name="title" class="form-control" placeholder="e.g. Software Development Engineer - I" required autofocus>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">
+                        <i class="fa-solid fa-building" style="color: var(--accent-indigo);"></i> Hiring Company
+                    </label>
+                    <input type="text" name="company" class="form-control" placeholder="e.g. Google / Microsoft / Startup" required>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">
+                        <i class="fa-solid fa-location-dot" style="color: var(--accent-emerald);"></i> Location
+                    </label>
+                    <input type="text" name="location" class="form-control" placeholder="e.g. Bengaluru / Remote" value="Bengaluru / Remote">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">
+                        <i class="fa-solid fa-money-bill-wave" style="color: var(--accent-amber);"></i> Salary Package
+                    </label>
+                    <input type="text" name="salary" class="form-control" placeholder="e.g. 15 - 22 LPA" value="15 - 22 LPA">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fa-solid fa-code" style="color: var(--accent-violet);"></i> Key Required Skills (Comma-separated)
+                </label>
+                <input type="text" name="required_skills" class="form-control" placeholder="e.g. Python, Java, Data Structures, Algorithms, SQL, Docker, System Design" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 28px;">
+                <label class="form-label">
+                    <i class="fa-solid fa-file-lines" style="color: var(--accent-blue);"></i> Detailed Job Description (Used by Gemini ATS Parser)
+                </label>
+                <textarea name="description" rows="6" class="form-control" placeholder="Paste full requirements, responsibilities, technical expectations, and qualification criteria..." required style="line-height: 1.6;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 14px;">
+                <a href="{% url 'admin_home' %}" class="btn-secondary" style="height: 48px; padding: 0 24px;">Cancel</a>
+                <button type="submit" class="btn-primary" style="height: 48px; padding: 0 32px;">
+                    <i class="fa-solid fa-plus"></i> Save Job Description
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

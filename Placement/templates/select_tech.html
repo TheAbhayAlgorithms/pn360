@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configure 30 MCQ Test - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-emerald" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-list-check"></i> Step 2: Technical Assessment Round
+        </div>
+        <h1>Configure Your 30 MCQ Placement Test</h1>
+        <p>Select one or multiple programming languages or core computer science domains to generate 30 placement-level MCQs with Gemini.</p>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+    </a>
+</div>
+
+<form method="POST" id="techForm">
+    {% csrf_token %}
+
+    <div class="glass-card" style="margin-bottom: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+            <div>
+                <h3 style="font-size: 20px; color: white; margin: 0;">Select Language(s) & Focus Areas</h3>
+                <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Click to select or deselect tracks. You can select single or multiple domains.</p>
+            </div>
+            <div id="selectionCounter" class="badge badge-cyan" style="font-size: 13px; padding: 8px 16px;">
+                <span id="countText">0</span> Tracks Selected &bull; Exactly 30 Questions
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px;">
+            {% for tech in available_techs %}
+                <label class="tech-select-card" style="cursor: pointer; position: relative; display: block; height: 100%;">
+                    <input type="checkbox" name="technologies" value="{{ tech.name }}" style="position: absolute; opacity: 0;" onchange="updateCardStyle(this)">
+                    <div class="card-inner" style="background: rgba(15, 23, 42, 0.6); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 22px; transition: all 0.25s ease; height: 100%; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="font-size: 17px; color: white; margin: 0;">{{ tech.name }}</h4>
+                            <span class="badge badge-violet" style="font-size: 11px;">{{ tech.badge }}</span>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 16px; line-height: 1.5; flex: 1;">
+                            {{ tech.desc }}
+                        </p>
+                        <div class="check-indicator" style="display: none; margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); color: var(--accent-emerald); font-size: 12.5px; font-weight: 600;">
+                            <i class="fa-solid fa-circle-check"></i> Selected for 30 MCQs
+                        </div>
+                    </div>
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Exam Parameters Card -->
+    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+        <div style="display: flex; gap: 36px; align-items: center; flex-wrap: wrap;">
+            <div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Question Count</div>
+                <div style="font-size: 18px; font-weight: 700; color: white;">30 MCQs (4 Options Each)</div>
+            </div>
+            <div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Difficulty Level</div>
+                <div style="font-size: 18px; font-weight: 700; color: var(--accent-emerald);">Campus Placement Standard</div>
+            </div>
+            <div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Exam Duration</div>
+                <div style="font-size: 18px; font-weight: 700; color: var(--accent-blue);">30 Minutes</div>
+            </div>
+        </div>
+
+        <button type="submit" id="startBtn" class="btn-primary" style="height: 50px; padding: 0 36px; font-size: 15px; font-weight: 700;">
+            <i class="fa-solid fa-bolt"></i> Generate 30 Questions & Start Test
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function updateCardStyle(checkbox) {
+        const cardInner = checkbox.closest('.tech-select-card').querySelector('.card-inner');
+        const indicator = cardInner.querySelector('.check-indicator');
+
+        if (checkbox.checked) {
+            cardInner.style.borderColor = '#10b981';
+            cardInner.style.background = 'rgba(16, 185, 129, 0.08)';
+            cardInner.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.15)';
+            indicator.style.display = 'block';
+        } else {
+            cardInner.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+            cardInner.style.background = 'rgba(15, 23, 42, 0.6)';
+            cardInner.style.boxShadow = 'none';
+            indicator.style.display = 'none';
+        }
+
+        const checkedCount = document.querySelectorAll('input[name="technologies"]:checked').length;
+        document.getElementById('countText').innerText = checkedCount;
+    }
+
+    // Pre-select first two by default
+    window.addEventListener('DOMContentLoaded', () => {
+        const firstTwo = document.querySelectorAll('input[name="technologies"]');
+        if (firstTwo.length >= 2) {
+            firstTwo[0].checked = true;
+            updateCardStyle(firstTwo[0]);
+            firstTwo[3].checked = true; // DSA
+            updateCardStyle(firstTwo[3]);
+        }
+    });
+
+    // Loading indicator on submit
+    document.getElementById('techForm').addEventListener('submit', function() {
+        const btn = document.getElementById('startBtn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating 30 Placement MCQs with Gemini...';
+        btn.style.opacity = '0.85';
+        btn.disabled = true;
+        this.submit();
+    });
+</script>
+{% endblock %}

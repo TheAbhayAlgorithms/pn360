@@ -1,0 +1,122 @@
+body{
+background:hsl(225, 15%, 95%);
+color:white;
+font-family:Segoe UI;
+}
+
+/* Sidebar */
+.sidebar{
+width:250px;
+height:100vh;
+position:fixed;
+background:hsl(240, 9%, 96%);
+padding:25px;
+}
+
+.sidebar h4{
+color:#38bdf8;
+margin-bottom:30px;
+text-align:center;
+font-weight:700;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px;
+border-radius:8px;
+text-decoration:none;
+color:#cbd5f1;
+margin-bottom:8px;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:hsl(216, 8%, 76%);
+color:#38bdf8;
+}
+
+/* Main */
+.main{
+margin-left:250px;
+padding:40px;
+}
+
+/* Topbar */
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.topbar h2{
+font-weight:600;
+}
+
+.admin-badge{
+background:#38bdf8;
+padding:6px 14px;
+border-radius:20px;
+font-size:13px;
+}
+
+/* Cards */
+.card-box{
+background:hsl(217, 12%, 87%);
+padding:25px;
+border-radius:14px;
+text-align:center;
+transition:.3s;
+}
+
+.card-box i{
+font-size:28px;
+margin-bottom:10px;
+color:#38bdf8;
+}
+
+.card-box:hover{
+transform:translateY(-5px);
+background:#0ea5e9;
+}
+
+/* Tables */
+.table{
+background:hsl(240, 2%, 80%);
+border-radius:10px;
+overflow:hidden;
+}
+
+.table th{
+background:hsl(228, 7%, 86%);
+color:#38bdf8;
+}
+
+.table td{
+vertical-align:middle;
+}
+
+/* Buttons */
+.btn-primary{
+background:linear-gradient(120deg,#2563eb,#38bdf8);
+border:none;
+}
+
+.btn-danger{
+border:none;
+}
+
+.profile-img{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+}
+
+/* Modal */
+.modal-content{
+background:#ecedf0;
+color:white;
+}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Online Interview - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-violet" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-video"></i> Step 3: Online AI Interview & Proctoring
+        </div>
+        <h1>AI Technical & HR Interview Portal</h1>
+        <p>Dynamic Gemini interview questions with real-time speech evaluation and intelligent anti-cheating camera proctoring.</p>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+    </a>
+</div>
+
+<div class="grid-2" style="align-items: stretch; margin-bottom: 30px;">
+    <!-- Left: Role Selection & Start Form -->
+    <div class="glass-card" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+        <div>
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 20px; color: white; margin-bottom: 6px;">Configure Your Interview Session</h3>
+                <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5;">Choose the engineering specialization for your customized Gemini question suite.</p>
+            </div>
+
+            <form method="POST" id="interviewConfigForm">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-laptop-code" style="color: var(--accent-blue);"></i> Target Engineering Role</label>
+                    <select name="technology" class="form-control">
+                        {% for role in roles %}
+                            <option value="{{ role }}">{{ role }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Hardware Check Preview -->
+                <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 20px; margin-bottom: 26px;">
+                    <h4 style="font-size: 14.5px; color: white; margin-bottom: 14px;">System Hardware Check</h4>
+                    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13.5px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #cbd5e1;"><i class="fa-solid fa-camera me-2" style="color: var(--accent-blue);"></i> Web Camera (Proctoring)</span>
+                            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Required</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #cbd5e1;"><i class="fa-solid fa-microphone me-2" style="color: var(--accent-emerald);"></i> Microphone (Speech AI)</span>
+                            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Required</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #cbd5e1;"><i class="fa-solid fa-brain me-2" style="color: var(--accent-violet);"></i> Gemini Answer Evaluation</span>
+                            <span class="badge badge-cyan"><i class="fa-solid fa-bolt"></i> Real-time</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; height: 50px; font-size: 15px; font-weight: 700;">
+                    <i class="fa-solid fa-door-open"></i> Enter Proctor-Monitored Interview Room
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right: Proctoring Rules & Guidelines -->
+    <div class="glass-card" style="border-top: 3px solid var(--accent-rose); display: flex; flex-direction: column; height: 100%;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 22px;">
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: #f43f5e; font-size: 18px; flex-shrink: 0;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <h3 style="font-size: 19px; color: white; margin: 0;">Strict Proctoring Rules</h3>
+                <div style="font-size: 12px; color: #fb7185; font-weight: 600; margin-top: 2px;">Automated 3-Warning Discard System</div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 13.5px; color: #cbd5e1; line-height: 1.5; flex: 1;">
+            <div style="background: rgba(244, 63, 94, 0.08); border-left: 3px solid #f43f5e; padding: 14px 18px; border-radius: 0 10px 10px 0;">
+                <strong style="color: #fb7185;"><i class="fa-solid fa-triangle-exclamation me-1"></i> Continuous Face Detection:</strong>
+                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
+                    Your face must remain completely visible within the camera view at all times. If your face moves out of camera range, a warning will be triggered.
+                </p>
+            </div>
+
+            <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid #f59e0b; padding: 14px 18px; border-radius: 0 10px 10px 0;">
+                <strong style="color: #fbbf24;"><i class="fa-solid fa-users-slash me-1"></i> Single Candidate Only:</strong>
+                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
+                    Only one face is permitted in the camera frame. If another person is detected, an automatic proctoring warning is issued.
+                </p>
+            </div>
+
+            <div style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); padding: 14px 18px; border-radius: 10px;">
+                <strong style="color: #f43f5e; font-size: 14px;"><i class="fa-solid fa-ban me-1"></i> 3 Warnings = Automatic Disqualification:</strong>
+                <p style="margin: 6px 0 0; color: #fecdd3; font-size: 13px;">
+                    If you accumulate 3 proctoring warnings (face out of range, multiple faces, or leaving screen), the test is automatically discarded and invalidated.
+                </p>
+            </div>
+
+            <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 14px 18px; border-radius: 0 10px 10px 0;">
+                <strong style="color: #34d399;"><i class="fa-solid fa-microphone me-1"></i> Gemini Voice Listening:</strong>
+                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
+                    Answer questions naturally using your voice. The AI transcribes your speech and grades your answer correctness with percentage scoring and suggestions for improvement.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gemini ATS Analysis - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-title">
+        <div class="badge badge-cyan" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-sparkles"></i> Gemini AI Analysis Complete
+        </div>
+        <h1>Resume ATS Scorecard</h1>
+        <p>Target Role: <strong style="color: white;">{{ resume.job_title }}</strong> {% if target_job %}&bull; {{ target_job.company }}{% endif %}</p>
+    </div>
+    <div style="display: flex; gap: 14px; align-items: center;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="{% url 'select_tech' %}" class="btn-emerald">
+            Proceed to 30 MCQ Test <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Score Overview Card -->
+<div class="glass-card" style="margin-bottom: 28px; padding: 32px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 28px;">
+        <div style="display: flex; align-items: center; gap: 28px; flex: 1; min-width: 320px;">
+            <!-- Radial Score Indicator -->
+            <div style="width: 110px; height: 110px; border-radius: 50%; background: conic-gradient({% if resume.ats_score >= 75 %}#10b981{% elif resume.ats_score >= 50 %}#38bdf8{% else %}#f43f5e{% endif %} {{ resume.ats_score }}%, rgba(255,255,255,0.08) 0); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); flex-shrink: 0;">
+                <div style="width: 86px; height: 86px; border-radius: 50%; background: #0a0f1d; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ resume.ats_score }}%</div>
+                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 4px;">ATS Match</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <span class="badge {% if resume.ats_score >= 75 %}badge-emerald{% elif resume.ats_score >= 50 %}badge-cyan{% else %}badge-rose{% endif %}">
+                        Role Fit: {{ resume.role_fit }}
+                    </span>
+                    <span class="badge badge-violet">
+                        <i class="fa-regular fa-file"></i> {{ resume.file.name|slice:"8:" }}
+                    </span>
+                </div>
+                <h3 style="font-size: 20px; color: white; margin-bottom: 6px;">Evaluation for {{ resume.job_title }}</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); max-width: 720px; line-height: 1.6; margin: 0;">
+                    {{ resume.summary }}
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align: right; flex-shrink: 0;">
+            <a href="{% url 'select_tech' %}" class="btn-primary" style="height: 48px; padding: 0 28px; font-size: 15px;">
+                Proceed to 30 MCQ Test <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                Step 2 of your Placement Preparation
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Suggestions Grid: Strengths, What to Add, What to Remove -->
+<div class="grid-3" style="margin-bottom: 30px; align-items: stretch;">
+    
+    <!-- 1. Key Strengths -->
+    <div class="glass-card" style="border-top: 3px solid #10b981; display: flex; flex-direction: column; height: 100%;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: #10b981; flex-shrink: 0;">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h4 style="font-size: 17px; color: white; margin: 0;">Key Strengths</h4>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Positives identified in your resume</div>
+            </div>
+        </div>
+
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px; flex: 1;">
+            {% for item in resume.strengths %}
+                <li style="font-size: 13.5px; color: #cbd5e1; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start;">
+                    <i class="fa-solid fa-check" style="color: #10b981; margin-top: 4px; font-size: 12px; flex-shrink: 0;"></i>
+                    <span>{{ item }}</span>
+                </li>
+            {% empty %}
+                <li style="font-size: 13.5px; color: var(--text-muted);">Good foundation in core computer science subjects.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- 2. What to ADD -->
+    <div class="glass-card" style="border-top: 3px solid #38bdf8; display: flex; flex-direction: column; height: 100%;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center; color: #38bdf8; flex-shrink: 0;">
+                <i class="fa-solid fa-circle-plus"></i>
+            </div>
+            <div>
+                <h4 style="font-size: 17px; color: white; margin: 0;">What to ADD</h4>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Missing skills & keywords to insert</div>
+            </div>
+        </div>
+
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px; flex: 1;">
+            {% for item in resume.what_to_add %}
+                <li style="font-size: 13.5px; color: #cbd5e1; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start;">
+                    <i class="fa-solid fa-plus" style="color: #38bdf8; margin-top: 4px; font-size: 12px; flex-shrink: 0;"></i>
+                    <span>{{ item }}</span>
+                </li>
+            {% empty %}
+                <li style="font-size: 13.5px; color: var(--text-muted);">Add specific measurable project outcomes and live URLs.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- 3. What to REMOVE -->
+    <div class="glass-card" style="border-top: 3px solid #f43f5e; display: flex; flex-direction: column; height: 100%;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: #f43f5e; flex-shrink: 0;">
+                <i class="fa-solid fa-circle-minus"></i>
+            </div>
+            <div>
+                <h4 style="font-size: 17px; color: white; margin: 0;">What to REMOVE</h4>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Redundancies & ATS blockers to cut</div>
+            </div>
+        </div>
+
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px; flex: 1;">
+            {% for item in resume.what_to_remove %}
+                <li style="font-size: 13.5px; color: #cbd5e1; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start;">
+                    <i class="fa-solid fa-xmark" style="color: #f43f5e; margin-top: 4px; font-size: 12px; flex-shrink: 0;"></i>
+                    <span>{{ item }}</span>
+                </li>
+            {% empty %}
+                <li style="font-size: 13.5px; color: var(--text-muted);">Remove subjective descriptors without verifiable proof.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Next Step CTA Bar -->
+<div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 26px 32px; flex-wrap: wrap; gap: 20px;">
+    <div>
+        <h4 style="font-size: 19px; color: white; margin-bottom: 4px;">Ready for the Next Round?</h4>
+        <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+            Now that your resume is optimized, proceed to validate your technical foundations in the 30 MCQ test.
+        </p>
+    </div>
+    <a href="{% url 'select_tech' %}" class="btn-emerald" style="height: 48px; padding: 0 32px; font-size: 15px;">
+        Start 30 MCQ Test <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</div>
+{% endblock %}

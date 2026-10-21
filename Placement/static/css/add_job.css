@@ -1,0 +1,114 @@
+body{
+background:#0f172a;
+color:#f1f5f9;
+font-family:Segoe UI;
+}
+
+/* Sidebar */
+.sidebar{
+width:250px;
+height:100vh;
+position:fixed;
+background:#020617;
+padding:25px;
+border-right:1px solid #1e293b;
+}
+
+.sidebar h4{
+color:#38bdf8;
+margin-bottom:35px;
+text-align:center;
+font-weight:700;
+letter-spacing:1px;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 14px;
+border-radius:8px;
+text-decoration:none;
+color:#cbd5f1;
+margin-bottom:8px;
+transition:.3s;
+font-size:15px;
+}
+
+.sidebar a:hover{
+background:#1e293b;
+color:#38bdf8;
+}
+
+/* Main */
+.main{
+margin-left:250px;
+padding:40px;
+}
+
+/* Page Header */
+.page-header{
+margin-bottom:30px;
+}
+
+.page-header h2{
+font-weight:600;
+color:#f8fafc;
+}
+
+.page-header p{
+color:#94a3b8;
+}
+
+/* Form Card */
+.form-card{
+background:#1e293b;
+padding:35px;
+border-radius:14px;
+box-shadow:0 20px 45px rgba(0,0,0,0.5);
+max-width:650px;
+border:1px solid #334155;
+}
+
+/* Inputs */
+.form-control{
+background:#0f172a;
+border:1px solid #475569;
+color:#f1f5f9;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+}
+
+.form-control::placeholder{
+color:#94a3b8;
+}
+
+.form-control:focus{
+border-color:#38bdf8;
+box-shadow:0 0 0 0.2rem rgba(56,189,248,0.25);
+background:#0f172a;
+color:#f1f5f9;
+}
+
+/* Button */
+.submit-btn{
+background:linear-gradient(120deg,#2563eb,#38bdf8);
+border:none;
+padding:13px;
+font-weight:600;
+border-radius:8px;
+color:white;
+transition:.3s;
+}
+
+.submit-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 20px rgba(37,99,235,0.4);
+}
+
+/* Textarea */
+textarea{
+resize:none;
+height:120px;
+}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Interview Discarded - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="center-container" style="max-width: 640px; margin: 40px auto;">
+    <div class="glass-card" style="padding: 44px 36px; border-top: 4px solid var(--accent-rose); text-align: center;">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #f43f5e; font-size: 32px; box-shadow: var(--glow-rose);">
+            <i class="fa-solid fa-ban"></i>
+        </div>
+
+        <span class="badge badge-rose" style="font-size: 13px; margin-bottom: 14px;">
+            Proctoring Disqualification
+        </span>
+
+        <h2 style="font-size: 24px; color: white; margin-bottom: 12px; font-weight: 800;">
+            Assessment Automatically Discarded
+        </h2>
+
+        <p style="font-size: 14.5px; color: #cbd5e1; line-height: 1.6; margin-bottom: 26px;">
+            {{ session.discard_reason|default:"Your interview test was terminated because 3 proctoring warnings were triggered (face moving out of camera range, multiple faces detected, or leaving the examination screen)." }}
+        </p>
+
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; margin-bottom: 28px; text-align: left; font-size: 13.5px; color: var(--text-secondary);">
+            <div style="font-weight: 700; color: white; margin-bottom: 8px;"><i class="fa-solid fa-circle-info me-1" style="color: var(--accent-blue);"></i> Assessment Regulations:</div>
+            <ul style="padding-left: 20px; margin: 0; line-height: 1.6;">
+                <li>The proctoring system enforces strict campus hiring integrity standards.</li>
+                <li>Ensure a quiet, well-lit environment where only you are visible in the camera frame.</li>
+                <li>Maintain eye contact with the screen throughout the interview duration.</li>
+            </ul>
+        </div>
+
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'dashboard' %}" class="btn-secondary" style="height: 46px; padding: 0 24px;">
+                <i class="fa-solid fa-house"></i> Return to Dashboard
+            </a>
+            <a href="{% url 'ai_interview' %}" class="btn-primary" style="height: 46px; padding: 0 28px;">
+                <i class="fa-solid fa-rotate-right"></i> Start Fresh Session
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
