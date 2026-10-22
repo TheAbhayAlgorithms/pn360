@@ -1,3 +1,4 @@
+import os
 import json
 from pathlib import Path
 from django.shortcuts import render, redirect, get_object_or_404
@@ -7,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.db.models import Avg, Sum, Max
+from django.db.models import Avg, Sum, Max, Q
 
 from .models import (
     Company, StudentProfile, Job, Resume, MockTest, Question, Answer,
@@ -28,51 +29,60 @@ from .ai.gemini_engine import (
 
 def home(request):
     if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('admin_home')
         return redirect('dashboard')
     jobs = Job.objects.all().order_by('-created_at')[:6]
     return render(request, "home.html", {"jobs": jobs})
 
 def register(request):
     if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('admin_home')
         return redirect('dashboard')
 
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "").strip().lower()
+        phone = request.POST.get("phone", "").strip()
         password = request.POST.get("password", "")
         confirm_password = request.POST.get("confirm_password", "")
-        phone = request.POST.get("phone", "").strip()
-        technology = request.POST.get("technology", "Software Development").strip()
         image = request.FILES.get("image")
 
-        if not email or not password:
-            messages.error(request, "Email and Password are required.")
+        if not phone or not password:
+            messages.error(request, "Phone Number and Password are required.")
             return redirect("register")
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return redirect("register")
 
-        if not username:
-            username = email.split("@")[0]
+        clean_phone = "".join(c for c in phone if c.isdigit())
+        if not clean_phone:
+            clean_phone = phone
 
-        if User.objects.filter(username=username).exists():
-            username = f"{username}_{User.objects.count() + 1}"
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email is already registered. Please log in.")
+        # Check if phone number is already registered
+        if StudentProfile.objects.filter(Q(phone=phone) | Q(phone=clean_phone)).exists():
+            messages.error(request, "This phone number is already registered. Please sign in.")
             return redirect("login")
 
+        if not username:
+            username = f"candidate_{clean_phone[-6:] if len(clean_phone) >= 6 else clean_phone}"
+
+        # Ensure unique username in User model
+        final_username = username
+        if User.objects.filter(username=final_username).exists():
+            final_username = f"{username}_{clean_phone[-4:] if len(clean_phone) >= 4 else User.objects.count() + 1}"
+
         user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
+            username=final_username,
+            password=password,
+            email=f"{clean_phone}@nexus.local"
         )
 
         StudentProfile.objects.create(
             user=user,
             phone=phone,
-            technology=technology,
+            technology="Software Development Engineer",
             image=image
         )
 
@@ -86,30 +96,61 @@ def register(request):
 
 def login_view(request):
     if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('admin_home')
         return redirect('dashboard')
 
     if request.method == "POST":
-        email_or_user = request.POST.get("email", "").strip()
+        phone_input = request.POST.get("phone", "").strip()
         password = request.POST.get("password", "")
 
-        user = None
-        # Try authenticating directly
-        user = authenticate(request, username=email_or_user, password=password)
+        # Unique Admin credential definitions (configurable via environment variables)
+        admin_phone = os.getenv("ADMIN_PHONE", "9999999999")
+        admin_username = os.getenv("ADMIN_USERNAME", "admin360")
+        admin_password = os.getenv("ADMIN_PASSWORD", "Nexus@Admin2025")
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@nexus360.com")
 
-        # If not, try by email lookup
-        if user is None:
-            user_obj = User.objects.filter(email__iexact=email_or_user).first()
-            if user_obj:
-                user = authenticate(request, username=user_obj.username, password=password)
+        clean_phone = "".join(c for c in phone_input if c.isdigit())
+
+        # Automatic detection and provisioning of unique admin credentials
+        if (phone_input in [admin_phone, admin_username, admin_email] or (clean_phone and clean_phone == admin_phone)) and password == admin_password:
+            admin_obj, _ = User.objects.get_or_create(
+                username=admin_username,
+                defaults={"email": admin_email, "is_staff": True, "is_superuser": True}
+            )
+            admin_obj.set_password(admin_password)
+            admin_obj.is_staff = True
+            admin_obj.is_superuser = True
+            admin_obj.save()
+            admin_profile, _ = StudentProfile.objects.get_or_create(user=admin_obj)
+            admin_profile.phone = admin_phone
+            admin_profile.save()
+
+        user = None
+
+        # 1. Lookup student/user by phone number in StudentProfile
+        if clean_phone or phone_input:
+            profile = StudentProfile.objects.filter(
+                Q(phone=phone_input) | 
+                (Q(phone=clean_phone) if clean_phone else Q())
+            ).select_related('user').first()
+            if profile and profile.user:
+                user = authenticate(request, username=profile.user.username, password=password)
+
+        # 2. Fallback: try authenticating directly by username/admin username
+        if user is None and phone_input:
+            user = authenticate(request, username=phone_input, password=password)
 
         if user is not None:
             login(request, user)
             PlacementProgress.objects.get_or_create(user=user)
+            # Automatic role-based routing: Admin directly to Admin Portal, students to Dashboard
             if user.is_staff or user.is_superuser:
+                messages.success(request, f"Welcome back Administrator {user.username}. Logged into Admin Portal.")
                 return redirect("admin_home")
             return redirect("dashboard")
         else:
-            messages.error(request, "Invalid credentials. Please verify your email/username and password.")
+            messages.error(request, "Invalid phone number or password. Please verify and try again.")
 
     return render(request, "login.html")
 
@@ -560,19 +601,47 @@ def schedule_test(request):
 
 @staff_member_required
 def admin_home(request):
-    students = User.objects.filter(is_staff=False).order_by("-date_joined")
+    search_query = request.GET.get("q", "").strip()
+
+    students_query = User.objects.filter(is_staff=False).select_related('profile', 'placement_progress').order_by("-date_joined")
+    if search_query:
+        students_query = students_query.filter(
+            Q(username__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(profile__technology__icontains=search_query)
+        )
+
     jobs = Job.objects.all().order_by("-created_at")
-    resumes = Resume.objects.all().order_by("-uploaded_at")[:20]
-    interviews = InterviewSession.objects.all().order_by("-created_at")[:20]
+    resumes = Resume.objects.select_related('user', 'job').order_by("-uploaded_at")[:15]
+    interviews = InterviewSession.objects.select_related('user').order_by("-created_at")[:15]
+    mock_tests = MockTest.objects.select_related('student').order_by("-started_at")[:15]
+
+    total_students = User.objects.filter(is_staff=False).count()
+    total_jobs = jobs.count()
+    total_resumes = Resume.objects.count()
+    avg_ats = Resume.objects.aggregate(Avg('ats_score'))['ats_score__avg'] or 0
+    total_tests = MockTest.objects.count()
+    passed_tests = MockTest.objects.filter(passed=True).count()
+    total_interviews = InterviewSession.objects.count()
+    completed_interviews = InterviewSession.objects.filter(status='completed').count()
+    discarded_interviews = InterviewSession.objects.filter(status='discarded').count()
 
     return render(request, "admin_home.html", {
-        "students": students,
+        "students": students_query,
         "jobs": jobs,
         "resumes": resumes,
         "interviews": interviews,
-        "total_students": students.count(),
-        "total_jobs": jobs.count(),
-        "total_resumes": resumes.count()
+        "mock_tests": mock_tests,
+        "total_students": total_students,
+        "total_jobs": total_jobs,
+        "total_resumes": total_resumes,
+        "avg_ats": round(avg_ats, 1),
+        "total_tests": total_tests,
+        "passed_tests": passed_tests,
+        "total_interviews": total_interviews,
+        "completed_interviews": completed_interviews,
+        "discarded_interviews": discarded_interviews,
+        "search_query": search_query,
     })
 
 @staff_member_required

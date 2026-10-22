@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Candidate Login - Placement Nexus 360{% endblock %}
+{% block title %}Sign In - Placement Nexus 360{% endblock %}
 
 {% block content %}
 <div class="center-container">
@@ -11,7 +11,7 @@
                 <i class="fa-solid fa-lock"></i>
             </div>
             <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 6px;">Sign In to Your Account</h2>
-            <p style="color: var(--text-secondary); font-size: 14px;">Access your placement preparation stages and test history</p>
+            <p style="color: var(--text-secondary); font-size: 14px;">Enter your credentials to access your candidate or coordinator console</p>
         </div>
 
         <form method="POST" action="{% url 'login' %}">
@@ -19,17 +19,15 @@
 
             <div class="form-group">
                 <label class="form-label">
-                    <i class="fa-regular fa-envelope" style="color: var(--accent-blue);"></i> Email Address or Username
+                    <i class="fa-solid fa-phone" style="color: var(--accent-blue);"></i> Phone Number
                 </label>
-                <input type="text" name="email" class="form-control" placeholder="name@example.com" required autofocus>
+                <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required autofocus>
             </div>
 
             <div class="form-group" style="margin-bottom: 24px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label class="form-label" style="margin-bottom: 0;">
-                        <i class="fa-solid fa-key" style="color: var(--accent-indigo);"></i> Password
-                    </label>
-                </div>
+                <label class="form-label">
+                    <i class="fa-solid fa-key" style="color: var(--accent-indigo);"></i> Password
+                </label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
             </div>
 

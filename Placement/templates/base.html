@@ -100,7 +100,13 @@
                     </div>
                     <div class="user-mini-info">
                         <div class="user-mini-name">{{ user.username }}</div>
-                        <div class="user-mini-role">{{ user.email|truncatechars:18 }}</div>
+                        <div class="user-mini-role">
+                            {% if user.is_staff or user.is_superuser %}
+                                <span style="color: var(--accent-cyan); font-weight: 600;">Administrator</span>
+                            {% else %}
+                                {{ user.email|truncatechars:18 }}
+                            {% endif %}
+                        </div>
                     </div>
                     <a href="{% url 'logout' %}" title="Logout" style="color: var(--text-muted); text-decoration: none; padding: 6px;">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>

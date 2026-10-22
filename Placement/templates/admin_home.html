@@ -4,79 +4,229 @@
 {% block title %}Admin Portal - Placement Nexus 360{% endblock %}
 
 {% block content %}
+<!-- Topbar Header -->
 <div class="topbar">
     <div class="topbar-title">
         <div class="badge badge-cyan" style="margin-bottom: 8px;">
-            <i class="fa-solid fa-sliders"></i> Placement Coordinator Console
+            <i class="fa-solid fa-shield-halved"></i> Administrator Console • Unique Secure Session
         </div>
         <h1>Platform Administration</h1>
-        <p>Manage campus job descriptions, review student progress, and monitor interview sessions.</p>
+        <p>Real-time candidate cohorts, AI proctoring violations, ATS resume benchmarks, and campus recruitment drives.</p>
     </div>
-    <div style="display: flex; gap: 14px; align-items: center;">
-        <a href="{% url 'dashboard' %}" class="btn-secondary">
-            <i class="fa-solid fa-arrow-left"></i> Dashboard
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <span class="badge badge-emerald" style="padding: 8px 14px; font-size: 13px;">
+            <i class="fa-solid fa-circle-user me-1"></i> Logged in as <strong>{{ request.user.username }}</strong>
+        </span>
+        <a href="{% url 'add_job' %}" class="btn-primary" style="height: 42px; padding: 0 20px; font-size: 13.5px;">
+            <i class="fa-solid fa-plus"></i> Add Job Role
         </a>
-        <a href="{% url 'add_job' %}" class="btn-primary">
-            <i class="fa-solid fa-plus"></i> Add New Job Role
+        <a href="{% url 'dashboard' %}" class="btn-secondary" style="height: 42px; padding: 0 18px; font-size: 13.5px;" title="Preview student candidate dashboard">
+            <i class="fa-solid fa-graduation-cap"></i> Student View
         </a>
     </div>
 </div>
 
-<!-- Stats Counters -->
-<div class="grid-3" style="margin-bottom: 30px;">
-    <div class="glass-card" style="padding: 24px;">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Registered Students</div>
-        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; margin-top: 6px; line-height: 1;">{{ total_students }}</div>
-    </div>
-    <div class="glass-card" style="padding: 24px;">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Active Job Descriptions</div>
-        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-blue); margin-top: 6px; line-height: 1;">{{ total_jobs }}</div>
-    </div>
-    <div class="glass-card" style="padding: 24px;">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Resumes Analyzed</div>
-        <div style="font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-emerald); margin-top: 6px; line-height: 1;">{{ total_resumes }}</div>
-    </div>
-</div>
-
-<!-- Job Descriptions Management -->
-<div class="glass-card" style="margin-bottom: 32px; padding: 28px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px;">
-        <div>
-            <h3 style="font-size: 19px; color: white;">Target Job Openings & Descriptions</h3>
-            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 2px;">Used by Gemini ATS to evaluate candidate resumes</p>
+<!-- Platform KPI Analytics Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 32px;">
+    <!-- Registered Students -->
+    <div class="glass-card" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Registered Students</span>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-blue);">
+                <i class="fa-solid fa-user-group"></i>
+            </div>
         </div>
-        <a href="{% url 'add_job' %}" class="btn-primary" style="height: 40px; font-size: 13.5px; padding: 0 18px;">
-            <i class="fa-solid fa-plus"></i> Create Job Role
-        </a>
+        <div style="font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ total_students }}</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Total active candidate pool</div>
+    </div>
+
+    <!-- Active Jobs -->
+    <div class="glass-card" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Active Job Openings</span>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-indigo);">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+        </div>
+        <div style="font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-cyan); line-height: 1;">{{ total_jobs }}</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Available placement profiles</div>
+    </div>
+
+    <!-- Resumes Evaluated -->
+    <div class="glass-card" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">ATS Resumes Scored</span>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald);">
+                <i class="fa-solid fa-file-shield"></i>
+            </div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+            <div style="font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-emerald); line-height: 1;">{{ total_resumes }}</div>
+            <span style="font-size: 13px; color: var(--text-secondary);">Avg: {{ avg_ats }}%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Gemini ATS benchmark runs</div>
+    </div>
+
+    <!-- MCQ Tests -->
+    <div class="glass-card" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Technical 30 MCQs</span>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(234, 179, 8, 0.15); display: flex; align-items: center; justify-content: center; color: #eab308;">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+            <div style="font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ total_tests }}</div>
+            <span style="font-size: 13px; color: #10b981;">{{ passed_tests }} Passed</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Adaptive algorithm evaluations</div>
+    </div>
+
+    <!-- AI Interviews & Proctoring -->
+    <div class="glass-card" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Proctored AI Interviews</span>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: #f43f5e;">
+                <i class="fa-solid fa-video"></i>
+            </div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+            <div style="font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; color: white; line-height: 1;">{{ total_interviews }}</div>
+            <span style="font-size: 12px; color: #f43f5e;">{{ discarded_interviews }} Flagged</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">{{ completed_interviews }} Completed successfully</div>
+    </div>
+</div>
+
+<!-- Section 1: Candidate Roster & Readiness Tracker -->
+<div class="glass-card" style="margin-bottom: 36px; padding: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3 style="font-size: 20px; color: white; margin: 0;">Candidate Placement Roster</h3>
+                <span class="badge badge-cyan" style="font-size: 12px;">{{ students.count }} Candidates</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Track cohort scores across all three stages: ATS Resume, Technical MCQs, and Proctored Voice AI Interview.</p>
+        </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'admin_home' %}" style="display: flex; gap: 10px; align-items: center;">
+            <div style="position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 13px; color: var(--text-muted); font-size: 13px;"></i>
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search name, email, stack..." class="form-control" style="height: 40px; padding-left: 36px; width: 260px; font-size: 13.5px;">
+            </div>
+            <button type="submit" class="btn-secondary" style="height: 40px; padding: 0 16px; font-size: 13.5px;">Search</button>
+            {% if search_query %}
+                <a href="{% url 'admin_home' %}" class="btn-secondary" style="height: 40px; padding: 0 14px; font-size: 13px;" title="Clear filter">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            {% endif %}
+        </form>
     </div>
 
     <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
             <thead>
-                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 12px; text-transform: uppercase;">
-                    <th style="padding: 14px 16px;">Role Title</th>
-                    <th style="padding: 14px 16px;">Company</th>
-                    <th style="padding: 14px 16px;">Package</th>
-                    <th style="padding: 14px 16px;">Location</th>
-                    <th style="padding: 14px 16px; text-align: right;">Actions</th>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <th style="padding: 14px 16px;">Candidate</th>
+                    <th style="padding: 14px 16px;">Target Track</th>
+                    <th style="padding: 14px 16px;">Stage 1: ATS</th>
+                    <th style="padding: 14px 16px;">Stage 2: 30 MCQs</th>
+                    <th style="padding: 14px 16px;">Stage 3: AI Interview</th>
+                    <th style="padding: 14px 16px;">Readiness</th>
+                    <th style="padding: 14px 16px; text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for j in jobs %}
-                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
-                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ j.title }}</td>
-                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">{{ j.company }}</td>
-                        <td style="padding: 14px 16px; color: #10b981; font-weight: 600; vertical-align: middle;">{{ j.salary }}</td>
-                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">{{ j.location }}</td>
+                {% for s in students %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04); transition: background 0.2s ease;">
+                        <!-- Candidate info -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #38bdf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 14px; flex-shrink: 0;">
+                                    {{ s.username|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: white;">{{ s.username }}</div>
+                                    <div style="color: var(--text-muted); font-size: 12px;">{{ s.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Track -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            <span class="badge badge-indigo" style="font-size: 12px;">
+                                {{ s.profile.technology|default:"General SDE" }}
+                            </span>
+                        </td>
+
+                        <!-- Stage 1: Resume ATS -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            {% if s.placement_progress.resume_completed %}
+                                <span class="badge {% if s.placement_progress.resume_score >= 75 %}badge-emerald{% elif s.placement_progress.resume_score >= 50 %}badge-cyan{% else %}badge-rose{% endif %}" style="font-size: 12px; font-weight: 700;">
+                                    {{ s.placement_progress.resume_score }}% ATS
+                                </span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 12px;">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Stage 2: 30 MCQs -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            {% if s.placement_progress.mock_passed %}
+                                <span class="badge badge-emerald" style="font-size: 12px;">
+                                    <i class="fa-solid fa-check me-1"></i> {{ s.placement_progress.mock_score }}% Passed
+                                </span>
+                            {% elif s.placement_progress.mock_score > 0 %}
+                                <span class="badge badge-rose" style="font-size: 12px;">
+                                    {{ s.placement_progress.mock_score }}% Failed
+                                </span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 12px;">Not Taken</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Stage 3: AI Interview -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            {% if s.placement_progress.interview_passed %}
+                                <span class="badge badge-emerald" style="font-size: 12px;">
+                                    <i class="fa-solid fa-check me-1"></i> {{ s.placement_progress.interview_score }}% Passed
+                                </span>
+                            {% elif s.placement_progress.interview_score > 0 %}
+                                <span class="badge badge-cyan" style="font-size: 12px;">
+                                    {{ s.placement_progress.interview_score }}% Scored
+                                </span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 12px;">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Overall Readiness -->
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="flex: 1; min-width: 60px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+                                    <div style="width: {{ s.placement_progress.overall_readiness|default:0 }}%; height: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald)); border-radius: 999px;"></div>
+                                </div>
+                                <span style="font-weight: 700; color: white; font-size: 12.5px;">{{ s.placement_progress.overall_readiness|default:0 }}%</span>
+                            </div>
+                        </td>
+
+                        <!-- Action -->
                         <td style="padding: 14px 16px; text-align: right; vertical-align: middle;">
-                            <a href="{% url 'delete_job' j.id %}" onclick="return confirm('Delete this job listing?')" style="color: #f43f5e; text-decoration: none; font-size: 13px; font-weight: 600;">
-                                <i class="fa-solid fa-trash me-1"></i> Delete
+                            <a href="{% url 'delete_student' s.id %}" onclick="return confirm('Remove student {{ s.username }} and all their test data?')" style="color: #f43f5e; text-decoration: none; font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.2);">
+                                <i class="fa-solid fa-trash-can me-1"></i> Remove
                             </a>
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No job listings created.</td>
+                        <td colspan="7" style="text-align: center; padding: 36px; color: var(--text-muted);">
+                            {% if search_query %}
+                                No candidates found matching "<strong>{{ search_query }}</strong>".
+                            {% else %}
+                                No candidates registered yet.
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -84,36 +234,182 @@
     </div>
 </div>
 
-<!-- Student Roster -->
-<div class="glass-card" style="padding: 28px;">
-    <h3 style="font-size: 19px; color: white; margin-bottom: 18px;">Candidate Roster</h3>
+<!-- Section 2: Active Job Openings Management -->
+<div class="glass-card" style="margin-bottom: 36px; padding: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3 style="font-size: 20px; color: white; margin: 0;">Target Job Descriptions & Recruitment Drives</h3>
+                <span class="badge badge-indigo" style="font-size: 12px;">{{ total_jobs }} Openings</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">These roles calibrate Gemini's ATS resume engine and dynamic technical assessment questions.</p>
+        </div>
+        <a href="{% url 'add_job' %}" class="btn-primary" style="height: 40px; font-size: 13.5px; padding: 0 18px;">
+            <i class="fa-solid fa-plus"></i> Add New Job Role
+        </a>
+    </div>
+
     <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
             <thead>
-                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 12px; text-transform: uppercase;">
-                    <th style="padding: 14px 16px;">Candidate Name</th>
-                    <th style="padding: 14px 16px;">Email</th>
-                    <th style="padding: 14px 16px;">Target Track</th>
-                    <th style="padding: 14px 16px;">Joined</th>
-                    <th style="padding: 14px 16px; text-align: right;">Actions</th>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <th style="padding: 14px 16px;">Role Title</th>
+                    <th style="padding: 14px 16px;">Company</th>
+                    <th style="padding: 14px 16px;">Salary Package</th>
+                    <th style="padding: 14px 16px;">Location</th>
+                    <th style="padding: 14px 16px;">Required Skills</th>
+                    <th style="padding: 14px 16px; text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for s in students %}
+                {% for j in jobs %}
                     <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
-                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ s.username }}</td>
-                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">{{ s.email }}</td>
-                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">{{ s.profile.technology|default:"General SDE" }}</td>
-                        <td style="padding: 14px 16px; color: var(--text-muted); font-size: 13px; vertical-align: middle;">{{ s.date_joined|date:"M d, Y" }}</td>
+                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ j.title }}</td>
+                        <td style="padding: 14px 16px; color: var(--accent-blue); font-weight: 600; vertical-align: middle;">{{ j.company }}</td>
+                        <td style="padding: 14px 16px; color: #10b981; font-weight: 700; vertical-align: middle;">{{ j.salary }}</td>
+                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">{{ j.location }}</td>
+                        <td style="padding: 14px 16px; color: var(--text-muted); font-size: 12px; vertical-align: middle; max-width: 280px;">{{ j.required_skills|truncatechars:50 }}</td>
                         <td style="padding: 14px 16px; text-align: right; vertical-align: middle;">
-                            <a href="{% url 'delete_student' s.id %}" onclick="return confirm('Remove student account?')" style="color: #f43f5e; text-decoration: none; font-size: 13px; font-weight: 600;">
-                                <i class="fa-solid fa-user-xmark me-1"></i> Remove
+                            <a href="{% url 'delete_job' j.id %}" onclick="return confirm('Delete role {{ j.title }}?')" style="color: #f43f5e; text-decoration: none; font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.2);">
+                                <i class="fa-solid fa-trash me-1"></i> Delete
                             </a>
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No registered candidates.</td>
+                        <td colspan="6" style="text-align: center; padding: 28px; color: var(--text-muted);">No active job listings.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Section 3: Proctored AI Interview Audit Sessions -->
+<div class="glass-card" style="margin-bottom: 36px; padding: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3 style="font-size: 20px; color: white; margin: 0;">AI Voice Interview & Proctoring Audit</h3>
+                <span class="badge badge-violet" style="font-size: 12px;">Recent Sessions</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Monitor real-time voice evaluations, camera proctoring infractions, and malpractice terminations.</p>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <th style="padding: 14px 16px;">Candidate</th>
+                    <th style="padding: 14px 16px;">Domain</th>
+                    <th style="padding: 14px 16px;">Session Status</th>
+                    <th style="padding: 14px 16px;">Proctoring Infractions</th>
+                    <th style="padding: 14px 16px;">AI Correctness</th>
+                    <th style="padding: 14px 16px; text-align: right;">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in interviews %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">
+                            {{ i.user.username }}
+                        </td>
+                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">
+                            {{ i.technology }}
+                        </td>
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            {% if i.status == 'completed' %}
+                                <span class="badge badge-emerald" style="font-size: 12px;">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Completed
+                                </span>
+                            {% elif i.status == 'discarded' %}
+                                <span class="badge badge-rose" style="font-size: 12px;">
+                                    <i class="fa-solid fa-ban me-1"></i> Discarded (Violation)
+                                </span>
+                            {% else %}
+                                <span class="badge badge-cyan" style="font-size: 12px;">
+                                    <i class="fa-solid fa-spinner fa-spin me-1"></i> In Progress
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            {% if i.warnings_count > 0 %}
+                                <span style="color: #f43f5e; font-weight: 700;">
+                                    <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ i.warnings_count }} Warnings
+                                </span>
+                            {% else %}
+                                <span style="color: #10b981; font-size: 12.5px;">
+                                    <i class="fa-solid fa-check me-1"></i> Zero Violations
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 14px 16px; font-weight: 700; vertical-align: middle;">
+                            {% if i.score is not None %}
+                                <span style="color: {% if i.score >= 70 %}#10b981{% elif i.score >= 50 %}#38bdf8{% else %}#f43f5e{% endif %};">
+                                    {{ i.score }}%
+                                </span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 12px;">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 14px 16px; text-align: right; color: var(--text-muted); font-size: 12px; vertical-align: middle;">
+                            {{ i.created_at|date:"M d, Y H:i" }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 28px; color: var(--text-muted);">No interview sessions recorded yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Section 4: Recent ATS Resume Evaluations -->
+<div class="glass-card" style="padding: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3 style="font-size: 20px; color: white; margin: 0;">Recent ATS Resume Analysis Runs</h3>
+                <span class="badge badge-cyan" style="font-size: 12px;">Gemini Benchmarks</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Audits of student resume scoring against company role requirements.</p>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <th style="padding: 14px 16px;">Candidate</th>
+                    <th style="padding: 14px 16px;">Target Role</th>
+                    <th style="padding: 14px 16px;">ATS Score</th>
+                    <th style="padding: 14px 16px;">Fit Verdict</th>
+                    <th style="padding: 14px 16px; text-align: right;">Upload Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in resumes %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                        <td style="padding: 14px 16px; font-weight: 600; color: white; vertical-align: middle;">{{ r.user.username }}</td>
+                        <td style="padding: 14px 16px; color: var(--accent-blue); vertical-align: middle;">{{ r.job_title }}</td>
+                        <td style="padding: 14px 16px; vertical-align: middle;">
+                            <span class="badge {% if r.ats_score >= 75 %}badge-emerald{% elif r.ats_score >= 50 %}badge-cyan{% else %}badge-rose{% endif %}" style="font-weight: 700;">
+                                {{ r.ats_score }}% Match
+                            </span>
+                        </td>
+                        <td style="padding: 14px 16px; color: var(--text-secondary); vertical-align: middle;">
+                            {{ r.role_fit }}
+                        </td>
+                        <td style="padding: 14px 16px; text-align: right; color: var(--text-muted); font-size: 12px; vertical-align: middle;">
+                            {{ r.uploaded_at|date:"M d, Y H:i" }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 28px; color: var(--text-muted);">No resume analyses submitted yet.</td>
                     </tr>
                 {% endfor %}
             </tbody>
