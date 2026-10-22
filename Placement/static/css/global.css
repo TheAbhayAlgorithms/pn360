@@ -46,6 +46,7 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     overflow-x: hidden;
     line-height: 1.5;
 }
@@ -55,6 +56,7 @@ body {
     display: flex;
     width: 100%;
     min-height: 100vh;
+    flex: 1;
 }
 
 /* Scrollbar */
@@ -87,6 +89,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    flex-shrink: 0;
 }
 
 .top-navbar-links {
@@ -666,3 +669,20 @@ textarea.form-control {
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 768px) {
+    .top-navbar {
+        padding: 12px 20px;
+        height: auto;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .top-navbar-links {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .main-public {
+        padding: 28px 18px;
+    }
+}
+
