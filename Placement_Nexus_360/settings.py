@@ -120,7 +120,27 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # ================= MEDIA FILES =================
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if IS_VERCEL:
+    MEDIA_ROOT = Path('/tmp') / 'media'
+    SEED_MEDIA = BASE_DIR / 'media'
+    if not MEDIA_ROOT.exists():
+        try:
+            if SEED_MEDIA.exists():
+                shutil.copytree(SEED_MEDIA, MEDIA_ROOT, dirs_exist_ok=True)
+            else:
+                MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            try:
+                MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+            except Exception:
+                pass
+    for sub in ['resumes', 'students', 'company_logo']:
+        try:
+            (MEDIA_ROOT / sub).mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 # ================= AUTH REDIRECTS =================
 LOGIN_URL = 'login'
