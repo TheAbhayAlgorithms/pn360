@@ -9,12 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # ================= GEMINI API KEY =================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or ""
-if GEMINI_API_KEY:
-    GEMINI_API_KEY = GEMINI_API_KEY.strip()
-else:
-    # Helpful warning - fallback engines will ensure app works seamlessly
-    print("[INFO] GEMINI_API_KEY not set in .env. Intelligent heuristic placement fallbacks are active.")
+GEMINI_API_KEY = (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "").strip()
+
 
 # ================= SECURITY =================
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-e=d!fvxy-@bx$^fuey7_bzye1i^%3=nwxxy4kt%ykmvs^b=#$s")
