@@ -14,7 +14,7 @@
             <p style="color: var(--text-secondary); font-size: 14px;">Join the complete AI preparation pipeline for placement success</p>
         </div>
 
-        <form method="POST" action="{% url 'register' %}">
+        <form method="POST" action="{% url 'register' %}" autocomplete="off">
             {% csrf_token %}
 
             <div class="grid-2" style="margin-bottom: 20px;">
@@ -22,13 +22,13 @@
                     <label class="form-label">
                         <i class="fa-solid fa-user" style="color: var(--accent-blue);"></i> Full Name / Username
                     </label>
-                    <input type="text" name="username" class="form-control" placeholder="e.g. Rahul Sharma" required autofocus>
+                    <input type="text" name="username" class="form-control" placeholder="e.g. Rahul Sharma" required autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">
                         <i class="fa-solid fa-phone" style="color: var(--accent-emerald);"></i> Phone Number
                     </label>
-                    <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required>
+                    <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 </div>
             </div>
 
@@ -37,13 +37,13 @@
                     <label class="form-label">
                         <i class="fa-solid fa-lock" style="color: var(--accent-indigo);"></i> Password
                     </label>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">
                         <i class="fa-solid fa-shield-check" style="color: var(--accent-emerald);"></i> Confirm Password
                     </label>
-                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
                 </div>
             </div>
 

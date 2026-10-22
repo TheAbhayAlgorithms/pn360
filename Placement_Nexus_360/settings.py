@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import shutil
 from dotenv import load_dotenv
 
 # ================= BASE DIRECTORY =================
@@ -64,12 +65,37 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Placement_Nexus_360.wsgi.application'
 
 # ================= DATABASE =================
+# On Vercel / Serverless deployments, the root directory (/var/task) is strictly read-only.
+# We redirect SQLite to /tmp (the writable ephemeral filesystem on AWS Lambda/Vercel)
+# and copy over the pre-migrated seed database.
+IS_VERCEL = bool(os.getenv("VERCEL") or not os.access(BASE_DIR, os.W_OK))
+if IS_VERCEL:
+    DB_PATH = Path("/tmp") / "db.sqlite3"
+    SEED_DB = BASE_DIR / "db.sqlite3"
+    if not DB_PATH.exists() and SEED_DB.exists():
+        try:
+            shutil.copy2(SEED_DB, DB_PATH)
+        except Exception:
+            pass
+else:
+    DB_PATH = BASE_DIR / "db.sqlite3"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DB_PATH,
     }
 }
+
+# ================= COOKIE & SESSION PRIVACY =================
+# Expire cookies on browser close (no persistent cookies saved on disk)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = False
+SESSION_COOKIE_AGE = 7200
+CSRF_COOKIE_AGE = None
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
 
 # ================= PASSWORD VALIDATION =================
 AUTH_PASSWORD_VALIDATORS = [

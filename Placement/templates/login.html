@@ -14,21 +14,21 @@
             <p style="color: var(--text-secondary); font-size: 14px;">Enter your credentials to access your candidate or coordinator console</p>
         </div>
 
-        <form method="POST" action="{% url 'login' %}">
+        <form method="POST" action="{% url 'login' %}" autocomplete="off">
             {% csrf_token %}
 
             <div class="form-group">
                 <label class="form-label">
                     <i class="fa-solid fa-phone" style="color: var(--accent-blue);"></i> Phone Number
                 </label>
-                <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required autofocus>
+                <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
 
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label">
                     <i class="fa-solid fa-key" style="color: var(--accent-indigo);"></i> Password
                 </label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
 
             <button type="submit" class="btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
