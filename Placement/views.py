@@ -188,38 +188,42 @@ def dashboard(request):
                 job_desc = target_job.description
 
         if uploaded_file:
-            resume_obj = Resume.objects.create(
-                user=request.user,
-                file=uploaded_file,
-                job=target_job,
-                job_title=job_title
-            )
+            try:
+                resume_obj = Resume.objects.create(
+                    user=request.user,
+                    file=uploaded_file,
+                    job=target_job,
+                    job_title=job_title
+                )
 
-            # Extract Text & Run Gemini ATS Analysis
-            file_path = resume_obj.file.path
-            resume_text = extract_text(file_path)
-            
-            ats_result = analyze_resume_ats(
-                resume_text=resume_text,
-                job_title=job_title,
-                job_description=job_desc
-            )
+                # Extract Text & Run Gemini ATS Analysis
+                file_path = resume_obj.file.path
+                resume_text = extract_text(file_path)
+                
+                ats_result = analyze_resume_ats(
+                    resume_text=resume_text,
+                    job_title=job_title,
+                    job_description=job_desc
+                )
 
-            resume_obj.ats_score = ats_result.get("ats_score", 65)
-            resume_obj.role_fit = ats_result.get("role_fit", "Moderate")
-            resume_obj.summary = ats_result.get("summary", "")
-            resume_obj.strengths = ats_result.get("strengths", [])
-            resume_obj.what_to_add = ats_result.get("what_to_add", [])
-            resume_obj.what_to_remove = ats_result.get("what_to_remove", [])
-            resume_obj.save()
+                resume_obj.ats_score = ats_result.get("ats_score", 65)
+                resume_obj.role_fit = ats_result.get("role_fit", "Moderate")
+                resume_obj.summary = ats_result.get("summary", "")
+                resume_obj.strengths = ats_result.get("strengths", [])
+                resume_obj.what_to_add = ats_result.get("what_to_add", [])
+                resume_obj.what_to_remove = ats_result.get("what_to_remove", [])
+                resume_obj.save()
 
-            # Update student progress
-            progress.resume_completed = True
-            progress.resume_score = resume_obj.ats_score
-            progress.calculate_readiness()
+                # Update student progress
+                progress.resume_completed = True
+                progress.resume_score = resume_obj.ats_score
+                progress.calculate_readiness()
 
-            messages.success(request, f"Resume successfully analyzed! ATS Score: {resume_obj.ats_score}%")
-            return redirect("resume_result", resume_id=resume_obj.id)
+                messages.success(request, f"Resume successfully analyzed! ATS Score: {resume_obj.ats_score}%")
+                return redirect("resume_result", resume_id=resume_obj.id)
+            except Exception as e:
+                messages.error(request, f"Resume analysis error: {str(e)}")
+                return redirect("dashboard")
 
     # Test Analytics
     mock_tests = MockTest.objects.filter(student=request.user, completed=True).order_by("started_at")

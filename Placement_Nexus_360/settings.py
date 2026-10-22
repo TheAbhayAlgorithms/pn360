@@ -64,19 +64,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Placement_Nexus_360.wsgi.application'
 
-# ================= DATABASE =================
+# ================= DATABASE & ENVIRONMENT DETECTION =================
 # On Vercel / Serverless deployments, the root directory (/var/task) is strictly read-only.
-# We redirect SQLite to /tmp (the writable ephemeral filesystem on AWS Lambda/Vercel)
-# and copy over the pre-migrated seed database.
-IS_VERCEL = bool(os.getenv("VERCEL") or not os.access(BASE_DIR, os.W_OK))
+# Note: os.access() returns True even on read-only mounts due to inode mode bits,
+# so we check /var/task path, serverless env vars, and perform a real write test.
+def _check_is_serverless():
+    if str(BASE_DIR).startswith("/var/task") or str(BASE_DIR).startswith("/var/lang"):
+        return True
+    if any(os.getenv(k) for k in ["VERCEL", "VERCEL_ENV", "AWS_LAMBDA_FUNCTION_NAME", "NOW_REGION", "LAMBDA_TASK_ROOT"]):
+        return True
+    try:
+        test_file = BASE_DIR / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+        return False
+    except (OSError, PermissionError):
+        return True
+
+IS_VERCEL = _check_is_serverless()
+
 if IS_VERCEL:
     DB_PATH = Path("/tmp") / "db.sqlite3"
     SEED_DB = BASE_DIR / "db.sqlite3"
-    if not DB_PATH.exists() and SEED_DB.exists():
+    if (not DB_PATH.exists() or DB_PATH.stat().st_size == 0) and SEED_DB.exists():
         try:
             shutil.copy2(SEED_DB, DB_PATH)
         except Exception:
             pass
+    try:
+        if DB_PATH.exists():
+            os.chmod(DB_PATH, 0o666)
+    except Exception:
+        pass
 else:
     DB_PATH = BASE_DIR / "db.sqlite3"
 
