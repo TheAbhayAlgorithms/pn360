@@ -32,8 +32,7 @@ def home(request):
         if request.user.is_staff or request.user.is_superuser:
             return redirect('admin_home')
         return redirect('dashboard')
-    jobs = Job.objects.all().order_by('-created_at')[:6]
-    return render(request, "home.html", {"jobs": jobs})
+    return render(request, "home.html")
 
 def register(request):
     if request.user.is_authenticated:
@@ -46,7 +45,6 @@ def register(request):
         phone = request.POST.get("phone", "").strip()
         password = request.POST.get("password", "")
         confirm_password = request.POST.get("confirm_password", "")
-        image = request.FILES.get("image")
 
         if not phone or not password:
             messages.error(request, "Phone Number and Password are required.")
@@ -82,8 +80,7 @@ def register(request):
         StudentProfile.objects.create(
             user=user,
             phone=phone,
-            technology="Software Development Engineer",
-            image=image
+            technology="Software Development Engineer"
         )
 
         PlacementProgress.objects.create(user=user)

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Roboto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
 
 :root {
     /* Backgrounds: Clean, modern, crisp palette extracted directly from TalentBridge template */
@@ -38,11 +38,15 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Roboto Serif', Georgia, serif;
 }
 
-h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: 'Outfit', sans-serif;
+body, p, span, a, label, input, select, textarea, button, td, th {
+    font-family: 'Roboto Serif', Georgia, serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading, .logo-text, .topbar-title h1, [style*="font-family: 'Outfit'"] {
+    font-family: 'Poppins', sans-serif !important;
     letter-spacing: -0.02em;
     font-weight: 700;
     color: var(--text-primary);
@@ -150,11 +154,12 @@ body {
 }
 
 .logo-text {
-    font-size: 19px;
+    font-size: 17.5px;
     font-weight: 800;
     color: var(--text-primary);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Poppins', sans-serif;
     line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .logo-sub {

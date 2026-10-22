@@ -5,16 +5,10 @@
 
 {% block content %}
 <!-- Hero Header -->
-<div style="text-align: center; max-width: 860px; margin: 20px auto 48px;">
-    <div class="badge badge-cyan" style="margin-bottom: 16px; font-size: 13px; padding: 8px 18px;">
-        <i class="fa-solid fa-sparkles"></i> AI-Powered Campus & Lateral Hiring Preparation
-    </div>
-    <h1 style="font-size: 44px; font-weight: 800; line-height: 1.15; color: white; margin-bottom: 16px; letter-spacing: -0.03em;">
+<div style="text-align: center; max-width: 860px; margin: 36px auto 48px;">
+    <h1 style="font-size: 46px; font-weight: 800; line-height: 1.15; color: var(--text-primary); margin-bottom: 28px; letter-spacing: -0.03em;">
         Master Every Round of Your Placement Journey
     </h1>
-    <p style="font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px;">
-        End-to-end recruitment preparation powered by Gemini: Live ATS Resume Benchmark, 30 Dynamic Placement MCQs, and Proctored Voice AI Interview with strict face detection.
-    </p>
     <div style="display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
         <a href="{% url 'register' %}" class="btn-primary" style="height: 50px; padding: 0 32px; font-size: 16px;">
             <i class="fa-solid fa-user-plus"></i> Get Started Free
@@ -79,45 +73,6 @@
                 Start AI Interview <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
-    </div>
-</div>
-
-<!-- Featured Placement Opportunities -->
-<div class="glass-card" style="margin-bottom: 40px; padding: 36px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; flex-wrap: wrap; gap: 14px;">
-        <div>
-            <h3 style="font-size: 22px; color: white;">Featured Placement Opportunities</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">Target these active company profiles to calibrate your ATS and test performance</p>
-        </div>
-        <a href="{% url 'register' %}" class="btn-primary" style="height: 42px; font-size: 13.5px; padding: 0 20px;">
-            Prepare for These Roles &rarr;
-        </a>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
-        {% for job in jobs %}
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px;">
-                        <div>
-                            <h4 style="font-size: 17px; color: white; margin: 0;">{{ job.title }}</h4>
-                            <div style="color: var(--accent-blue); font-size: 13px; font-weight: 600; margin-top: 2px;">{{ job.company }}</div>
-                        </div>
-                        <span class="badge badge-emerald" style="font-size: 12px;">{{ job.salary }}</span>
-                    </div>
-                    <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
-                        {{ job.description|truncatewords:20 }}
-                    </p>
-                </div>
-                <div style="font-size: 12px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
-                    <i class="fa-solid fa-code me-1" style="color: var(--accent-blue);"></i> Required: {{ job.required_skills|truncatechars:45 }}
-                </div>
-            </div>
-        {% empty %}
-            <div style="color: var(--text-muted); font-size: 14px; padding: 20px;">
-                Roles will appear after initializing default opportunities.
-            </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
