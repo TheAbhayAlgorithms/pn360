@@ -110,12 +110,12 @@
         if (checkbox.checked) {
             cardInner.style.borderColor = 'var(--accent-teal)';
             cardInner.style.background = 'var(--accent-teal-light)';
-            cardInner.style.boxShadow = '0 0 0 1px var(--accent-teal)';
+            cardInner.style.boxShadow = '0 0 0 1.5px var(--accent-teal), 0 8px 20px rgba(15, 118, 110, 0.12)';
             indicator.style.display = 'block';
         } else {
             cardInner.style.borderColor = 'var(--border-subtle)';
             cardInner.style.background = '#ffffff';
-            cardInner.style.boxShadow = 'none';
+            cardInner.style.boxShadow = 'var(--shadow-sm)';
             indicator.style.display = 'none';
         }
 

@@ -363,7 +363,7 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px;">
         {% for job in jobs %}
-            <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--accent-teal)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.borderColor='var(--border-subtle)'; this.style.boxShadow='none';">
+            <div class="job-card">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                         <div>
@@ -445,19 +445,19 @@
             plugins: {
                 legend: {
                     position: 'top',
-                    labels: { color: '#475569', font: { family: 'Inter', size: 12 } }
+                    labels: { color: '#475569', font: { family: 'Poppins', size: 12 } }
                 }
             },
             scales: {
                 x: {
                     grid: { color: 'rgba(226, 232, 240, 0.6)' },
-                    ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } }
+                    ticks: { color: '#64748b', font: { family: 'Poppins', size: 11 } }
                 },
                 y: {
                     min: 0,
                     max: 100,
                     grid: { color: 'rgba(226, 232, 240, 0.6)' },
-                    ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } }
+                    ticks: { color: '#64748b', font: { family: 'Poppins', size: 11 } }
                 }
             }
         }
