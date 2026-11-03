@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Placement Nexus 360 - AI Placement Preparation Platform{% endblock %}</title>
     
-    <!-- Google Font: Poppins -->
+    <!-- Google Fonts: Anton & Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
     
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -25,28 +25,29 @@
 <body>
 
     {% if not user.is_authenticated %}
-    <!-- Public Header for Guests -->
-    <header class="top-navbar">
-        <a href="{% url 'home' %}" class="logo-container" style="margin-bottom: 0;">
-            <div class="logo-icon">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <div>
-                <div class="logo-text">Placement Nexus 360</div>
-                <div class="logo-sub">AI Career Accelerator</div>
-            </div>
-        </a>
+    <!-- Public Header for Guests (Ploy Modern Navbar Style) -->
+    <header class="top-navbar-public">
+        <div class="navbar-public-inner">
+            <!-- Brand Wordmark -->
+            <a href="{% url 'home' %}" class="brand-wordmark-link">
+                <span class="brand-wordmark-main">nexus</span><span class="brand-wordmark-sub">360</span>
+            </a>
 
-        <div class="top-navbar-links">
-            <a href="{% url 'home' %}" class="btn-ghost">
-                <i class="fa-solid fa-house"></i> Home
-            </a>
-            <a href="{% url 'login' %}" class="btn-secondary">
-                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
-            </a>
-            <a href="{% url 'register' %}" class="btn-primary">
-                <i class="fa-solid fa-user-plus"></i> Register Free
-            </a>
+            <!-- Center Navigation Links -->
+            <nav class="nav-links-center">
+                <a href="{% url 'home' %}#platform" class="nav-center-item">Platform</a>
+                <a href="{% url 'home' %}#stages" class="nav-center-item">Pipeline</a>
+                <a href="{% url 'home' %}#solutions" class="nav-center-item">Solutions</a>
+                <a href="{% url 'home' %}#integrity" class="nav-center-item">Integrity</a>
+                <a href="{% url 'leaderboard' %}" class="nav-center-item">Leaderboard</a>
+                <a href="{% url 'home' %}#the-360-effect" class="nav-center-item nav-highlight-link">The 360 Effect</a>
+            </nav>
+
+            <!-- Right Action Pills -->
+            <div class="nav-actions-right">
+                <a href="{% url 'login' %}" class="btn-pill-login">Log in</a>
+                <a href="{% url 'register' %}" class="btn-pill-start">Start Free</a>
+            </div>
         </div>
     </header>
     {% endif %}
