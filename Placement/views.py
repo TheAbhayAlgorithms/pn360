@@ -233,6 +233,54 @@ def dashboard(request):
     interview_scores = [round(i.score) for i in interviews if i.score is not None] or [0]
 
     scheduled_tests = ScheduledTest.objects.filter(user=request.user).order_by("date", "time")
+    recent_mock_tests = MockTest.objects.filter(student=request.user, completed=True).order_by("-started_at")[:5]
+    recent_interviews = InterviewSession.objects.filter(user=request.user).order_by("-created_at")[:5]
+
+    # Dynamic Next Action Coordinator
+    if not progress.resume_completed:
+        next_action = {
+            "step": 1,
+            "title": "Stage 1: Benchmark Your Resume with Gemini ATS",
+            "desc": "Upload your resume and select your target engineering role to identify keyword matches, missing skills, and receive an instant ATS score.",
+            "badge": "Step 1 Pending",
+            "badge_class": "badge-amber",
+            "action_text": "Upload Resume Now",
+            "action_url": "#resume-section",
+            "icon": "fa-file-shield"
+        }
+    elif not progress.mock_passed:
+        next_action = {
+            "step": 2,
+            "title": "Stage 2: Clear the 30 MCQ Technical Assessment",
+            "desc": f"Your resume scored {progress.resume_score}% ATS match. Take the adaptive 30 MCQ technical exam to clear the 60% placement benchmark.",
+            "badge": "Step 2 Active",
+            "badge_class": "badge-cyan",
+            "action_text": "Start 30 MCQ Test",
+            "action_url": "/mcq-test/",
+            "icon": "fa-list-check"
+        }
+    elif not progress.interview_passed:
+        next_action = {
+            "step": 3,
+            "title": "Stage 3: Complete Proctored AI Interview Round",
+            "desc": f"You cleared the technical round ({progress.mock_score}%)! Test your voice answers and engineering problem-solving in the proctored interview room.",
+            "badge": "Final Stage Active",
+            "badge_class": "badge-cyan",
+            "action_text": "Launch Proctored Interview",
+            "action_url": "/ai-interview/",
+            "icon": "fa-video"
+        }
+    else:
+        next_action = {
+            "step": 4,
+            "title": f"Placement Ready! Overall Readiness: {progress.overall_readiness}%",
+            "desc": "All 3 rounds cleared with distinction. Review matched job descriptions, schedule mock sessions, or benchmark other tech tracks.",
+            "badge": "Placement Certified",
+            "badge_class": "badge-emerald",
+            "action_text": "Explore Target Job Openings",
+            "action_url": "#jobs-section",
+            "icon": "fa-circle-check"
+        }
 
     context = {
         "profile": profile,
@@ -243,6 +291,9 @@ def dashboard(request):
         "mock_scores": json.dumps(mock_scores),
         "interview_scores": json.dumps(interview_scores),
         "scheduled_tests": scheduled_tests,
+        "recent_mock_tests": recent_mock_tests,
+        "recent_interviews": recent_interviews,
+        "next_action": next_action,
         "has_gemini_key": bool(get_gemini_api_key()),
     }
     return render(request, "dashboard.html", context)
@@ -265,17 +316,32 @@ def select_tech(request):
     Candidate selects one or multiple languages/topics.
     Gemini generates 30 placement preparation level questions.
     """
+    role_param = request.GET.get("role", "").strip()
+
     available_techs = [
-        {"name": "Python", "desc": "CPython, OOP, Generators, Memory & GIL", "badge": "Core"},
-        {"name": "Java", "desc": "JVM, Collections, Multithreading & OOP", "badge": "Enterprise"},
-        {"name": "C++", "desc": "Pointers, STL, Memory Management & Modern C++", "badge": "High-Perf"},
-        {"name": "Data Structures & Algorithms", "desc": "Trees, Graphs, DP, Sorting & Complexity", "badge": "Essential"},
-        {"name": "JavaScript", "desc": "Closures, Event Loop, Promises & Async/Await", "badge": "Web"},
-        {"name": "SQL & DBMS", "desc": "ACID, Indexing, Normalization & Complex Joins", "badge": "Database"},
-        {"name": "Operating Systems", "desc": "Process, Threads, Memory, Paging & Scheduling", "badge": "Systems"},
-        {"name": "Computer Networks", "desc": "TCP/IP, HTTP/S, Sockets & Handshakes", "badge": "Infra"},
-        {"name": "System Design", "desc": "Scalability, Caching, Load Balancing & Microservices", "badge": "Advanced"}
+        {"name": "Python", "desc": "CPython, OOP, Generators, Memory & GIL", "badge": "Core", "category": "languages"},
+        {"name": "Java", "desc": "JVM, Collections, Multithreading & OOP", "badge": "Enterprise", "category": "languages"},
+        {"name": "C++", "desc": "Pointers, STL, Memory Management & Modern C++", "badge": "High-Perf", "category": "languages"},
+        {"name": "Data Structures & Algorithms", "desc": "Trees, Graphs, DP, Sorting & Complexity", "badge": "Essential", "category": "core"},
+        {"name": "JavaScript", "desc": "Closures, Event Loop, Promises & Async/Await", "badge": "Web", "category": "languages"},
+        {"name": "SQL & DBMS", "desc": "ACID, Indexing, Normalization & Complex Joins", "badge": "Database", "category": "data"},
+        {"name": "Operating Systems", "desc": "Process, Threads, Memory, Paging & Scheduling", "badge": "Systems", "category": "core"},
+        {"name": "Computer Networks", "desc": "TCP/IP, HTTP/S, Sockets & Handshakes", "badge": "Infra", "category": "core"},
+        {"name": "System Design", "desc": "Scalability, Caching, Load Balancing & Microservices", "badge": "Advanced", "category": "core"}
     ]
+
+    # Map role to recommended tech stacks
+    recommended_techs = []
+    if role_param:
+        r_lower = role_param.lower()
+        if "data" in r_lower or "analytics" in r_lower:
+            recommended_techs = ["Python", "SQL & DBMS", "Data Structures & Algorithms"]
+        elif "frontend" in r_lower or "react" in r_lower or "ui" in r_lower:
+            recommended_techs = ["JavaScript", "Data Structures & Algorithms"]
+        elif "backend" in r_lower:
+            recommended_techs = ["Python", "SQL & DBMS", "System Design", "Operating Systems"]
+        else:
+            recommended_techs = ["Python", "Data Structures & Algorithms", "SQL & DBMS"]
 
     if request.method == "POST":
         selected = request.POST.getlist("technologies")
@@ -315,7 +381,11 @@ def select_tech(request):
 
         return redirect("take_test", test_id=mock_test.id)
 
-    return render(request, "select_tech.html", {"available_techs": available_techs})
+    return render(request, "select_tech.html", {
+        "available_techs": available_techs,
+        "role_param": role_param,
+        "recommended_techs": recommended_techs,
+    })
 
 @login_required
 def take_test(request, test_id):
@@ -401,6 +471,32 @@ def test_result(request, test_id):
         "passed": test.passed,
     })
 
+@login_required
+def api_test_violation(request, test_id):
+    """
+    Records a tab-switch or screen loss violation during the 30 MCQ test.
+    Automatically blocks test upon 3 warnings.
+    """
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST required")
+
+    test = get_object_or_404(MockTest, id=test_id, student=request.user)
+    if test.completed:
+        return JsonResponse({"status": "already_completed"})
+
+    test.cheating_count += 1
+    if test.cheating_count >= 3:
+        test.blocked = True
+    test.save()
+
+    return JsonResponse({
+        "status": "recorded",
+        "violations": test.cheating_count,
+        "max_warnings": 3,
+        "blocked": test.blocked,
+        "redirect_url": f"/take-test/{test.id}/" if test.blocked else None
+    })
+
 # =========================================================================
 # STEP 3: ONLINE INTERVIEW TEST (REAL-TIME FACE PROCTORING & SPEECH AI)
 # =========================================================================
@@ -410,8 +506,12 @@ def ai_interview(request):
     """
     Setup / Launch screen for online interview.
     """
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    latest_resume = Resume.objects.filter(user=request.user).order_by("-uploaded_at").first()
+    default_role = latest_resume.job_title if latest_resume else (profile.target_role if profile else "Software Development Engineer")
+
     if request.method == "POST":
-        target_role = request.POST.get("technology", "Software Development Engineer").strip()
+        target_role = request.POST.get("technology", default_role).strip()
         
         session = InterviewSession.objects.create(
             user=request.user,
@@ -433,7 +533,10 @@ def ai_interview(request):
         "Data Engineer / ML Engineer",
         "DevOps & Cloud Architect"
     ]
-    return render(request, "ai_interview.html", {"roles": roles})
+    return render(request, "ai_interview.html", {
+        "roles": roles,
+        "default_role": default_role
+    })
 
 @login_required
 def live_demo_interview(request, session_id):

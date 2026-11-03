@@ -1,63 +1,89 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}AI Online Interview - Placement Nexus 360{% endblock %}
+{% block title %}AI Online Interview Setup - Placement Nexus 360{% endblock %}
 
 {% block content %}
 <div class="topbar">
     <div class="topbar-title">
-        <div class="badge badge-violet" style="margin-bottom: 8px;">
-            <i class="fa-solid fa-video"></i> Step 3: Online AI Interview & Proctoring
+        <div class="badge badge-teal" style="margin-bottom: 6px;">
+            <i class="fa-solid fa-video"></i> Step 3: Proctored AI Voice Interview
         </div>
         <h1>AI Technical & HR Interview Portal</h1>
-        <p>Dynamic Gemini interview questions with real-time speech evaluation and intelligent anti-cheating camera proctoring.</p>
+        <p>Dynamic Gemini interview questions with real-time speech evaluation and intelligent single-face camera proctoring.</p>
     </div>
-    <a href="{% url 'dashboard' %}" class="btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Dashboard
-    </a>
+    
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+    </div>
 </div>
 
-<div class="grid-2" style="align-items: stretch; margin-bottom: 30px;">
+<div class="grid-2" style="align-items: stretch; margin-bottom: 28px;">
     <!-- Left: Role Selection & Start Form -->
     <div class="glass-card" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
         <div>
-            <div style="margin-bottom: 24px;">
-                <h3 style="font-size: 20px; color: white; margin-bottom: 6px;">Configure Your Interview Session</h3>
-                <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5;">Choose the engineering specialization for your customized Gemini question suite.</p>
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 4px;">Configure Your Interview Session</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">Choose your target specialization for tailored Gemini technical and behavioral questions.</p>
             </div>
 
             <form method="POST" id="interviewConfigForm">
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label class="form-label"><i class="fa-solid fa-laptop-code" style="color: var(--accent-blue);"></i> Target Engineering Role</label>
+                    <label class="form-label">
+                        <i class="fa-solid fa-laptop-code" style="color: var(--accent-teal);"></i> Target Engineering Track
+                    </label>
                     <select name="technology" class="form-control">
                         {% for role in roles %}
-                            <option value="{{ role }}">{{ role }}</option>
+                            <option value="{{ role }}" {% if role == default_role %}selected{% endif %}>{{ role }}</option>
                         {% endfor %}
                     </select>
                 </div>
 
-                <!-- Hardware Check Preview -->
-                <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 20px; margin-bottom: 26px;">
-                    <h4 style="font-size: 14.5px; color: white; margin-bottom: 14px;">System Hardware Check</h4>
-                    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13.5px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #cbd5e1;"><i class="fa-solid fa-camera me-2" style="color: var(--accent-blue);"></i> Web Camera (Proctoring)</span>
-                            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Required</span>
+                <!-- Interactive Hardware Check Preview -->
+                <div style="background: #f8fafc; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; margin-bottom: 22px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h4 style="font-size: 13.5px; color: var(--text-primary); margin: 0; font-weight: 700;">Hardware & System Readiness</h4>
+                        <span id="hwStatusBadge" class="badge badge-cyan" style="font-size: 11px;">Verification Ready</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                        <!-- Camera Check -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: 8px;">
+                            <span style="color: var(--text-secondary);"><i class="fa-solid fa-camera me-2" style="color: var(--accent-teal);"></i> Camera (Face Proctoring)</span>
+                            <button type="button" onclick="testCameraPreview()" id="camTestBtn" class="btn-ghost" style="height: 28px; padding: 0 10px; font-size: 11.5px; border: 1px solid var(--border-medium);">
+                                Test Camera
+                            </button>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #cbd5e1;"><i class="fa-solid fa-microphone me-2" style="color: var(--accent-emerald);"></i> Microphone (Speech AI)</span>
-                            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Required</span>
+                        <div id="camPreviewBox" style="display: none; border-radius: 8px; overflow: hidden; background: #000; height: 160px; margin-top: 4px;">
+                            <video id="testCamVideo" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #cbd5e1;"><i class="fa-solid fa-brain me-2" style="color: var(--accent-violet);"></i> Gemini Answer Evaluation</span>
-                            <span class="badge badge-cyan"><i class="fa-solid fa-bolt"></i> Real-time</span>
+
+                        <!-- Mic Check -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: 8px;">
+                            <span style="color: var(--text-secondary);"><i class="fa-solid fa-microphone me-2" style="color: var(--accent-emerald);"></i> Microphone (Speech AI)</span>
+                            <button type="button" onclick="testMicInput()" id="micTestBtn" class="btn-ghost" style="height: 28px; padding: 0 10px; font-size: 11.5px; border: 1px solid var(--border-medium);">
+                                Test Mic
+                            </button>
+                        </div>
+                        <div id="micIndicatorBar" style="display: none; height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 2px;">
+                            <div id="micLevel" style="width: 0%; height: 100%; background: var(--accent-emerald); transition: width 0.1s ease;"></div>
+                        </div>
+
+                        <!-- Speaker Test -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: 8px;">
+                            <span style="color: var(--text-secondary);"><i class="fa-solid fa-volume-high me-2" style="color: #4f46e5;"></i> Audio Reader (TTS Voice)</span>
+                            <button type="button" onclick="testAudioVoice()" id="audioTestBtn" class="btn-ghost" style="height: 28px; padding: 0 10px; font-size: 11.5px; border: 1px solid var(--border-medium);">
+                                Test Speaker
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; height: 50px; font-size: 15px; font-weight: 700;">
+                <button type="submit" class="btn-primary" style="width: 100%; height: 44px; font-size: 14.5px;">
                     <i class="fa-solid fa-door-open"></i> Enter Proctor-Monitored Interview Room
                 </button>
             </form>
@@ -66,45 +92,141 @@
 
     <!-- Right: Proctoring Rules & Guidelines -->
     <div class="glass-card" style="border-top: 3px solid var(--accent-rose); display: flex; flex-direction: column; height: 100%;">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 22px;">
-            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: #f43f5e; font-size: 18px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: var(--accent-rose-light); border: 1px solid var(--accent-rose-border); display: flex; align-items: center; justify-content: center; color: var(--accent-rose); font-size: 16px; flex-shrink: 0;">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div>
-                <h3 style="font-size: 19px; color: white; margin: 0;">Strict Proctoring Rules</h3>
-                <div style="font-size: 12px; color: #fb7185; font-weight: 600; margin-top: 2px;">Automated 3-Warning Discard System</div>
+                <h3 style="font-size: 17px; color: var(--text-primary); margin: 0;">Proctoring Regulations</h3>
+                <div style="font-size: 11.5px; color: #b91c1c; font-weight: 600; margin-top: 1px;">Automated 3-Warning Integrity Safeguard</div>
             </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 13.5px; color: #cbd5e1; line-height: 1.5; flex: 1;">
-            <div style="background: rgba(244, 63, 94, 0.08); border-left: 3px solid #f43f5e; padding: 14px 18px; border-radius: 0 10px 10px 0;">
-                <strong style="color: #fb7185;"><i class="fa-solid fa-triangle-exclamation me-1"></i> Continuous Face Detection:</strong>
-                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
-                    Your face must remain completely visible within the camera view at all times. If your face moves out of camera range, a warning will be triggered.
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1;">
+            <div style="background: var(--accent-rose-light); border-left: 3px solid var(--accent-rose); padding: 12px 14px; border-radius: 0 8px 8px 0;">
+                <strong style="color: #b91c1c;"><i class="fa-solid fa-triangle-exclamation me-1"></i> Continuous Face Tracking:</strong>
+                <p style="margin: 3px 0 0; color: var(--text-secondary); font-size: 12.5px;">
+                    Your face must remain centered within camera frame. Leaving view for over 3 seconds triggers a violation warning.
                 </p>
             </div>
 
-            <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid #f59e0b; padding: 14px 18px; border-radius: 0 10px 10px 0;">
-                <strong style="color: #fbbf24;"><i class="fa-solid fa-users-slash me-1"></i> Single Candidate Only:</strong>
-                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
-                    Only one face is permitted in the camera frame. If another person is detected, an automatic proctoring warning is issued.
+            <div style="background: var(--accent-amber-light); border-left: 3px solid var(--accent-amber); padding: 12px 14px; border-radius: 0 8px 8px 0;">
+                <strong style="color: #b45309;"><i class="fa-solid fa-users-slash me-1"></i> Single Candidate Verification:</strong>
+                <p style="margin: 3px 0 0; color: var(--text-secondary); font-size: 12.5px;">
+                    Only one face is allowed in camera view. If multiple faces appear in frame, a proctoring infraction is issued.
                 </p>
             </div>
 
-            <div style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); padding: 14px 18px; border-radius: 10px;">
-                <strong style="color: #f43f5e; font-size: 14px;"><i class="fa-solid fa-ban me-1"></i> 3 Warnings = Automatic Disqualification:</strong>
-                <p style="margin: 6px 0 0; color: #fecdd3; font-size: 13px;">
-                    If you accumulate 3 proctoring warnings (face out of range, multiple faces, or leaving screen), the test is automatically discarded and invalidated.
+            <div style="background: #fef2f2; border: 1px solid var(--accent-rose-border); padding: 12px 14px; border-radius: 8px;">
+                <strong style="color: var(--accent-rose); font-size: 13px;"><i class="fa-solid fa-ban me-1"></i> 3 Warnings = Session Discarded:</strong>
+                <p style="margin: 4px 0 0; color: #991b1b; font-size: 12px;">
+                    Accumulating 3 warnings terminates and invalidates the session automatically, exactly like a proctored campus hiring round.
                 </p>
             </div>
 
-            <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 14px 18px; border-radius: 0 10px 10px 0;">
-                <strong style="color: #34d399;"><i class="fa-solid fa-microphone me-1"></i> Gemini Voice Listening:</strong>
-                <p style="margin: 4px 0 0; color: #cbd5e1; font-size: 13px;">
-                    Answer questions naturally using your voice. The AI transcribes your speech and grades your answer correctness with percentage scoring and suggestions for improvement.
+            <div style="background: var(--accent-emerald-light); border-left: 3px solid var(--accent-emerald); padding: 12px 14px; border-radius: 0 8px 8px 0;">
+                <strong style="color: #047857;"><i class="fa-solid fa-microphone me-1"></i> Voice & Editable Transcript:</strong>
+                <p style="margin: 3px 0 0; color: var(--text-secondary); font-size: 12.5px;">
+                    Answer questions naturally with your microphone. Your spoken text is transcribed in real-time, and you can edit or refine words before final Gemini evaluation.
                 </p>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Test Camera Preview
+    let camStream = null;
+    async function testCameraPreview() {
+        const btn = document.getElementById('camTestBtn');
+        const box = document.getElementById('camPreviewBox');
+        const video = document.getElementById('testCamVideo');
+
+        if (camStream) {
+            camStream.getTracks().forEach(t => t.stop());
+            camStream = null;
+            box.style.display = 'none';
+            btn.innerHTML = 'Test Camera';
+            return;
+        }
+
+        try {
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+            camStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = camStream;
+            box.style.display = 'block';
+            btn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Cam';
+            btn.style.color = '#dc2626';
+        } catch(e) {
+            alert("Camera access denied or device unavailable: " + e.message);
+            btn.innerHTML = 'Test Camera';
+        }
+    }
+
+    // Test Mic Input
+    let micStream = null;
+    let audioContext = null;
+    async function testMicInput() {
+        const btn = document.getElementById('micTestBtn');
+        const bar = document.getElementById('micIndicatorBar');
+        const level = document.getElementById('micLevel');
+
+        if (micStream) {
+            micStream.getTracks().forEach(t => t.stop());
+            micStream = null;
+            if (audioContext) audioContext.close();
+            bar.style.display = 'none';
+            btn.innerHTML = 'Test Mic';
+            return;
+        }
+
+        try {
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Listening...';
+            micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            bar.style.display = 'block';
+            btn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Mic';
+
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaStreamSource(micStream);
+            source.connect(analyser);
+            analyser.fftSize = 64;
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+            function updateMeter() {
+                if (!micStream) return;
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                let avg = sum / dataArray.length;
+                let pct = Math.min(100, Math.round((avg / 128) * 100));
+                level.style.width = pct + '%';
+                requestAnimationFrame(updateMeter);
+            }
+            updateMeter();
+        } catch(e) {
+            alert("Microphone access denied: " + e.message);
+            btn.innerHTML = 'Test Mic';
+        }
+    }
+
+    // Test Audio Voice (TTS)
+    function testAudioVoice() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance("Audio check verified. Welcome to Placement Nexus 360 AI Interview.");
+            utter.rate = 1.0;
+            const btn = document.getElementById('audioTestBtn');
+            btn.innerHTML = '<i class="fa-solid fa-volume-high fa-beat"></i> Playing...';
+            utter.onend = () => {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Speaker Verified';
+            };
+            window.speechSynthesis.speak(utter);
+        } else {
+            alert("Text-to-speech is not supported in this browser.");
+        }
+    }
+</script>
 {% endblock %}

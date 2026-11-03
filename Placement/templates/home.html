@@ -5,31 +5,41 @@
 
 {% block content %}
 <!-- Hero Header -->
-<div style="text-align: center; max-width: 860px; margin: 36px auto 48px;">
-    <h1 style="font-size: 46px; font-weight: 800; line-height: 1.15; color: var(--text-primary); margin-bottom: 28px; letter-spacing: -0.03em;">
+<div style="text-align: center; max-width: 820px; margin: 40px auto 44px; padding: 0 16px;">
+    <div class="badge badge-teal" style="margin-bottom: 14px; font-size: 12px; padding: 6px 14px;">
+        <i class="fa-solid fa-sparkles"></i> All-in-One AI Campus Placement Engine
+    </div>
+    
+    <h1 style="font-size: 40px; font-weight: 800; line-height: 1.2; color: var(--text-primary); margin-bottom: 16px; letter-spacing: -0.03em;">
         Master Every Round of Your Placement Journey
     </h1>
-    <div style="display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
-        <a href="{% url 'register' %}" class="btn-primary" style="height: 50px; padding: 0 32px; font-size: 16px;">
+    
+    <p style="font-size: 15.5px; color: var(--text-secondary); line-height: 1.6; max-width: 640px; margin: 0 auto 28px;">
+        A comprehensive 3-stage preparation pipeline: benchmark your resume with Gemini ATS, clear the 30 MCQ technical cutoff, and ace proctored voice interviews.
+    </p>
+
+    <div style="display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        <a href="{% url 'register' %}" class="btn-primary" style="height: 44px; padding: 0 28px; font-size: 14.5px;">
             <i class="fa-solid fa-user-plus"></i> Get Started Free
         </a>
-        <a href="{% url 'login' %}" class="btn-secondary" style="height: 50px; padding: 0 28px; font-size: 16px;">
+        <a href="{% url 'login' %}" class="btn-secondary" style="height: 44px; padding: 0 24px; font-size: 14.5px;">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
         </a>
     </div>
 </div>
 
-<!-- 3-Step Placement Preparation Pipeline -->
-<div class="roadmap-container" style="margin-bottom: 48px;">
+<!-- 3-Step Placement Preparation Pipeline Showcase -->
+<div class="roadmap-container" style="margin-bottom: 40px;">
+    <!-- Step 1 -->
     <div class="roadmap-card">
         <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                 <div class="roadmap-step-num">1</div>
-                <span class="badge badge-cyan">Step 1: Resume</span>
+                <span class="badge badge-teal">Stage 1: Resume</span>
             </div>
-            <h3 style="font-size: 20px; margin-bottom: 10px; color: white;">Gemini ATS Analyzer</h3>
-            <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
-                Upload your resume and match it against top software engineering and technical roles. Receive instant ATS scores with specific instructions on what to add and what to eliminate.
+            <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-primary);">Gemini ATS Analyzer</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                Upload your resume and match it against top software engineering job descriptions. Receive an instant ATS match score with actionable checklists of what to add and what to remove.
             </p>
         </div>
         <div>
@@ -39,15 +49,16 @@
         </div>
     </div>
 
+    <!-- Step 2 -->
     <div class="roadmap-card">
         <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                 <div class="roadmap-step-num">2</div>
-                <span class="badge badge-emerald">Step 2: Technical</span>
+                <span class="badge badge-emerald">Stage 2: Technical</span>
             </div>
-            <h3 style="font-size: 20px; margin-bottom: 10px; color: white;">30 MCQ Placement Test</h3>
-            <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
-                Select one or multiple programming languages. Gemini dynamically generates 30 placement-level MCQs covering syntax, algorithms, complexity, and systems.
+            <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-primary);">30 MCQ Technical Assessment</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                Choose single or multiple programming tracks. Gemini dynamically generates 30 placement-standard questions covering algorithms, code prediction, and system fundamentals with a 60% pass threshold.
             </p>
         </div>
         <div>
@@ -57,15 +68,16 @@
         </div>
     </div>
 
+    <!-- Step 3 -->
     <div class="roadmap-card">
         <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                 <div class="roadmap-step-num">3</div>
-                <span class="badge badge-violet">Step 3: HR & Tech</span>
+                <span class="badge badge-indigo">Stage 3: HR & Tech</span>
             </div>
-            <h3 style="font-size: 20px; margin-bottom: 10px; color: white;">AI Interview & Proctoring</h3>
-            <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
-                Interactive interview test with Gemini questions. Listens to your voice answers, computes correctness percentage, and enforces strict face proctoring.
+            <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-primary);">Proctored AI Voice Interview</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                An interactive interview experience: AI voice reads questions aloud, listens to your voice dictation, provides real-time Gemini evaluation, and enforces client-side face proctoring.
             </p>
         </div>
         <div>
@@ -73,6 +85,39 @@
                 Start AI Interview <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
+    </div>
+</div>
+
+<!-- Features Callout Grid -->
+<div class="grid-3" style="margin-bottom: 40px;">
+    <div class="glass-card" style="padding: 22px;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-teal-light); display: flex; align-items: center; justify-content: center; color: var(--accent-teal); font-size: 16px; margin-bottom: 12px;">
+            <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <h4 style="font-size: 15px; margin-bottom: 6px; color: var(--text-primary);">Readiness Index (0-100%)</h4>
+        <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+            A unified metric weighting Resume (25%), 30 MCQs (35%), and AI Interview (40%) to predict placement offer likelihood.
+        </p>
+    </div>
+
+    <div class="glass-card" style="padding: 22px;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-rose-light); display: flex; align-items: center; justify-content: center; color: var(--accent-rose); font-size: 16px; margin-bottom: 12px;">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h4 style="font-size: 15px; margin-bottom: 6px; color: var(--text-primary);">Proctored Campus Integrity</h4>
+        <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+            Continuous client-side single-face tracking and tab switch monitoring ensure authentic preparation standards.
+        </p>
+    </div>
+
+    <div class="glass-card" style="padding: 22px;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-emerald-light); display: flex; align-items: center; justify-content: center; color: #047857; font-size: 16px; margin-bottom: 12px;">
+            <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <h4 style="font-size: 15px; margin-bottom: 6px; color: var(--text-primary);">Real Job Profiles</h4>
+        <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+            Practice against actual role descriptions from top tech recruiters with 1-click tailored assessment generation.
+        </p>
     </div>
 </div>
 {% endblock %}

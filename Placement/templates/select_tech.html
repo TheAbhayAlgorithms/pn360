@@ -6,44 +6,63 @@
 {% block content %}
 <div class="topbar">
     <div class="topbar-title">
-        <div class="badge badge-emerald" style="margin-bottom: 8px;">
+        <div class="badge badge-emerald" style="margin-bottom: 6px;">
             <i class="fa-solid fa-list-check"></i> Step 2: Technical Assessment Round
         </div>
         <h1>Configure Your 30 MCQ Placement Test</h1>
-        <p>Select one or multiple programming languages or core computer science domains to generate 30 placement-level MCQs with Gemini.</p>
+        <p>Select one or multiple programming languages and core CS domains to generate 30 placement-level MCQs with Gemini.</p>
     </div>
-    <a href="{% url 'dashboard' %}" class="btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Dashboard
-    </a>
+    
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+    </div>
 </div>
 
 <form method="POST" id="techForm">
     {% csrf_token %}
 
-    <div class="glass-card" style="margin-bottom: 28px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <div>
-                <h3 style="font-size: 20px; color: white; margin: 0;">Select Language(s) & Focus Areas</h3>
-                <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Click to select or deselect tracks. You can select single or multiple domains.</p>
+                <h3 style="font-size: 18px; color: var(--text-primary); margin: 0;">Select Language(s) & Focus Areas</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-top: 2px;">
+                    {% if role_param %}
+                        Pre-selected for target role: <strong style="color: var(--accent-teal);">{{ role_param }}</strong>
+                    {% else %}
+                        Select single or multiple tracks. Exactly 30 questions are generated.
+                    {% endif %}
+                </p>
             </div>
-            <div id="selectionCounter" class="badge badge-cyan" style="font-size: 13px; padding: 8px 16px;">
-                <span id="countText">0</span> Tracks Selected &bull; Exactly 30 Questions
+            
+            <div id="selectionCounter" class="badge badge-teal" style="font-size: 12.5px; padding: 6px 14px;">
+                <span id="countText">0</span> Tracks Selected &bull; 30 Questions
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px;">
+        <!-- Filter Category Tabs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
+            <button type="button" class="btn-secondary filter-tab active" data-cat="all" onclick="filterTech('all', this)" style="height: 32px; padding: 0 14px; font-size: 12px;">All Topics</button>
+            <button type="button" class="btn-secondary filter-tab" data-cat="languages" onclick="filterTech('languages', this)" style="height: 32px; padding: 0 14px; font-size: 12px;">Languages</button>
+            <button type="button" class="btn-secondary filter-tab" data-cat="core" onclick="filterTech('core', this)" style="height: 32px; padding: 0 14px; font-size: 12px;">DSA & Systems</button>
+            <button type="button" class="btn-secondary filter-tab" data-cat="data" onclick="filterTech('data', this)" style="height: 32px; padding: 0 14px; font-size: 12px;">Database & SQL</button>
+        </div>
+
+        <!-- Grid of Technology Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
             {% for tech in available_techs %}
-                <label class="tech-select-card" style="cursor: pointer; position: relative; display: block; height: 100%;">
+                <label class="tech-select-card" data-category="{{ tech.category }}" style="cursor: pointer; position: relative; display: block; height: 100%;">
                     <input type="checkbox" name="technologies" value="{{ tech.name }}" style="position: absolute; opacity: 0;" onchange="updateCardStyle(this)">
-                    <div class="card-inner" style="background: rgba(15, 23, 42, 0.6); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 22px; transition: all 0.25s ease; height: 100%; display: flex; flex-direction: column;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <h4 style="font-size: 17px; color: white; margin: 0;">{{ tech.name }}</h4>
-                            <span class="badge badge-violet" style="font-size: 11px;">{{ tech.badge }}</span>
+                    <div class="card-inner" style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; transition: all 0.2s ease; height: 100%; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-size: 15.5px; font-weight: 700; color: var(--text-primary); margin: 0;">{{ tech.name }}</h4>
+                            <span class="badge badge-slate" style="font-size: 10.5px;">{{ tech.badge }}</span>
                         </div>
-                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 16px; line-height: 1.5; flex: 1;">
+                        <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0 0 14px; line-height: 1.4; flex: 1;">
                             {{ tech.desc }}
                         </p>
-                        <div class="check-indicator" style="display: none; margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); color: var(--accent-emerald); font-size: 12.5px; font-weight: 600;">
+                        <div class="check-indicator" style="display: none; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border-subtle); color: var(--accent-emerald); font-size: 12px; font-weight: 600;">
                             <i class="fa-solid fa-circle-check"></i> Selected for 30 MCQs
                         </div>
                     </div>
@@ -52,25 +71,29 @@
         </div>
     </div>
 
-    <!-- Exam Parameters Card -->
-    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
-        <div style="display: flex; gap: 36px; align-items: center; flex-wrap: wrap;">
+    <!-- Exam Parameters Summary Card -->
+    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="display: flex; gap: 28px; align-items: center; flex-wrap: wrap;">
             <div>
-                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Question Count</div>
-                <div style="font-size: 18px; font-weight: 700; color: white;">30 MCQs (4 Options Each)</div>
+                <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Question Count</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">30 MCQs (4 Options)</div>
             </div>
             <div>
-                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Difficulty Level</div>
-                <div style="font-size: 18px; font-weight: 700; color: var(--accent-emerald);">Campus Placement Standard</div>
+                <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Difficulty Level</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent-emerald);">Campus Placement Standard</div>
             </div>
             <div>
-                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Exam Duration</div>
-                <div style="font-size: 18px; font-weight: 700; color: var(--accent-blue);">30 Minutes</div>
+                <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Exam Duration</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent-teal);">30 Minutes</div>
+            </div>
+            <div>
+                <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Passing Threshold</div>
+                <div style="font-size: 16px; font-weight: 700; color: #2563eb;">60% (18/30 Correct)</div>
             </div>
         </div>
 
-        <button type="submit" id="startBtn" class="btn-primary" style="height: 50px; padding: 0 36px; font-size: 15px; font-weight: 700;">
-            <i class="fa-solid fa-bolt"></i> Generate 30 Questions & Start Test
+        <button type="submit" id="startBtn" class="btn-primary" style="height: 44px; padding: 0 28px;">
+            <i class="fa-solid fa-bolt"></i> Generate 30 MCQs & Start Test
         </button>
     </div>
 </form>
@@ -78,18 +101,20 @@
 
 {% block extra_scripts %}
 <script>
+    const recommendedList = {{ recommended_techs|default:"[]"|safe }};
+
     function updateCardStyle(checkbox) {
         const cardInner = checkbox.closest('.tech-select-card').querySelector('.card-inner');
         const indicator = cardInner.querySelector('.check-indicator');
 
         if (checkbox.checked) {
-            cardInner.style.borderColor = '#10b981';
-            cardInner.style.background = 'rgba(16, 185, 129, 0.08)';
-            cardInner.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.15)';
+            cardInner.style.borderColor = 'var(--accent-teal)';
+            cardInner.style.background = 'var(--accent-teal-light)';
+            cardInner.style.boxShadow = '0 0 0 1px var(--accent-teal)';
             indicator.style.display = 'block';
         } else {
-            cardInner.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-            cardInner.style.background = 'rgba(15, 23, 42, 0.6)';
+            cardInner.style.borderColor = 'var(--border-subtle)';
+            cardInner.style.background = '#ffffff';
             cardInner.style.boxShadow = 'none';
             indicator.style.display = 'none';
         }
@@ -98,19 +123,59 @@
         document.getElementById('countText').innerText = checkedCount;
     }
 
-    // Pre-select first two by default
+    function filterTech(category, btn) {
+        document.querySelectorAll('.filter-tab').forEach(t => {
+            t.classList.remove('active');
+            t.style.borderColor = 'var(--border-medium)';
+            t.style.color = 'var(--text-primary)';
+            t.style.background = '#ffffff';
+        });
+        btn.classList.add('active');
+        btn.style.borderColor = 'var(--accent-teal)';
+        btn.style.color = 'var(--accent-teal)';
+        btn.style.background = 'var(--accent-teal-light)';
+
+        const cards = document.querySelectorAll('.tech-select-card');
+        cards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Auto-select recommended or defaults
     window.addEventListener('DOMContentLoaded', () => {
-        const firstTwo = document.querySelectorAll('input[name="technologies"]');
-        if (firstTwo.length >= 2) {
-            firstTwo[0].checked = true;
-            updateCardStyle(firstTwo[0]);
-            firstTwo[3].checked = true; // DSA
-            updateCardStyle(firstTwo[3]);
+        const checkboxes = document.querySelectorAll('input[name="technologies"]');
+        let selectedAny = false;
+
+        if (recommendedList.length > 0) {
+            checkboxes.forEach(cb => {
+                if (recommendedList.includes(cb.value)) {
+                    cb.checked = true;
+                    updateCardStyle(cb);
+                    selectedAny = true;
+                }
+            });
+        }
+
+        if (!selectedAny && checkboxes.length >= 2) {
+            checkboxes[0].checked = true; // Python
+            updateCardStyle(checkboxes[0]);
+            checkboxes[3].checked = true; // DSA
+            updateCardStyle(checkboxes[3]);
         }
     });
 
-    // Loading indicator on submit
-    document.getElementById('techForm').addEventListener('submit', function() {
+    document.getElementById('techForm').addEventListener('submit', function(e) {
+        const checkedCount = document.querySelectorAll('input[name="technologies"]:checked').length;
+        if (checkedCount === 0) {
+            e.preventDefault();
+            alert("Please select at least one technology to continue.");
+            return;
+        }
+
         const btn = document.getElementById('startBtn');
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating 30 Placement MCQs with Gemini...';
         btn.style.opacity = '0.85';

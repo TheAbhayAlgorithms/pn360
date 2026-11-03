@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Assessment Blocked - Placement Nexus 360{% endblock %}
+
+{% block content %}
+<div class="center-container" style="max-width: 580px; margin: 48px auto;">
+    <div class="glass-card" style="padding: 40px 32px; border-top: 4px solid var(--accent-rose); text-align: center;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--accent-rose-light); border: 1px solid var(--accent-rose-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: var(--accent-rose); font-size: 26px;">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <span class="badge badge-rose" style="font-size: 12px; margin-bottom: 12px;">
+            Security & Proctoring Policy
+        </span>
+
+        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 10px; color: var(--text-primary);">
+            Assessment Session Blocked
+        </h2>
+
+        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
+            {{ reason|default:"This assessment attempt was automatically locked because 3 proctoring infractions were triggered (e.g. repeated tab switching, window minimization, or loss of screen focus)." }}
+        </p>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px 20px; margin-bottom: 26px; text-align: left; font-size: 13px; color: var(--text-secondary);">
+            <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                <i class="fa-solid fa-circle-info" style="color: var(--accent-teal); margin-right: 6px;"></i> Campus Integrity Guidelines:
+            </div>
+            <ul style="padding-left: 20px; margin: 0; line-height: 1.6;">
+                <li>Assessments emulate real campus recruitment rounds and require uninterrupted fullscreen attention.</li>
+                <li>Closing the exam window, opening new tabs, or switching desktop applications logs an infraction.</li>
+                <li>If you experienced a technical issue or unexpected browser interruption, you may launch a fresh practice session.</li>
+            </ul>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'dashboard' %}" class="btn-secondary">
+                <i class="fa-solid fa-house"></i> Return to Dashboard
+            </a>
+            <a href="{% url 'select_tech' %}" class="btn-primary">
+                <i class="fa-solid fa-rotate-right"></i> Start Fresh Assessment
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

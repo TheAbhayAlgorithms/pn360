@@ -24,6 +24,7 @@ urlpatterns = [
     path('take-test/<int:test_id>/', views.take_test, name='take_test'),
     path('submit-test/<int:test_id>/', views.submit_test, name='submit_test'),
     path('test-result/<int:test_id>/', views.test_result, name='test_result'),
+    path('api/test/<int:test_id>/violation/', views.api_test_violation, name='api_test_violation'),
 
     # Step 3: Online AI Interview with Real-Time Proctoring & Speech AI
     path('ai-interview/', views.ai_interview, name='ai_interview'),
