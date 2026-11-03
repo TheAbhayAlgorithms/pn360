@@ -24,8 +24,8 @@
 </head>
 <body>
 
-    {% if not user.is_authenticated %}
-    <!-- Public Header for Guests (Ploy Modern Navbar Style) -->
+    {% if not user.is_authenticated and request.resolver_match.url_name != 'home' %}
+    <!-- Public Header for Guests (Ploy Modern Navbar Style for Login/Register) -->
     <header class="top-navbar-public">
         <div class="navbar-public-inner">
             <!-- Brand Wordmark -->
@@ -118,7 +118,7 @@
         {% endif %}
 
         <!-- Main Content Area -->
-        <main class="{% if user.is_authenticated %}main{% else %}main-public{% endif %}">
+        <main class="{% if user.is_authenticated %}main{% elif request.resolver_match.url_name == 'home' %}main-home-exact{% else %}main-public{% endif %}">
             <!-- Messages & Notifications -->
             {% if messages %}
                 <div class="messages-container" style="margin-bottom: 20px;">

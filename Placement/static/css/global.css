@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'FK Screamer';
+    src: url('../fonts/fkscreamer.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 :root {
@@ -1611,4 +1619,380 @@ table tbody tr:hover td {
     padding-top: 24px;
     font-size: 13px;
     color: var(--text-muted);
+}
+
+/* =========================================================================
+   EXACT REPLICA LANDING PAGE (PLOY / STUDIO VIEWPORT PRESENTATION)
+   ========================================================================= */
+
+.main-home-exact {
+    width: 100%;
+    min-height: 100vh;
+    padding: 16px 24px;
+    margin: 0;
+    background: #111215;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Studio Canvas Top Toolbar */
+.studio-topbar {
+    width: 100%;
+    max-width: 1440px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.studio-toggle-pill {
+    background: #1e2025;
+    border-radius: 999px;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.studio-toggle-btn {
+    border: none;
+    background: transparent;
+    color: #8e929c;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.studio-toggle-btn.active {
+    background: #2a2d35;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.studio-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.studio-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #1e2025;
+    color: #8e929c;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.studio-icon-btn:hover {
+    background: #2a2d35;
+    color: #ffffff;
+}
+
+/* Studio Preview Browser Window (The White Card) */
+.studio-browser-window {
+    width: 100%;
+    max-width: 1380px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease;
+}
+
+.studio-browser-window.mobile-mode {
+    max-width: 400px;
+    border-radius: 28px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7);
+}
+
+/* Browser Navbar */
+.browser-navbar {
+    height: 60px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.browser-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.browser-logo-wordmark {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: #111111;
+    line-height: 1;
+}
+
+.browser-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.browser-nav-link {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #1a1a1a;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.browser-nav-link:hover {
+    color: #000000;
+    opacity: 0.7;
+}
+
+.browser-auth-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.browser-btn-login {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111111;
+    text-decoration: none;
+    padding: 7px 18px;
+    border-radius: 999px;
+    border: 1px solid #e5e5e5;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.browser-btn-login:hover {
+    border-color: #999999;
+}
+
+.browser-btn-start {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: #111111;
+    border: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.browser-btn-start:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+}
+
+/* Browser Hero Stage */
+.browser-hero-container {
+    padding: 0 16px 16px 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.browser-hero-canvas {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    min-height: 530px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    background: 
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.18) 75%),
+        url('../images/hero-bg.jpg') center/cover no-repeat;
+    background-color: #0a0f1d;
+}
+
+.browser-hero-title {
+    font-family: 'FK Screamer', 'Anton', sans-serif !important;
+    font-size: clamp(38px, 6.2vw, 84px);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 980px;
+    margin: 0 auto 18px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    user-select: none;
+}
+
+.browser-hero-desc {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: clamp(13px, 1.15vw, 15px);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.88) !important;
+    max-width: 520px;
+    margin: 0 auto 24px;
+    line-height: 1.5;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.browser-hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.browser-hero-pill-white {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: #111111 !important;
+    background: #ffffff;
+    padding: 10px 26px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.browser-hero-pill-white:hover {
+    background: #f4f4f4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.browser-hero-pill-glass {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 10px 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.browser-hero-pill-glass:hover {
+    background: rgba(255, 255, 255, 0.26);
+    border-color: rgba(255, 255, 255, 0.55);
+    transform: translateY(-1px);
+}
+
+/* Studio Bottom Toolbar */
+.studio-bottombar {
+    width: 100%;
+    max-width: 1440px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.studio-menu-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #1e2025;
+    color: #8e929c;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.studio-menu-btn:hover {
+    background: #2a2d35;
+    color: #ffffff;
+}
+
+.studio-viewport-tag {
+    font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 12px;
+    color: #555862;
+    letter-spacing: -0.01em;
+}
+
+/* Modal for Get Demo / Platform Details */
+.exact-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+}
+
+.exact-modal-card {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 680px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 900px) {
+    .browser-nav-links {
+        display: none;
+    }
+    .main-home-exact {
+        padding: 12px 10px;
+    }
+    .browser-navbar {
+        padding: 0 16px;
+    }
+    .browser-hero-container {
+        padding: 0 10px 10px 10px;
+    }
+    .browser-hero-canvas {
+        min-height: 440px;
+        padding: 30px 16px;
+    }
 }
