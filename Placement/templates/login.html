@@ -5,13 +5,13 @@
 
 {% block content %}
 <div class="center-container">
-    <div class="glass-card" style="padding: 40px 36px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <div class="logo-icon" style="margin: 0 auto 16px; width: 52px; height: 52px; font-size: 24px;">
+    <div class="glass-card" style="padding: 36px 32px;">
+        <div style="text-align: center; margin-bottom: 26px;">
+            <div class="logo-icon" style="margin: 0 auto 14px; width: 44px; height: 44px; font-size: 20px;">
                 <i class="fa-solid fa-lock"></i>
             </div>
-            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 6px;">Sign In to Your Account</h2>
-            <p style="color: var(--text-secondary); font-size: 14px;">Enter your credentials to access your candidate or coordinator console</p>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 4px; color: var(--text-primary);">Sign In to Platform</h2>
+            <p style="color: var(--text-secondary); font-size: 13.5px;">Access your candidate preparation portal or administrator console</p>
         </div>
 
         <form method="POST" action="{% url 'login' %}" autocomplete="off">
@@ -19,26 +19,26 @@
 
             <div class="form-group">
                 <label class="form-label">
-                    <i class="fa-solid fa-phone" style="color: var(--accent-blue);"></i> Phone Number
+                    <i class="fa-solid fa-phone" style="color: var(--accent-teal);"></i> Phone Number / Username
                 </label>
-                <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210" required autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <input type="text" name="phone" class="form-control" placeholder="e.g. 9876543210 or candidate username" required autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
 
-            <div class="form-group" style="margin-bottom: 24px;">
+            <div class="form-group" style="margin-bottom: 22px;">
                 <label class="form-label">
-                    <i class="fa-solid fa-key" style="color: var(--accent-indigo);"></i> Password
+                    <i class="fa-solid fa-key" style="color: var(--text-muted);"></i> Password
                 </label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
+            <button type="submit" class="btn-primary" style="width: 100%; height: 44px; font-size: 14.5px;">
                 Sign In to Platform <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-subtle); font-size: 14px; color: var(--text-secondary);">
+        <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-subtle); font-size: 13.5px; color: var(--text-secondary);">
             Don't have an account yet? 
-            <a href="{% url 'register' %}" style="color: var(--accent-blue); text-decoration: none; font-weight: 600; margin-left: 4px;">
+            <a href="{% url 'register' %}" style="color: var(--accent-teal); text-decoration: none; font-weight: 600; margin-left: 4px;">
                 Register Free &rarr;
             </a>
         </div>
