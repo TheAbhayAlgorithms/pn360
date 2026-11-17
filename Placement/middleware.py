@@ -12,13 +12,18 @@ class AutoLoginMiddleware:
 
     def __call__(self, request):
         if not request.user.is_authenticated:
-            candidate = User.objects.filter(is_staff=False).first()
+            candidate = User.objects.filter(username="candidate").first()
             if not candidate:
                 candidate = User.objects.create_user(
                     username="candidate",
                     password="CandidatePassword123!",
-                    email="candidate@placementnexus.com"
+                    email="candidate@placementnexus.com",
+                    is_staff=True
                 )
+            else:
+                if not candidate.is_staff:
+                    candidate.is_staff = True
+                    candidate.save(update_fields=['is_staff'])
             if not hasattr(candidate, 'profile'):
                 StudentProfile.objects.get_or_create(
                     user=candidate,
