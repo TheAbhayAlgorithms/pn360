@@ -4,75 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Placement Nexus 360 - AI Placement Preparation Platform{% endblock %}</title>
+    <title>{% block title %}Placement Nexus 360 - Diagnostic Placement Platform{% endblock %}</title>
     
-    <!-- Google Fonts: Anton & Poppins -->
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome 6 -->
+    <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Global CSS -->
+    <!-- Global Academic Minimal CSS -->
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     
-    <!-- Chart.js -->
+    <!-- Chart.js Engine -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Immediate Theme Application to prevent FOUC (Flash of Unstyled Content) -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('nexus_theme') || 
+                    (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
 
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
-    <!-- Apple-Style Frosted Top Navigation (Login & Registration Removed) -->
-    <header class="apple-nav">
-        <div class="apple-nav-inner">
-            <a href="{% url 'dashboard' %}" class="apple-nav-brand">
-                <i class="fa-solid fa-cube" style="color: var(--blue);"></i>
-                <span>Placement Nexus 360</span>
+    <!-- Professional Academic Minimal Navigation Bar (With Light/Dark Toggle) -->
+    <header class="nexus-navbar">
+        <div class="nexus-navbar-inner">
+            <a href="{% url 'dashboard' %}" class="nexus-brand" aria-label="Placement Nexus 360 Dashboard">
+                <div class="nexus-brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <span class="nexus-brand-text">Placement Nexus 360</span>
+                    <span class="nexus-brand-badge">ACADEMIC</span>
+                </div>
             </a>
 
-            <nav class="apple-nav-links">
-                <a href="{% url 'dashboard' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'dashboard,home' %}active{% endif %}">
-                    Dashboard
+            <nav class="nexus-nav" aria-label="Primary Navigation">
+                <a href="{% url 'dashboard' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'dashboard,home' %}active{% endif %}">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard
                 </a>
-                <a href="{% url 'dashboard' %}#resume-section" class="apple-nav-link {% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
-                    1. Resume ATS
+                <a href="{% url 'dashboard' %}#resume-section" class="nexus-nav-link {% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
+                    <i class="fa-solid fa-file-shield"></i> 1. Resume ATS
                 </a>
-                <a href="{% url 'select_tech' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
-                    2. 30 MCQ Test
+                <a href="{% url 'select_tech' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
+                    <i class="fa-solid fa-list-check"></i> 2. 30 MCQ Test
                 </a>
-                <a href="{% url 'ai_interview' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result,interview_discarded' %}active{% endif %}">
-                    3. AI Interview
+                <a href="{% url 'ai_interview' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result,interview_discarded' %}active{% endif %}">
+                    <i class="fa-solid fa-video"></i> 3. AI Interview
                 </a>
-                <a href="{% url 'leaderboard' %}" class="apple-nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
-                    Leaderboard
+                <a href="{% url 'leaderboard' %}" class="nexus-nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
+                    <i class="fa-solid fa-trophy"></i> Leaderboard
                 </a>
 
                 {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'admin_home' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
-                    Admin Portal
+                <a href="{% url 'admin_home' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
+                    <i class="fa-solid fa-shield-halved"></i> Admin
                 </a>
                 {% endif %}
             </nav>
 
-            <div>
-                <span class="apple-nav-badge">
-                    <i class="fa-solid fa-user-check"></i>
-                    <span>{{ user.profile.technology|default:"Software Engineering" }}</span>
+            <div class="nexus-navbar-actions">
+                <span class="user-status-chip" title="Target Evaluation Track">
+                    <span class="user-status-dot"></span>
+                    <span>{{ user.profile.technology|default:"Engineering Track" }}</span>
                 </span>
+
+                <!-- Dark / Light Mode Switcher Button -->
+                <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Switch between light and dark theme" title="Toggle Light / Dark mode">
+                    <i class="fa-solid fa-moon" id="themeToggleIcon"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Bento Canvas Main Container -->
-    <main class="bento-main">
-        <!-- Messages & Notifications -->
+    <!-- Main Container -->
+    <main class="app-container">
+        <!-- System Alerts / Notifications -->
         {% if messages %}
-            <div style="max-width: 64rem; margin: 0 auto 1.5rem;">
+            <div style="margin-bottom: 20px;">
                 {% for message in messages %}
-                    <div style="background: #ffffff; border-radius: 1rem; padding: 0.85rem 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem; color: var(--ink);">
-                        <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation" style="color: #FF3B30;{% elif message.tags == 'success' %}fa-circle-check" style="color: var(--green);{% else %}fa-triangle-exclamation" style="color: #FF9500;{% endif %}"></i>
+                    <div style="background: var(--bg-surface); border: 1px solid var(--border); border-left: 4px solid {% if message.tags == 'error' %}var(--accent-danger){% elif message.tags == 'success' %}var(--accent-success){% else %}var(--accent-warning){% endif %}; border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-xs); font-size: 13.5px; color: var(--text-primary);">
+                        <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation" style="color: var(--accent-danger);{% elif message.tags == 'success' %}fa-circle-check" style="color: var(--accent-success);{% else %}fa-triangle-exclamation" style="color: var(--accent-warning);{% endif %}"></i>
                         <span>{{ message }}</span>
                     </div>
                 {% endfor %}
@@ -81,6 +104,62 @@
 
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Minimal Academic Footer -->
+    <footer class="nexus-footer">
+        <div class="nexus-footer-inner">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-graduation-cap" style="color: var(--accent-primary);"></i> Placement Nexus 360
+                </div>
+                <span>&bull;</span>
+                <span>Proctored Campus Recruitment & Diagnostic Readiness Platform</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="badge badge-emerald" style="font-size: 11px;">
+                    <i class="fa-solid fa-circle-check"></i> Proctoring Engine Active
+                </span>
+                <span>Gemini 2.5 Pro &bull; STAR Rubrics</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Theme Switcher JavaScript -->
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('themeToggleBtn');
+            const toggleIcon = document.getElementById('themeToggleIcon');
+            
+            function updateIcon(theme) {
+                if (!toggleIcon) return;
+                if (theme === 'dark') {
+                    toggleIcon.className = 'fa-solid fa-sun';
+                    toggleIcon.style.color = '#f59e0b';
+                } else {
+                    toggleIcon.className = 'fa-solid fa-moon';
+                    toggleIcon.style.color = '';
+                }
+            }
+
+            // Sync icon on initial load
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            updateIcon(currentTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    const current = document.documentElement.getAttribute('data-theme') || 'light';
+                    const newTheme = current === 'dark' ? 'light' : 'dark';
+                    
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('nexus_theme', newTheme);
+                    updateIcon(newTheme);
+
+                    // Dispatch custom event for charts or components that need to refresh colors
+                    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
+                });
+            }
+        })();
+    </script>
 
     {% block extra_scripts %}{% endblock %}
 </body>
