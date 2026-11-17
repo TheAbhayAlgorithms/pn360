@@ -1,426 +1,629 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Placement Nexus 360 - Dashboard{% endblock %}
+{% block title %}Dashboard - Placement Nexus 360{% endblock %}
 
 {% block content %}
-<div class="grid">
-
-    <!-- =========================================================================
-         1. FEATURED TILE (2x2): READINESS INDEX & COORDINATED NEXT ACTION
-         ========================================================================= -->
-    <div class="tile tile--feature" style="grid-column: span 2; grid-row: span 2;">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.22); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
-                    <i class="fa-solid fa-gauge-high"></i> Readiness Index
-                </span>
-                <span style="font-size: 0.8rem; opacity: 0.85; font-weight: 500;">
-                    Target: {{ profile.technology|default:"Software Engineering" }}
-                </span>
-            </div>
-
-            <!-- Big Score Typography -->
-            <div style="display: flex; align-items: baseline; gap: 8px; margin: 0.5rem 0 0.25rem;">
-                <span style="font-size: 4rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em;">
-                    {{ progress.overall_readiness|default:0 }}%
-                </span>
-                <span style="font-size: 1.1rem; opacity: 0.85; font-weight: 600;">
-                    {% if progress.overall_readiness >= 75 %}Offer Ready{% elif progress.overall_readiness >= 40 %}In Progress{% else %}Starting Out{% endif %}
-                </span>
-            </div>
-
-            <p style="font-size: 0.875rem; opacity: 0.9; margin: 0 0 1.5rem; line-height: 1.45;">
-                AI-synthesized campus readiness: Resume ATS (25%), 30 MCQs (35%), and Proctored Voice Interview (40%).
-            </p>
-        </div>
-
-        <!-- Coordinated Next Action Banner Inside Feature Tile -->
-        {% if next_action %}
-        <div style="background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 1.25rem; padding: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.25);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span style="display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF; color: #6D28D9; font-size: 0.72rem; font-weight: 700; padding: 2px 10px; border-radius: 9999px; text-transform: uppercase;">
-                    <i class="fa-solid {{ next_action.icon }}"></i> {{ next_action.badge }}
-                </span>
-                <span style="font-size: 0.75rem; opacity: 0.85; font-weight: 500;">Recommended Next Step</span>
-            </div>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.35rem; line-height: 1.3;">
-                {{ next_action.title }}
-            </h3>
-            <p style="font-size: 0.825rem; color: rgba(255,255,255,0.9); margin: 0 0 1rem; line-height: 1.4;">
-                {{ next_action.desc }}
-            </p>
-            <a href="{{ next_action.action_url }}" class="bento-btn-white" aria-label="{{ next_action.action_text }}">
-                {{ next_action.action_text }} &rarr;
-            </a>
-        </div>
-        {% endif %}
-    </div>
-
-    <!-- =========================================================================
-         2. STAGE 1: RESUME ATS TILE
-         ========================================================================= -->
-    <a href="{% if latest_resume %}{% url 'resume_result' latest_resume.id %}{% else %}#resume-section{% endif %}" class="tile" aria-label="Gemini ATS Resume Benchmark">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="width: 36px; height: 36px; border-radius: 0.75rem; background: rgba(0, 122, 255, 0.1); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
-                    <i class="fa-solid fa-file-shield"></i>
-                </span>
-                {% if progress.resume_completed %}
-                    <span style="background: rgba(52, 199, 89, 0.15); color: #248A3D; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        ATS: {{ progress.resume_score }}%
+<!-- =========================================================================
+     SECTION 1: HERO READINESS INDEX & COORDINATED NEXT ACTION
+     ========================================================================= -->
+<div class="section-block">
+    <div class="grid-split-hero">
+        
+        <!-- Left Hero Card: Placement Readiness Gauge -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span class="badge badge-blue">
+                        <i class="fa-solid fa-gauge-high"></i> Readiness Index
                     </span>
-                {% else %}
-                    <span style="background: rgba(255, 149, 0, 0.15); color: #B25000; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        Pending
+                    <span class="badge badge-slate">
+                        Target: {{ profile.technology|default:"Engineering Track" }}
                     </span>
-                {% endif %}
-            </div>
-            <h3 style="color: var(--ink);">Resume ATS</h3>
-            <p style="font-size: 0.825rem; color: var(--text-muted); line-height: 1.4; margin-top: 0.25rem;">
-                Gemini keyword audit & role matching.
-            </p>
-        </div>
-        <div style="margin-top: 1rem;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: var(--blue);">
-                {% if latest_resume %}View Report &rarr;{% else %}Upload Resume &rarr;{% endif %}
-            </span>
-        </div>
-    </a>
+                </div>
 
-    <!-- =========================================================================
-         3. STAGE 2: 30 MCQ ASSESSMENT TILE (BLUE ACCENT)
-         ========================================================================= -->
-    <a href="{% url 'select_tech' %}" class="tile tile--blue" aria-label="30 MCQ Technical Assessment">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="width: 36px; height: 36px; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.2); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
-                    <i class="fa-solid fa-list-check"></i>
-                </span>
-                {% if progress.mock_passed %}
-                    <span style="background: rgba(255,255,255,0.25); color: #FFFFFF; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        Passed: {{ progress.mock_score }}%
+                <div style="display: flex; align-items: baseline; gap: 12px; margin: 10px 0 16px;">
+                    <span style="font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--text-primary);">
+                        {{ progress.overall_readiness|default:0 }}%
                     </span>
-                {% elif progress.mock_score > 0 %}
-                    <span style="background: rgba(255,255,255,0.25); color: #FFFFFF; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        Retake ({{ progress.mock_score }}%)
+                    <span class="badge {% if progress.overall_readiness >= 75 %}badge-emerald{% elif progress.overall_readiness >= 40 %}badge-blue{% else %}badge-slate{% endif %}" style="font-size: 13px; padding: 4px 12px;">
+                        {% if progress.overall_readiness >= 75 %}Offer Ready{% elif progress.overall_readiness >= 40 %}In Training{% else %}Diagnostic Phase{% endif %}
                     </span>
-                {% else %}
-                    <span style="background: rgba(255,255,255,0.2); color: #FFFFFF; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        60% Cutoff
-                    </span>
-                {% endif %}
-            </div>
-            <h3 style="color: #FFFFFF;">30 MCQ Test</h3>
-            <p style="font-size: 0.825rem; color: rgba(255,255,255,0.9); line-height: 1.4; margin-top: 0.25rem;">
-                Algorithms & code prediction round.
-            </p>
-        </div>
-        <div style="margin-top: 1rem;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: #FFFFFF;">
-                Start 30 MCQs &rarr;
-            </span>
-        </div>
-    </a>
+                </div>
 
-    <!-- =========================================================================
-         4. STAGE 3: AI VOICE INTERVIEW TILE (DARK ACCENT)
-         ========================================================================= -->
-    <a href="{% url 'ai_interview' %}" class="tile tile--dark" aria-label="Proctored AI Voice Interview">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="width: 36px; height: 36px; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.15); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
-                    <i class="fa-solid fa-video"></i>
-                </span>
-                {% if progress.interview_passed %}
-                    <span style="background: rgba(52, 199, 89, 0.25); color: #34C759; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        Score: {{ progress.interview_score }}%
-                    </span>
-                {% else %}
-                    <span style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                        Proctored
-                    </span>
-                {% endif %}
-            </div>
-            <h3 style="color: #FFFFFF;">AI Interview</h3>
-            <p style="font-size: 0.825rem; color: rgba(255,255,255,0.8); line-height: 1.4; margin-top: 0.25rem;">
-                Voice dictation & STAR coaching.
-            </p>
-        </div>
-        <div style="margin-top: 1rem;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: #FFFFFF;">
-                Enter Room &rarr;
-            </span>
-        </div>
-    </a>
+                <!-- Overall Progress Bar -->
+                <div class="progress-track progress-track-lg" style="margin-bottom: 20px;">
+                    <div class="progress-fill {% if progress.overall_readiness >= 75 %}progress-fill-emerald{% else %}progress-fill-blue{% endif %}" style="width: {{ progress.overall_readiness|default:0 }}%;"></div>
+                </div>
 
-    <!-- =========================================================================
-         5. ACADEMIC SHIELD TILE (GREEN ACCENT)
-         ========================================================================= -->
-    <div class="tile tile--green" aria-label="Academic Proctoring Shield">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="width: 36px; height: 36px; border-radius: 0.75rem; background: rgba(0, 0, 0, 0.1); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </span>
-                <span style="background: rgba(0,0,0,0.12); color: var(--ink); font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
-                    Active
-                </span>
-            </div>
-            <h3 style="color: var(--ink);">100% Proctored</h3>
-            <p style="font-size: 0.825rem; color: rgba(29, 29, 31, 0.85); line-height: 1.4; margin-top: 0.25rem;">
-                Face tracking & tab switch checks.
-            </p>
-        </div>
-        <div style="margin-top: 1rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--ink);">
-                <i class="fa-solid fa-circle-check"></i> Campus Standard
-            </span>
-        </div>
-    </div>
-
-    <!-- =========================================================================
-         6. STEP 1 RESUME BENCHMARK FORM (WIDE TILE)
-         ========================================================================= -->
-    <div class="tile tile--wide" id="resume-section">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="color: var(--ink); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-cloud-arrow-up" style="color: var(--blue);"></i> Benchmark Resume
-                </h3>
-                {% if latest_resume %}
-                    <span style="background: rgba(0, 122, 255, 0.1); color: var(--blue); font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">
-                        Latest Score: {{ latest_resume.ats_score }}%
-                    </span>
-                {% endif %}
-            </div>
-            <p style="font-size: 0.825rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.4;">
-                Select your target job role and upload your PDF/DOCX resume for Gemini ATS audit.
-            </p>
-
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="hidden" name="upload_resume" value="1">
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <!-- 3 Pillars Breakdown -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; text-align: center;">
                     <div>
-                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem;">
-                            Target Role
-                        </label>
-                        <select name="job_id" class="bento-input">
+                        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">1. Resume ATS</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--text-primary); margin-top: 2px;">{{ progress.resume_score }}%</div>
+                        <div style="font-size: 10.5px; color: var(--text-subtle);">Weight: 25%</div>
+                    </div>
+                    <div style="border-left: 1px solid var(--border); border-right: 1px solid var(--border);">
+                        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">2. 30 MCQs</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--text-primary); margin-top: 2px;">{{ progress.mock_score }}%</div>
+                        <div style="font-size: 10.5px; color: var(--text-subtle);">Weight: 35%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">3. AI Interview</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--text-primary); margin-top: 2px;">{{ progress.interview_score }}%</div>
+                        <div style="font-size: 10.5px; color: var(--text-subtle);">Weight: 40%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <span style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-shield-halved" style="color: var(--accent-success);"></i> Proctored Campus Standard
+                </span>
+                <span style="font-size: 12px; color: var(--text-muted);">
+                    Passing Cutoff: <strong>60%</strong>
+                </span>
+            </div>
+        </div>
+
+        <!-- Right Hero Card: Coordinated Next Action Banner -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%);">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span class="badge {{ next_action.badge_class }}">
+                        <i class="fa-solid {{ next_action.icon }}"></i> {{ next_action.badge }}
+                    </span>
+                    <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">
+                        Recommended Milestone
+                    </span>
+                </div>
+
+                <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+                    <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--accent-primary-subtle); border: 1px solid var(--accent-primary-border); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                        <i class="fa-solid {{ next_action.icon }}"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px;">
+                            {{ next_action.title }}
+                        </h2>
+                        <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.55;">
+                            {{ next_action.desc }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer" style="background: transparent;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="badge badge-emerald" style="font-size: 11px;">
+                        <i class="fa-solid fa-bolt"></i> Instant Feedback
+                    </span>
+                    <span style="font-size: 12px; color: var(--text-muted);">STAR Rubric Evaluated</span>
+                </div>
+                <a href="{{ next_action.action_url }}" class="btn btn-primary btn-lg" aria-label="{{ next_action.action_text }}">
+                    <span>{{ next_action.action_text }}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================================
+     SECTION 2: 3-STAGE CAMPUS PLACEMENT CURRICULUM
+     ========================================================================= -->
+<div class="section-block">
+    <div class="section-header">
+        <div>
+            <h2 class="section-title">
+                <i class="fa-solid fa-layer-group text-accent"></i>
+                Placement Readiness Curriculum
+            </h2>
+            <p class="section-subtitle">
+                Complete the three sequential diagnostic rounds to achieve full campus recruiter readiness.
+            </p>
+        </div>
+    </div>
+
+    <div class="grid-3">
+        <!-- Stage 1: Resume ATS -->
+        <div class="card card-interactive" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <span style="font-size: 12px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
+                        STAGE 01
+                    </span>
+                    {% if progress.resume_completed %}
+                        <span class="badge badge-emerald">
+                            <i class="fa-solid fa-circle-check"></i> ATS: {{ progress.resume_score }}%
+                        </span>
+                    {% else %}
+                        <span class="badge badge-amber">
+                            <i class="fa-solid fa-clock"></i> Pending Audit
+                        </span>
+                    {% endif %}
+                </div>
+
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                    1. Resume ATS Benchmark
+                </h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+                    Audit your resume using Gemini 2.5 Pro. Extract skills, detect missing keywords, and get ATS score matching your target job role.
+                </p>
+            </div>
+
+            <div class="card-footer">
+                <span style="font-size: 12px; color: var(--text-muted);">Weight: 25%</span>
+                {% if latest_resume %}
+                    <a href="{% url 'resume_result' latest_resume.id %}" class="btn btn-secondary btn-sm">
+                        View Analysis &rarr;
+                    </a>
+                {% else %}
+                    <a href="#resume-section" class="btn btn-primary btn-sm">
+                        Upload Resume &rarr;
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Stage 2: 30 MCQ Tech Test -->
+        <div class="card card-interactive" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <span style="font-size: 12px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
+                        STAGE 02
+                    </span>
+                    {% if progress.mock_passed %}
+                        <span class="badge badge-emerald">
+                            <i class="fa-solid fa-circle-check"></i> Passed {{ progress.mock_score }}%
+                        </span>
+                    {% elif progress.mock_score > 0 %}
+                        <span class="badge badge-rose">
+                            <i class="fa-solid fa-rotate-right"></i> Retake ({{ progress.mock_score }}%)
+                        </span>
+                    {% else %}
+                        <span class="badge badge-blue">
+                            <i class="fa-solid fa-clipboard-check"></i> 60% Cutoff
+                        </span>
+                    {% endif %}
+                </div>
+
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                    2. 30 MCQ Technical Test
+                </h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+                    30 technical multiple-choice questions covering algorithms, data structures, and code output prediction. Proctored for fairness.
+                </p>
+            </div>
+
+            <div class="card-footer">
+                <span style="font-size: 12px; color: var(--text-muted);">Weight: 35%</span>
+                <a href="{% url 'select_tech' %}" class="btn btn-primary btn-sm">
+                    Start 30 MCQs &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Stage 3: AI Interview -->
+        <div class="card card-interactive" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <span style="font-size: 12px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
+                        STAGE 03
+                    </span>
+                    {% if progress.interview_passed %}
+                        <span class="badge badge-emerald">
+                            <i class="fa-solid fa-circle-check"></i> Score {{ progress.interview_score }}%
+                        </span>
+                    {% else %}
+                        <span class="badge badge-purple">
+                            <i class="fa-solid fa-video"></i> Proctored &bull; STAR
+                        </span>
+                    {% endif %}
+                </div>
+
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                    3. AI Voice Interview
+                </h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+                    Browser-based speech recognition and audio synthesis. Real-time head tracking and AI evaluation using official STAR criteria.
+                </p>
+            </div>
+
+            <div class="card-footer">
+                <span style="font-size: 12px; color: var(--text-muted);">Weight: 40%</span>
+                <a href="{% url 'ai_interview' %}" class="btn btn-secondary btn-sm">
+                    Enter Interview Room &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================================
+     SECTION 3: STEP 1 RESUME BENCHMARK & PERFORMANCE TREND
+     ========================================================================= -->
+<div class="section-block">
+    <div class="grid-split-work">
+        
+        <!-- Left: Step 1 Resume Benchmark Form -->
+        <div class="card" id="resume-section">
+            <div class="card-header">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+                        Benchmark Resume with Gemini ATS
+                    </h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                        Select your target role and upload your resume for keyword gap analysis.
+                    </p>
+                </div>
+                {% if latest_resume %}
+                    <span class="badge badge-blue">
+                        Latest: {{ latest_resume.ats_score }}%
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="upload_resume" value="1">
+
+                    <div class="form-group">
+                        <label class="form-label">Target Role Specification</label>
+                        <select name="job_id" class="form-select">
                             {% for job in jobs %}
-                                <option value="{{ job.id }}">{{ job.title }} &bull; {{ job.company }}</option>
+                                <option value="{{ job.id }}">{{ job.title }} &bull; {{ job.company }} ({{ job.salary }})</option>
                             {% empty %}
                                 <option value="">Software Development Engineer</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div>
-                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem;">
-                            Resume File (.PDF, .DOCX)
-                        </label>
-                        <input type="file" name="resume" accept=".pdf,.docx,.doc,.txt" required class="bento-input">
+
+                    <div class="form-group">
+                        <label class="form-label">Resume Document (.PDF, .DOCX)</label>
+                        <input type="file" name="resume" accept=".pdf,.docx,.doc,.txt" required class="form-input" style="padding-top: 8px;">
                     </div>
-                </div>
 
-                <div style="display: flex; justify-content: flex-end;">
-                    <button type="submit" class="bento-btn-primary" aria-label="Benchmark Resume with Gemini ATS">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Benchmark Resume
-                    </button>
-                </div>
-            </form>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <span style="font-size: 12px; color: var(--text-muted);">
+                            <i class="fa-solid fa-lock"></i> Parsed securely in memory
+                        </span>
+                        <button type="submit" class="btn btn-primary" aria-label="Benchmark Resume">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Benchmark Resume
+                        </button>
+                    </div>
+                </form>
+
+                {% if resumes %}
+                    <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                            Previous Resume Audits
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            {% for r in resumes|slice:":2" %}
+                                <div class="list-item-row" style="padding: 8px 12px;">
+                                    <div style="font-size: 12.5px; color: var(--text-primary);">
+                                        <strong>{{ r.job_title|default:"Software Engineer" }}</strong>
+                                        <span style="color: var(--text-muted); font-size: 11.5px; margin-left: 6px;">{{ r.uploaded_at|date:"M d, Y" }}</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span class="badge badge-emerald" style="font-size: 11px;">ATS {{ r.ats_score }}%</span>
+                                        <a href="{% url 'resume_result' r.id %}" class="btn btn-ghost btn-sm" style="height: 26px; padding: 0 8px; font-size: 11.5px;">View</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <!-- =========================================================================
-         7. PERFORMANCE TREND ANALYTICS (WIDE TILE)
-         ========================================================================= -->
-    <div class="tile tile--wide">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="color: var(--ink); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-chart-line" style="color: var(--blue);"></i> Performance Trend
-                </h3>
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
-                    Assessments & Interviews
+        <!-- Right: Diagnostic Performance Trend Chart -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-chart-line text-accent"></i>
+                        Placement Diagnostic Trend
+                    </h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                        Historical progress across 30 MCQs and Proctored Voice Interviews.
+                    </p>
+                </div>
+                <span class="badge badge-slate">
+                    Assessments
                 </span>
             </div>
-            <p style="font-size: 0.825rem; color: var(--text-muted); margin: 0 0 0.75rem; line-height: 1.4;">
-                Historical progress across 30 MCQs and Proctored Voice Interviews.
-            </p>
-        </div>
-        <div style="position: relative; height: 180px; width: 100%;">
-            <canvas id="progressChart"></canvas>
-        </div>
-    </div>
 
-    <!-- =========================================================================
-         8. SCHEDULE MOCK APPOINTMENT (WIDE TILE)
-         ========================================================================= -->
-    <div class="tile tile--wide">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="color: var(--ink); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-calendar-check" style="color: var(--blue);"></i> Schedule Mock Slot
-                </h3>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">Appointment</span>
-            </div>
-            <p style="font-size: 0.825rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.4;">
-                Reserve upcoming placement rounds and practice slots.
-            </p>
-
-            <form method="POST" action="{% url 'schedule_test' %}">
-                {% csrf_token %}
-                <div style="margin-bottom: 0.75rem;">
-                    <select name="type" class="bento-input">
-                        <option value="30 MCQ Placement Test">30 MCQ Placement Test</option>
-                        <option value="Proctored AI Online Interview">Proctored AI Online Interview</option>
-                        <option value="Full Placement Simulation">Full Placement Simulation</option>
-                    </select>
+            <div class="card-body">
+                <div style="position: relative; height: 240px; width: 100%;">
+                    <canvas id="progressChart"></canvas>
                 </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <input type="date" name="date" required class="bento-input" aria-label="Appointment Date">
-                    <input type="time" name="time" required class="bento-input" aria-label="Appointment Time">
-                </div>
-
-                <div style="display: flex; justify-content: flex-end;">
-                    <button type="submit" class="bento-btn-primary" aria-label="Confirm Mock Appointment">
-                        <i class="fa-solid fa-calendar-plus"></i> Set Slot Appointment
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        {% if scheduled_tests %}
-        <div style="margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.75rem;">
-            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem;">
-                Upcoming Appointments
             </div>
-            {% for st in scheduled_tests %}
-                <div style="font-size: 0.8rem; color: var(--ink); display: flex; justify-content: space-between; padding: 3px 0;">
-                    <span>{{ st.test_type }}</span>
-                    <span style="color: var(--blue); font-weight: 600;">{{ st.date }} &bull; {{ st.time }}</span>
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
 
-    <!-- =========================================================================
-         9. ACTIVE RECRUITER TECH OPENINGS (WIDE TILE)
-         ========================================================================= -->
-    <div class="tile tile--wide" id="jobs-section">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="color: var(--ink); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-briefcase" style="color: var(--blue);"></i> Target Job Openings
-                </h3>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">{{ jobs|length }} Active</span>
-            </div>
-            <p style="font-size: 0.825rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.4;">
-                Benchmark your skills against real role specifications from top recruiters.
-            </p>
-
-            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
-                {% for job in jobs|slice:":3" %}
-                    <div style="background: var(--canvas); border-radius: 0.75rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">{{ job.title }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ job.company }} &bull; {{ job.salary }}</div>
-                        </div>
-                        <a href="{% url 'select_tech' %}?role={{ job.title|urlencode }}" class="bento-btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.75rem;" aria-label="Practice for {{ job.title }}">
-                            Practice &rarr;
-                        </a>
-                    </div>
-                {% empty %}
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">No job listings configured.</div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <!-- =========================================================================
-         10. RECENT ASSESSMENT AUDIT HISTORY (SPAN 4 COLS)
-         ========================================================================= -->
-    <div class="tile tile--wide" style="grid-column: span 4;">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="color: var(--ink); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--blue);"></i> Recent Assessment Audit Log
-                </h3>
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
-                    Latest Attempts
+            <div class="card-footer">
+                <span style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2563eb;"></span> 30 MCQs</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #059669;"></span> AI Interview</span>
+                </span>
+                <span style="font-size: 12px; color: var(--text-muted);">
+                    Goal: <strong>&ge; 75%</strong>
                 </span>
             </div>
-            <p style="font-size: 0.825rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.4;">
-                Complete record of diagnostic assessments, proctoring violations, and STAR rubric feedback.
-            </p>
+        </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
-                {% for test in recent_mock_tests %}
-                    <div style="background: var(--canvas); border-radius: 0.75rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--ink);">
-                                <i class="fa-solid fa-list-check" style="color: var(--blue); margin-right: 4px;"></i> 30 MCQs &bull; {{ test.technology }}
-                            </div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
-                                {{ test.started_at|date:"M d, Y &bull; H:i" }} &bull; Violations: {{ test.cheating_count }}
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 0.875rem; font-weight: 700; color: {% if test.passed %}#248A3D{% else %}#D70015{% endif %};">
-                                {{ test.total_score|floatformat:0 }}%
-                            </span>
-                            <div style="font-size: 0.7rem; font-weight: 600; color: {% if test.passed %}#248A3D{% else %}#D70015{% endif %};">
-                                {% if test.passed %}Passed{% else %}Cutoff Missed{% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div style="background: var(--canvas); border-radius: 0.75rem; padding: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-                        No completed MCQ tests yet. Click "Start 30 MCQ Test" above to begin your diagnostic round.
-                    </div>
-                {% endfor %}
+    </div>
+</div>
 
-                {% for iv in recent_interviews %}
-                    <div style="background: var(--canvas); border-radius: 0.75rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+<!-- =========================================================================
+     SECTION 4: MOCK SLOT SCHEDULER & RECRUITER OPENINGS
+     ========================================================================= -->
+<div class="section-block">
+    <div class="grid-2">
+        
+        <!-- Left: Mock Slot Scheduler -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-calendar-check text-accent"></i>
+                        Schedule Practice Appointment
+                    </h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                        Reserve a dedicated practice slot for placement preparation.
+                    </p>
+                </div>
+                <span class="badge badge-slate">Reservation</span>
+            </div>
+
+            <div class="card-body">
+                <form method="POST" action="{% url 'schedule_test' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Assessment Type</label>
+                        <select name="type" class="form-select">
+                            <option value="30 MCQ Placement Test">30 MCQ Technical Assessment</option>
+                            <option value="Proctored AI Online Interview">Proctored AI Voice Interview</option>
+                            <option value="Full Placement Simulation">Full 3-Stage Placement Simulation</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div>
-                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--ink);">
-                                <i class="fa-solid fa-video" style="color: #6D28D9; margin-right: 4px;"></i> AI Interview &bull; {{ iv.technology }}
-                            </div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
-                                {{ iv.created_at|date:"M d, Y &bull; H:i" }} &bull; Warnings: {{ iv.warnings_count }}
-                            </div>
+                            <label class="form-label">Date</label>
+                            <input type="date" name="date" required class="form-input">
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 0.875rem; font-weight: 700; color: #248A3D;">
-                                {{ iv.score|default:0|floatformat:0 }}%
-                            </span>
-                            <div style="font-size: 0.7rem; font-weight: 600; color: #248A3D;">
-                                Completed
-                            </div>
+                        <div>
+                            <label class="form-label">Time</label>
+                            <input type="time" name="time" required class="form-input">
                         </div>
                     </div>
-                {% endfor %}
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary" aria-label="Reserve Slot">
+                            <i class="fa-solid fa-calendar-plus"></i> Set Appointment
+                        </button>
+                    </div>
+                </form>
+
+                {% if scheduled_tests %}
+                    <div style="margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px;">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                            Upcoming Appointments
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            {% for st in scheduled_tests %}
+                                <div class="list-item-row" style="padding: 8px 12px;">
+                                    <span style="font-size: 12.5px; color: var(--text-primary); font-weight: 600;">
+                                        {{ st.test_type }}
+                                    </span>
+                                    <span class="badge badge-blue" style="font-size: 11.5px;">
+                                        {{ st.date }} &bull; {{ st.time }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right: Recruiter Target Openings -->
+        <div class="card" id="jobs-section">
+            <div class="card-header">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-briefcase text-accent"></i>
+                        Target Recruiter Tech Openings
+                    </h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                        Align your test questions and resume against top tech companies.
+                    </p>
+                </div>
+                <span class="badge badge-emerald">{{ jobs|length }} Active</span>
+            </div>
+
+            <div class="card-body">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for job in jobs|slice:":3" %}
+                        <div class="list-item-row">
+                            <div>
+                                <div style="font-weight: 700; font-size: 14px; color: var(--text-primary);">
+                                    {{ job.title }}
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                                    <i class="fa-solid fa-building" style="margin-right: 4px;"></i> {{ job.company }} &bull; 
+                                    <span style="color: var(--accent-success); font-weight: 600;">{{ job.salary }}</span>
+                                </div>
+                            </div>
+                            <a href="{% url 'select_tech' %}?role={{ job.title|urlencode }}" class="btn btn-secondary btn-sm" aria-label="Practice for {{ job.title }}">
+                                Practice &rarr;
+                            </a>
+                        </div>
+                    {% empty %}
+                        <div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px;">
+                            No recruiter openings configured.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================================
+     SECTION 5: RECENT ASSESSMENT AUDIT HISTORY
+     ========================================================================= -->
+<div class="section-block">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-clock-rotate-left text-accent"></i>
+                    Academic Assessment Audit Log
+                </h3>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                    Complete verification record of diagnostic tests, proctoring violations, and rubric evaluations.
+                </p>
+            </div>
+            <span class="badge badge-slate">Proctored Archive</span>
+        </div>
+
+        <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Assessment Round</th>
+                            <th>Technology Track</th>
+                            <th>Date & Time</th>
+                            <th>Proctoring Violations</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test in recent_mock_tests %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fa-solid fa-list-check" style="color: var(--accent-primary);"></i>
+                                        30 MCQ Technical Assessment
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-slate">{{ test.technology }}</span>
+                                </td>
+                                <td style="color: var(--text-muted); font-size: 12.5px;">
+                                    {{ test.started_at|date:"M d, Y &bull; H:i" }}
+                                </td>
+                                <td>
+                                    {% if test.cheating_count > 0 %}
+                                        <span class="badge badge-rose">
+                                            <i class="fa-solid fa-triangle-exclamation"></i> {{ test.cheating_count }} warning{{ test.cheating_count|pluralize }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-emerald">
+                                            <i class="fa-solid fa-shield"></i> Clean
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong style="color: {% if test.passed %}var(--accent-success){% else %}var(--accent-danger){% endif %}; font-size: 14.5px;">
+                                        {{ test.total_score|floatformat:0 }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    {% if test.passed %}
+                                        <span class="badge badge-emerald">Passed</span>
+                                    {% else %}
+                                        <span class="badge badge-rose">Cutoff Missed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            {% if not recent_interviews %}
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">
+                                        No assessment records found. Click <strong>"Start 30 MCQ Test"</strong> above to launch your initial diagnostic round.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for iv in recent_interviews %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fa-solid fa-video" style="color: var(--accent-purple);"></i>
+                                        AI Voice Interview Round
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-purple">{{ iv.technology }}</span>
+                                </td>
+                                <td style="color: var(--text-muted); font-size: 12.5px;">
+                                    {{ iv.created_at|date:"M d, Y &bull; H:i" }}
+                                </td>
+                                <td>
+                                    {% if iv.warnings_count > 0 %}
+                                        <span class="badge badge-amber">
+                                            <i class="fa-solid fa-triangle-exclamation"></i> {{ iv.warnings_count }} warning{{ iv.warnings_count|pluralize }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-emerald">
+                                            <i class="fa-solid fa-shield"></i> Clean
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong style="color: var(--accent-success); font-size: 14.5px;">
+                                        {{ iv.score|default:0|floatformat:0 }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-emerald">Completed</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-    // Apple-styled Chart.js configuration
-    const ctx = document.getElementById('progressChart');
-    if (ctx) {
+    (function() {
+        const ctx = document.getElementById('progressChart');
+        if (!ctx) return;
+
         const mockScores = {{ mock_scores|safe }};
         const interviewScores = {{ interview_scores|safe }};
         const maxLen = Math.max(mockScores.length, interviewScores.length, 3);
         const labels = Array.from({length: maxLen}, (_, i) => `Round ${i + 1}`);
 
-        new Chart(ctx, {
+        function getThemeColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            return {
+                gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.06)',
+                textColor: isDark ? '#94a3b8' : '#64748b',
+                primaryLine: isDark ? '#60a5fa' : '#2563eb',
+                primaryFill: isDark ? 'rgba(96, 165, 250, 0.12)' : 'rgba(37, 99, 235, 0.08)',
+                successLine: isDark ? '#34d399' : '#059669',
+                successFill: isDark ? 'rgba(52, 211, 153, 0.12)' : 'rgba(5, 150, 105, 0.08)',
+            };
+        }
+
+        let colors = getThemeColors();
+
+        const chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
@@ -428,22 +631,22 @@
                     {
                         label: '30 MCQ Technical %',
                         data: mockScores,
-                        borderColor: '#007AFF', // Apple Blue
-                        backgroundColor: 'rgba(0, 122, 255, 0.08)',
-                        borderWidth: 2.5,
+                        borderColor: colors.primaryLine,
+                        backgroundColor: colors.primaryFill,
+                        borderWidth: 2,
                         pointRadius: 4,
-                        pointBackgroundColor: '#007AFF',
+                        pointBackgroundColor: colors.primaryLine,
                         fill: true,
                         tension: 0.35
                     },
                     {
                         label: 'AI Interview %',
                         data: interviewScores,
-                        borderColor: '#34C759', // Apple Green
-                        backgroundColor: 'rgba(52, 199, 89, 0.06)',
-                        borderWidth: 2.5,
+                        borderColor: colors.successLine,
+                        backgroundColor: colors.successFill,
+                        borderWidth: 2,
                         pointRadius: 4,
-                        pointBackgroundColor: '#34C759',
+                        pointBackgroundColor: colors.successLine,
                         fill: true,
                         tension: 0.35
                     }
@@ -456,8 +659,8 @@
                     legend: {
                         position: 'top',
                         labels: {
-                            color: '#1D1D1F',
-                            font: { family: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif', size: 11, weight: '500' },
+                            color: colors.textColor,
+                            font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' },
                             boxWidth: 10,
                             usePointStyle: true
                         }
@@ -465,18 +668,36 @@
                 },
                 scales: {
                     x: {
-                        grid: { color: 'rgba(0, 0, 0, 0.04)' },
-                        ticks: { color: '#4B5563', font: { family: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif', size: 10 } }
+                        grid: { color: colors.gridColor },
+                        ticks: { color: colors.textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }
                     },
                     y: {
                         min: 0,
                         max: 100,
-                        grid: { color: 'rgba(0, 0, 0, 0.04)' },
-                        ticks: { color: '#4B5563', font: { family: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif', size: 10 } }
+                        grid: { color: colors.gridColor },
+                        ticks: { color: colors.textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }
                     }
                 }
             }
         });
-    }
+
+        // Dynamic theme synchronization
+        document.addEventListener('themeChanged', function() {
+            colors = getThemeColors();
+            chart.data.datasets[0].borderColor = colors.primaryLine;
+            chart.data.datasets[0].backgroundColor = colors.primaryFill;
+            chart.data.datasets[0].pointBackgroundColor = colors.primaryLine;
+            chart.data.datasets[1].borderColor = colors.successLine;
+            chart.data.datasets[1].backgroundColor = colors.successFill;
+            chart.data.datasets[1].pointBackgroundColor = colors.successLine;
+
+            chart.options.plugins.legend.labels.color = colors.textColor;
+            chart.options.scales.x.grid.color = colors.gridColor;
+            chart.options.scales.x.ticks.color = colors.textColor;
+            chart.options.scales.y.grid.color = colors.gridColor;
+            chart.options.scales.y.ticks.color = colors.textColor;
+            chart.update();
+        });
+    })();
 </script>
 {% endblock %}

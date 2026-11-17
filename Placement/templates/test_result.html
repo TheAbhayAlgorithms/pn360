@@ -6,32 +6,32 @@
 {% block content %}
 <div class="topbar">
     <div class="topbar-title">
-        <div class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}" style="margin-bottom: 6px;">
+        <div class="badge {% if passed %}badge-emerald{% else %}badge-rose{% endif %}" style="margin-bottom: 8px;">
             <i class="fa-solid {% if passed %}fa-circle-check{% else %}fa-circle-xmark{% endif %}"></i>
             {% if passed %}Technical Cutoff Cleared (60% Minimum Met){% else %}Cutoff Not Reached (60% Required){% endif %}
         </div>
         <h1>30 MCQ Test Scorecard</h1>
-        <p>Technology Track: <strong style="color: var(--accent-teal);">{{ test.technology }}</strong> &bull; Completed on {{ test.started_at|date:"M d, Y" }}</p>
+        <p>Technology Track: <strong class="text-accent">{{ test.technology }}</strong> &bull; Completed on {{ test.started_at|date:"M d, Y &bull; H:i" }}</p>
     </div>
     
     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-        <a href="{% url 'select_tech' %}" class="btn-secondary">
+        <a href="{% url 'select_tech' %}" class="btn btn-secondary">
             <i class="fa-solid fa-rotate-right"></i> Retake Test
         </a>
-        <a href="{% url 'ai_interview' %}" class="btn-primary">
+        <a href="{% url 'ai_interview' %}" class="btn btn-primary">
             Proceed to AI Interview <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 </div>
 
 <!-- Score Overview Card -->
-<div class="glass-card" style="margin-bottom: 24px; padding: 28px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
+<div class="card" style="margin-bottom: 24px;">
+    <div class="card-body" style="padding: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
         <div style="display: flex; align-items: center; gap: 24px; flex: 1; min-width: 300px;">
             <!-- Circular Score Dial -->
-            <div style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient({% if passed %}#10b981{% else %}#ef4444{% endif %} {{ test.total_score }}%, #e2e8f0 0); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); flex-shrink: 0;">
-                <div style="width: 76px; height: 76px; border-radius: 50%; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <div style="font-size: 24px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-primary); line-height: 1;">{{ test.total_score }}%</div>
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient({% if passed %}var(--accent-success){% else %}var(--accent-danger){% endif %} {{ test.total_score }}%, var(--border) 0); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0;">
+                <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--bg-surface); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); line-height: 1;">{{ test.total_score|floatformat:0 }}%</div>
                     <div style="font-size: 9.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Score</div>
                 </div>
             </div>
@@ -42,8 +42,17 @@
                         {{ test.correct_count }} / {{ test.total_questions }} Questions Correct
                     </span>
                     <span class="badge badge-slate">
-                        Cutoff: 60%
+                        Passing Benchmark: 60%
                     </span>
+                    {% if test.cheating_count > 0 %}
+                        <span class="badge badge-amber">
+                            {{ test.cheating_count }} Proctor Warning{{ test.cheating_count|pluralize }}
+                        </span>
+                    {% else %}
+                        <span class="badge badge-emerald">
+                            Proctoring Verified
+                        </span>
+                    {% endif %}
                 </div>
                 <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 4px;">
                     {% if passed %}
@@ -53,13 +62,13 @@
                     {% endif %}
                 </h3>
                 <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
-                    Your performance has been recorded in your placement profile and contributes 35% towards your Overall Placement Readiness Index.
+                    Your score has been registered in your academic placement profile and accounts for 35% of your Overall Placement Readiness Index.
                 </p>
             </div>
         </div>
 
         <div style="text-align: right; flex-shrink: 0;">
-            <a href="{% url 'ai_interview' %}" class="btn-emerald">
+            <a href="{% url 'ai_interview' %}" class="btn btn-success btn-lg">
                 Proceed to Online AI Interview <i class="fa-solid fa-arrow-right"></i>
             </a>
             <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">
@@ -70,69 +79,75 @@
 </div>
 
 <!-- Question by Question Review -->
-<div class="glass-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+<div class="card">
+    <div class="card-header">
         <div>
-            <h3 style="font-size: 18px; color: var(--text-primary); margin: 0;">Solutions & Gemini Explanations</h3>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 2px;">Review all 30 questions with detailed solutions and technical rationale.</p>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary);">
+                Solutions & Gemini Technical Explanations
+            </h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 2px;">
+                Review all 30 questions with detailed solutions and technical rationale.
+            </p>
         </div>
 
         <!-- Filter Buttons -->
         <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-secondary filter-sol active" onclick="filterSolutions('all', this)" style="height: 32px; padding: 0 12px; font-size: 12px;">All (30)</button>
-            <button type="button" class="btn-secondary filter-sol" onclick="filterSolutions('correct', this)" style="height: 32px; padding: 0 12px; font-size: 12px; color: #047857;">
+            <button type="button" class="btn btn-secondary filter-sol active" onclick="filterSolutions('all', this)" style="height: 32px; padding: 0 12px; font-size: 12px;">All (30)</button>
+            <button type="button" class="btn btn-secondary filter-sol" onclick="filterSolutions('correct', this)" style="height: 32px; padding: 0 12px; font-size: 12px; color: var(--accent-success);">
                 <i class="fa-solid fa-check"></i> Correct ({{ test.correct_count }})
             </button>
-            <button type="button" class="btn-secondary filter-sol" onclick="filterSolutions('incorrect', this)" style="height: 32px; padding: 0 12px; font-size: 12px; color: #b91c1c;">
-                <i class="fa-solid fa-xmark"></i> Incorrect ({{ test.total_questions|add:"-1"|default:0 }})
+            <button type="button" class="btn btn-secondary filter-sol" onclick="filterSolutions('incorrect', this)" style="height: 32px; padding: 0 12px; font-size: 12px; color: var(--accent-danger);">
+                <i class="fa-solid fa-xmark"></i> Incorrect
             </button>
         </div>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 14px;" id="solutionsList">
-        {% for a in answers %}
-            <div class="solution-item {% if a.is_correct %}is-correct{% else %}is-incorrect{% endif %}" style="background: #ffffff; border: 1px solid {% if a.is_correct %}var(--accent-emerald-border){% else %}var(--accent-rose-border){% endif %}; border-radius: 12px; padding: 20px; box-shadow: var(--shadow-sm);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">#{{ forloop.counter }}</span>
-                        <span class="badge badge-slate" style="font-size: 11px;">{{ a.question.topic }}</span>
+    <div class="card-body">
+        <div style="display: flex; flex-direction: column; gap: 14px;" id="solutionsList">
+            {% for a in answers %}
+                <div class="solution-item {% if a.is_correct %}is-correct{% else %}is-incorrect{% endif %}" style="background: var(--bg-surface); border: 1px solid {% if a.is_correct %}var(--accent-success-border){% else %}var(--accent-danger-border){% endif %}; border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-xs);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-weight: 800; font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">#{{ forloop.counter }}</span>
+                            <span class="badge badge-slate" style="font-size: 11px;">{{ a.question.topic }}</span>
+                        </div>
+                        {% if a.is_correct %}
+                            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Correct (+3.33 pts)</span>
+                        {% else %}
+                            <span class="badge badge-rose"><i class="fa-solid fa-xmark"></i> Incorrect (0 pts)</span>
+                        {% endif %}
                     </div>
-                    {% if a.is_correct %}
-                        <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Correct (+3.33 pts)</span>
-                    {% else %}
-                        <span class="badge badge-rose"><i class="fa-solid fa-xmark"></i> Incorrect (0 pts)</span>
+
+                    <h4 style="font-size: 15px; color: var(--text-primary); margin-bottom: 14px; font-weight: 600; line-height: 1.5; white-space: pre-wrap;">{{ a.question.question_text }}</h4>
+
+                    <div class="grid-2" style="margin-bottom: 12px;">
+                        <div style="padding: 10px 14px; border-radius: var(--radius-sm); background: {% if a.is_correct %}var(--accent-success-subtle){% else %}var(--accent-danger-subtle){% endif %}; border: 1px solid {% if a.is_correct %}var(--accent-success-border){% else %}var(--accent-danger-border){% endif %};">
+                            <strong style="color: {% if a.is_correct %}var(--accent-success){% else %}var(--accent-danger){% endif %}; font-size: 11px; text-transform: uppercase;">Your Chosen Option:</strong>
+                            <div style="color: var(--text-primary); margin-top: 2px; font-size: 13.5px; font-weight: 500;">{{ a.student_answer|default:"(No Answer Selected)" }}</div>
+                        </div>
+
+                        <div style="padding: 10px 14px; border-radius: var(--radius-sm); background: var(--accent-success-subtle); border: 1px solid var(--accent-success-border);">
+                            <strong style="color: var(--accent-success); font-size: 11px; text-transform: uppercase;">Verified Correct Answer:</strong>
+                            <div style="color: var(--text-primary); margin-top: 2px; font-size: 13.5px; font-weight: 500;">{{ a.question.correct_answer }}</div>
+                        </div>
+                    </div>
+
+                    {% if a.question.explanation %}
+                    <div style="background: var(--bg-surface-elevated); border-left: 3px solid var(--accent-primary); padding: 10px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                        <strong class="text-accent"><i class="fa-solid fa-lightbulb me-1"></i> Gemini Technical Explanation:</strong> {{ a.question.explanation }}
+                    </div>
                     {% endif %}
                 </div>
-
-                <h4 style="font-size: 15px; color: var(--text-primary); margin-bottom: 14px; font-weight: 600; line-height: 1.5; white-space: pre-wrap;">{{ a.question.question_text }}</h4>
-
-                <div class="grid-2" style="margin-bottom: 12px;">
-                    <div style="padding: 10px 14px; border-radius: 8px; background: {% if a.is_correct %}var(--accent-emerald-light){% else %}var(--accent-rose-light){% endif %}; border: 1px solid {% if a.is_correct %}var(--accent-emerald-border){% else %}var(--accent-rose-border){% endif %};">
-                        <strong style="color: {% if a.is_correct %}#047857{% else %}#b91c1c{% endif %}; font-size: 11px; text-transform: uppercase;">Your Chosen Option:</strong>
-                        <div style="color: var(--text-primary); margin-top: 2px; font-size: 13.5px; font-weight: 500;">{{ a.student_answer|default:"(No Answer Selected)" }}</div>
-                    </div>
-
-                    <div style="padding: 10px 14px; border-radius: 8px; background: var(--accent-emerald-light); border: 1px solid var(--accent-emerald-border);">
-                        <strong style="color: #047857; font-size: 11px; text-transform: uppercase;">Verified Correct Answer:</strong>
-                        <div style="color: var(--text-primary); margin-top: 2px; font-size: 13.5px; font-weight: 500;">{{ a.question.correct_answer }}</div>
-                    </div>
-                </div>
-
-                {% if a.question.explanation %}
-                <div style="background: #f8fafc; border-left: 3px solid var(--accent-teal); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-                    <strong style="color: var(--accent-teal);"><i class="fa-solid fa-lightbulb me-1"></i> Gemini Technical Explanation:</strong> {{ a.question.explanation }}
-                </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 
-    <!-- Coordinated Action CTA -->
-    <div style="text-align: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: center; gap: 12px;">
-        <a href="{% url 'dashboard' %}" class="btn-secondary">
+    <!-- Coordinated Action Footer -->
+    <div class="card-footer" style="justify-content: center; gap: 12px; padding: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
             <i class="fa-solid fa-house"></i> Return to Dashboard
         </a>
-        <a href="{% url 'ai_interview' %}" class="btn-primary">
+        <a href="{% url 'ai_interview' %}" class="btn btn-primary">
             Proceed to AI Interview Room &rarr;
         </a>
     </div>
@@ -144,12 +159,12 @@
     function filterSolutions(type, btn) {
         document.querySelectorAll('.filter-sol').forEach(b => {
             b.classList.remove('active');
-            b.style.background = '#ffffff';
-            b.style.borderColor = 'var(--border-medium)';
+            b.style.background = 'var(--bg-surface)';
+            b.style.borderColor = 'var(--border)';
         });
         btn.classList.add('active');
-        btn.style.background = 'var(--accent-teal-light)';
-        btn.style.borderColor = 'var(--accent-teal)';
+        btn.style.background = 'var(--accent-primary-subtle)';
+        btn.style.borderColor = 'var(--accent-primary)';
 
         const items = document.querySelectorAll('.solution-item');
         items.forEach(item => {

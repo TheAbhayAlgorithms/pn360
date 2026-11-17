@@ -46,13 +46,13 @@
         pointer-events: none;
     }
     .warning-counter-pill {
-        background: #ffffff;
-        border: 1px solid var(--accent-rose-border);
-        color: var(--accent-rose);
+        background: var(--bg-surface);
+        border: 1px solid var(--accent-danger-border);
+        color: var(--accent-danger);
         font-weight: 700;
         font-size: 13px;
         padding: 6px 14px;
-        border-radius: 999px;
+        border-radius: var(--radius-pill);
         display: flex;
         align-items: center;
         gap: 8px;
@@ -89,24 +89,26 @@
             <canvas id="proctorCanvas"></canvas>
 
             <div class="proctor-overlay">
-                <div id="proctorBadge" class="badge badge-emerald" style="pointer-events: auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px);">
+                <div id="proctorBadge" class="badge badge-emerald" style="pointer-events: auto; background: var(--bg-surface); backdrop-filter: blur(8px);">
                     <i class="fa-solid fa-spinner fa-spin"></i> Initializing Proctor...
                 </div>
             </div>
         </div>
 
         <!-- Proctoring Status Monitor Card -->
-        <div class="glass-card" style="margin-top: 14px; padding: 18px 20px;">
-            <h4 style="font-size: 14px; color: var(--text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-weight: 700;">
-                <i class="fa-solid fa-eye" style="color: var(--accent-teal);"></i> Proctoring Monitor
-            </h4>
-            <div id="statusMessage" style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;">
-                Keep your face visible and centered. The AI proctor continuously verifies single-candidate presence.
-            </div>
+        <div class="card" style="margin-top: 14px;">
+            <div class="card-body" style="padding: 18px 20px;">
+                <h4 style="font-size: 14px; color: var(--text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-weight: 700;">
+                    <i class="fa-solid fa-eye text-accent"></i> Proctoring Monitor
+                </h4>
+                <div id="statusMessage" style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;">
+                    Keep your face visible and centered. The AI proctor continuously verifies single-candidate presence.
+                </div>
 
-            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted);">
-                <span><i class="fa-solid fa-user me-1"></i> Single Face Rule</span>
-                <span><i class="fa-solid fa-ban me-1" style="color: var(--accent-rose);"></i> 3 Warnings = Auto Discard</span>
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted);">
+                    <span><i class="fa-solid fa-user me-1"></i> Single Face Rule</span>
+                    <span><i class="fa-solid fa-ban me-1 text-danger"></i> 3 Warnings = Auto Discard</span>
+                </div>
             </div>
         </div>
     </div>
@@ -114,85 +116,89 @@
     <!-- RIGHT COLUMN: Active Question, Voice Recognition & Gemini Evaluation -->
     <div>
         <!-- Question Card -->
-        <div class="glass-card" style="padding: 24px; margin-bottom: 18px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-                <span class="badge badge-teal" id="qNumberBadge">Question 1 of 5</span>
-                <span class="badge badge-slate" id="qCategoryBadge">Category: Introduction</span>
-            </div>
+        <div class="card" style="margin-bottom: 18px;">
+            <div class="card-body" style="padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                    <span class="badge badge-blue" id="qNumberBadge">Question 1 of 5</span>
+                    <span class="badge badge-slate" id="qCategoryBadge">Category: Introduction</span>
+                </div>
 
-            <h3 id="currentQuestionText" style="font-size: 18px; color: var(--text-primary); line-height: 1.5; margin-bottom: 16px; font-weight: 700;">
-                Loading question...
-            </h3>
+                <h3 id="currentQuestionText" style="font-size: 18px; color: var(--text-primary); line-height: 1.5; margin-bottom: 16px; font-weight: 700;">
+                    Loading question...
+                </h3>
 
-            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                <button type="button" onclick="speakQuestion()" class="btn-secondary" style="height: 36px; font-size: 12.5px; padding: 0 14px;">
-                    <i class="fa-solid fa-volume-high"></i> Listen to Question
-                </button>
-                <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); cursor: pointer;">
-                    <input type="checkbox" id="autoVoiceToggle" checked style="accent-color: var(--accent-teal);">
-                    Auto-read new questions
-                </label>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <button type="button" onclick="speakQuestion()" class="btn btn-secondary btn-sm">
+                        <i class="fa-solid fa-volume-high"></i> Listen to Question
+                    </button>
+                    <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" id="autoVoiceToggle" checked style="accent-color: var(--accent-primary);">
+                        Auto-read new questions
+                    </label>
+                </div>
             </div>
         </div>
 
         <!-- Voice Answer & Live Transcription Card -->
-        <div class="glass-card" style="padding: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                <h4 style="font-size: 15px; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700;">
-                    <i class="fa-solid fa-microphone-lines" style="color: var(--accent-emerald);"></i> Your Spoken Response
-                </h4>
-                
-                <div id="audioVisualizer" class="audio-wave">
-                    <div class="audio-bar"></div>
-                    <div class="audio-bar"></div>
-                    <div class="audio-bar"></div>
-                    <div class="audio-bar"></div>
-                    <div class="audio-bar"></div>
-                </div>
-            </div>
-
-            <!-- Live Spoken Transcript Textarea -->
-            <textarea id="transcriptInput" rows="5" class="form-control" placeholder="Click 'Start Dictating' and speak into your microphone, or type/edit your response here before submitting..." style="font-size: 14px; line-height: 1.6; resize: vertical; margin-bottom: 16px;"></textarea>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; gap: 8px;">
-                    <button type="button" id="micBtn" onclick="toggleSpeech()" class="btn-primary" style="height: 40px; padding: 0 18px; font-size: 13.5px;">
-                        <i class="fa-solid fa-microphone"></i> <span id="micBtnText">Start Dictating</span>
-                    </button>
-                    <button type="button" onclick="clearTranscript()" class="btn-ghost" style="height: 40px; padding: 0 12px; font-size: 13px;">
-                        <i class="fa-solid fa-eraser"></i> Clear
-                    </button>
-                </div>
-
-                <button type="button" id="submitAnswerBtn" onclick="submitCurrentAnswer()" class="btn-emerald" style="height: 40px; padding: 0 22px; font-size: 13.5px;">
-                    <i class="fa-solid fa-paper-plane"></i> Submit & Evaluate with Gemini
-                </button>
-            </div>
-
-            <!-- Real-Time Gemini Answer Evaluation Box -->
-            <div id="evalResultBox" style="display: none; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span class="badge badge-emerald" id="evalScoreBadge" style="font-size: 13px; font-weight: 700;">Score: 85%</span>
-                        <span style="font-weight: 700; color: var(--text-primary); font-size: 14px;" id="evalVerdict">Strong Answer</span>
+        <div class="card">
+            <div class="card-body" style="padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <h4 style="font-size: 15px; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700;">
+                        <i class="fa-solid fa-microphone-lines text-success"></i> Your Spoken Response
+                    </h4>
+                    
+                    <div id="audioVisualizer" class="audio-wave">
+                        <div class="audio-bar"></div>
+                        <div class="audio-bar"></div>
+                        <div class="audio-bar"></div>
+                        <div class="audio-bar"></div>
+                        <div class="audio-bar"></div>
                     </div>
-                    <button type="button" onclick="nextQuestionStep()" id="nextQBtn" class="btn-primary" style="height: 38px; padding: 0 18px; font-size: 13px;">
-                        Next Question <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <!-- Live Spoken Transcript Textarea -->
+                <textarea id="transcriptInput" rows="5" class="form-textarea" placeholder="Click 'Start Dictating' and speak into your microphone, or type/edit your response here before submitting..." style="font-size: 14px; line-height: 1.6; resize: vertical; margin-bottom: 16px;"></textarea>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" id="micBtn" onclick="toggleSpeech()" class="btn btn-primary">
+                            <i class="fa-solid fa-microphone"></i> <span id="micBtnText">Start Dictating</span>
+                        </button>
+                        <button type="button" onclick="clearTranscript()" class="btn btn-ghost btn-sm">
+                            <i class="fa-solid fa-eraser"></i> Clear
+                        </button>
+                    </div>
+
+                    <button type="button" id="submitAnswerBtn" onclick="submitCurrentAnswer()" class="btn btn-success">
+                        <i class="fa-solid fa-paper-plane"></i> Submit & Evaluate with Gemini
                     </button>
                 </div>
 
-                <div style="background: var(--accent-emerald-light); border: 1px solid var(--accent-emerald-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
-                    <div style="font-size: 11.5px; font-weight: 700; color: #047857; margin-bottom: 4px;">
-                        <i class="fa-solid fa-circle-check me-1"></i> Gemini Positive Feedback:
+                <!-- Real-Time Gemini Answer Evaluation Box -->
+                <div id="evalResultBox" style="display: none; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="badge badge-emerald" id="evalScoreBadge" style="font-size: 13px; font-weight: 700;">Score: 85%</span>
+                            <span style="font-weight: 700; color: var(--text-primary); font-size: 14px;" id="evalVerdict">Strong Answer</span>
+                        </div>
+                        <button type="button" onclick="nextQuestionStep()" id="nextQBtn" class="btn btn-primary">
+                            Next Question <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </div>
-                    <p id="evalFeedbackText" style="font-size: 13px; color: var(--text-primary); line-height: 1.5; margin: 0;"></p>
-                </div>
 
-                <div style="background: var(--accent-blue-light); border-left: 3px solid #2563eb; border-radius: 0 10px 10px 0; padding: 12px 16px;">
-                    <div style="font-size: 11.5px; font-weight: 700; color: #1d4ed8; margin-bottom: 4px;">
-                        <i class="fa-solid fa-lightbulb me-1"></i> STAR & Technical Improvement Tips:
+                    <div style="background: var(--accent-success-subtle); border: 1px solid var(--accent-success-border); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 10px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-success); margin-bottom: 4px;">
+                            <i class="fa-solid fa-circle-check me-1"></i> Gemini Positive Feedback:
+                        </div>
+                        <p id="evalFeedbackText" style="font-size: 13px; color: var(--text-primary); line-height: 1.5; margin: 0;"></p>
                     </div>
-                    <p id="evalImprovementText" style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0;"></p>
+
+                    <div style="background: var(--accent-primary-subtle); border-left: 3px solid var(--accent-primary); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-primary); margin-bottom: 4px;">
+                            <i class="fa-solid fa-lightbulb me-1"></i> STAR & Technical Improvement Tips:
+                        </div>
+                        <p id="evalImprovementText" style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0;"></p>
+                    </div>
                 </div>
             </div>
         </div>

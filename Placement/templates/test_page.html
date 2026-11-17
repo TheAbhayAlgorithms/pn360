@@ -8,9 +8,9 @@
     .palette-btn {
         width: 100%;
         aspect-ratio: 1;
-        border-radius: 8px;
-        background: #ffffff;
-        border: 1px solid var(--border-medium);
+        border-radius: var(--radius-sm);
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
         color: var(--text-secondary);
         font-weight: 700;
         font-size: 13px;
@@ -21,29 +21,65 @@
         transition: all 0.15s ease;
     }
     .palette-btn:hover {
-        border-color: var(--accent-teal);
-        color: var(--accent-teal);
-        background: var(--accent-teal-light);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+        background: var(--accent-primary-subtle);
     }
     .palette-btn.active {
-        border-color: var(--accent-teal);
-        background: var(--accent-teal-light);
-        color: var(--accent-teal);
-        box-shadow: 0 0 0 2px var(--accent-teal);
+        border-color: var(--accent-primary);
+        background: var(--accent-primary-subtle);
+        color: var(--accent-primary);
+        box-shadow: 0 0 0 2px var(--accent-primary);
     }
     .palette-btn.answered {
-        background: var(--accent-emerald);
-        border-color: var(--accent-emerald);
+        background: var(--accent-success);
+        border-color: var(--accent-success);
         color: #ffffff !important;
     }
     .palette-btn.marked {
-        background: var(--accent-amber);
-        border-color: var(--accent-amber);
+        background: var(--accent-warning);
+        border-color: var(--accent-warning);
         color: #ffffff !important;
     }
     .palette-btn.answered.marked {
-        background: #d97706;
-        border-color: #d97706;
+        background: var(--accent-warning);
+        border-color: var(--accent-warning);
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .modal-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        max-width: 460px;
+        width: 90%;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .floating-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: var(--shadow-lg);
+        z-index: 10000;
     }
 </style>
 {% endblock %}
@@ -53,11 +89,11 @@
     {% csrf_token %}
 
     <!-- Exam Header Bar -->
-    <div class="glass-card" style="margin-bottom: 20px; padding: 16px 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-body" style="padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div>
                 <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                    <span class="badge badge-teal">30 MCQ Technical Assessment</span>
+                    <span class="badge badge-blue">30 MCQ Technical Assessment</span>
                     <span class="badge badge-slate">{{ test.technology }}</span>
                 </div>
                 <h2 style="font-size: 18px; color: var(--text-primary); margin: 0;">Campus Placement Round 1</h2>
@@ -66,21 +102,21 @@
             <!-- Timer & Live Counters -->
             <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                 <div style="text-align: right;">
-                    <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Progress</div>
-                    <div style="font-size: 16px; font-weight: 800; color: #059669; line-height: 1.1;">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Progress</div>
+                    <div style="font-size: 16px; font-weight: 800; color: var(--accent-success); line-height: 1.1;">
                         <span id="answeredCount">0</span> / {{ total_count }} Answered
                     </div>
                 </div>
 
-                <div style="background: #ffffff; border: 1px solid var(--border-medium); border-radius: 10px; padding: 6px 14px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-sm);">
-                    <i class="fa-regular fa-clock" style="color: var(--accent-teal); font-size: 16px;"></i>
+                <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 6px 14px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-regular fa-clock text-accent" style="font-size: 16px;"></i>
                     <div>
                         <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Time Remaining</div>
-                        <div id="countdownTimer" style="font-size: 17px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-primary); line-height: 1;">30:00</div>
+                        <div id="countdownTimer" style="font-size: 17px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); line-height: 1;">30:00</div>
                     </div>
                 </div>
 
-                <button type="button" onclick="openSubmitModal()" class="btn-emerald" style="height: 38px; padding: 0 18px;">
+                <button type="button" onclick="openSubmitModal()" class="btn btn-success">
                     Submit Exam <i class="fa-solid fa-check"></i>
                 </button>
             </div>
@@ -91,119 +127,127 @@
     <div style="display: grid; grid-template-columns: 1fr 310px; gap: 20px; align-items: start;">
         
         <!-- Question Pane -->
-        <div class="glass-card" style="padding: 28px;">
-            {% for q in questions %}
-                <div class="question-container" id="q_pane_{{ forloop.counter }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                        <span class="badge badge-teal" style="font-size: 12px;">
-                            Question {{ forloop.counter }} of {{ total_count }}
-                        </span>
-                        <span class="badge badge-slate">{{ q.topic }}</span>
-                    </div>
-
-                    <h3 style="font-size: 17px; font-weight: 600; line-height: 1.6; color: var(--text-primary); margin-bottom: 22px; white-space: pre-wrap;">{{ q.question_text }}</h3>
-
-                    <!-- 4 Options -->
-                    <div class="options-group">
-                        {% if q.option1 %}
-                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option1|escapejs }}', this)">
-                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option1 }}" onchange="markAnswered({{ forloop.counter }})">
-                            <span><strong>A)</strong> {{ q.option1 }}</span>
-                        </label>
-                        {% endif %}
-
-                        {% if q.option2 %}
-                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option2|escapejs }}', this)">
-                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option2 }}" onchange="markAnswered({{ forloop.counter }})">
-                            <span><strong>B)</strong> {{ q.option2 }}</span>
-                        </label>
-                        {% endif %}
-
-                        {% if q.option3 %}
-                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option3|escapejs }}', this)">
-                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option3 }}" onchange="markAnswered({{ forloop.counter }})">
-                            <span><strong>C)</strong> {{ q.option3 }}</span>
-                        </label>
-                        {% endif %}
-
-                        {% if q.option4 %}
-                        <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option4|escapejs }}', this)">
-                            <input type="radio" name="q_{{ q.id }}" value="{{ q.option4 }}" onchange="markAnswered({{ forloop.counter }})">
-                            <span><strong>D)</strong> {{ q.option4 }}</span>
-                        </label>
-                        {% endif %}
-                    </div>
-
-                    <!-- Bottom Navigation Bar -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 10px;">
-                        <button type="button" class="btn-secondary" onclick="prevQuestion()" style="height: 38px;" {% if forloop.first %}disabled style="opacity: 0.5;"{% endif %}>
-                            <i class="fa-solid fa-arrow-left"></i> Previous <span style="font-size: 11px; color: var(--text-muted); margin-left: 4px;">[P]</span>
-                        </button>
-
-                        <div style="display: flex; gap: 8px;">
-                            <button type="button" class="btn-ghost" onclick="clearCurrentSelection({{ forloop.counter }}, {{ q.id }})" style="height: 38px; font-size: 12.5px;">
-                                <i class="fa-solid fa-eraser"></i> Clear
-                            </button>
-                            <button type="button" class="btn-secondary" onclick="toggleReview({{ forloop.counter }})" style="height: 38px; font-size: 12.5px; color: #b45309;">
-                                <i class="fa-regular fa-bookmark"></i> Review Later <span style="font-size: 10.5px; color: var(--text-muted); margin-left: 2px;">[F]</span>
-                            </button>
+        <div class="card">
+            <div class="card-body" style="padding: 28px;">
+                {% for q in questions %}
+                    <div class="question-container" id="q_pane_{{ forloop.counter }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                            <span class="badge badge-blue" style="font-size: 12px;">
+                                Question {{ forloop.counter }} of {{ total_count }}
+                            </span>
+                            <span class="badge badge-slate">{{ q.topic }}</span>
                         </div>
 
-                        {% if forloop.last %}
-                        <button type="button" class="btn-emerald" onclick="openSubmitModal()" style="height: 38px;">
-                            Review & Submit <i class="fa-solid fa-check"></i>
-                        </button>
-                        {% else %}
-                        <button type="button" class="btn-primary" onclick="nextQuestion()" style="height: 38px;">
-                            Next Question <i class="fa-solid fa-arrow-right"></i> <span style="font-size: 11px; opacity: 0.8; margin-left: 4px;">[N]</span>
-                        </button>
-                        {% endif %}
+                        <h3 style="font-size: 17px; font-weight: 600; line-height: 1.6; color: var(--text-primary); margin-bottom: 22px; white-space: pre-wrap;">{{ q.question_text }}</h3>
+
+                        <!-- 4 Options -->
+                        <div class="options-group">
+                            {% if q.option1 %}
+                            <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option1|escapejs }}', this)">
+                                <input type="radio" name="q_{{ q.id }}" value="{{ q.option1 }}" onchange="markAnswered({{ forloop.counter }})" style="display: none;">
+                                <div class="option-circle">A</div>
+                                <div class="option-text">{{ q.option1 }}</div>
+                            </label>
+                            {% endif %}
+
+                            {% if q.option2 %}
+                            <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option2|escapejs }}', this)">
+                                <input type="radio" name="q_{{ q.id }}" value="{{ q.option2 }}" onchange="markAnswered({{ forloop.counter }})" style="display: none;">
+                                <div class="option-circle">B</div>
+                                <div class="option-text">{{ q.option2 }}</div>
+                            </label>
+                            {% endif %}
+
+                            {% if q.option3 %}
+                            <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option3|escapejs }}', this)">
+                                <input type="radio" name="q_{{ q.id }}" value="{{ q.option3 }}" onchange="markAnswered({{ forloop.counter }})" style="display: none;">
+                                <div class="option-circle">C</div>
+                                <div class="option-text">{{ q.option3 }}</div>
+                            </label>
+                            {% endif %}
+
+                            {% if q.option4 %}
+                            <label class="option-row" onclick="selectOption({{ forloop.counter }}, '{{ q.option4|escapejs }}', this)">
+                                <input type="radio" name="q_{{ q.id }}" value="{{ q.option4 }}" onchange="markAnswered({{ forloop.counter }})" style="display: none;">
+                                <div class="option-circle">D</div>
+                                <div class="option-text">{{ q.option4 }}</div>
+                            </label>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bottom Navigation Bar -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px;">
+                            <button type="button" class="btn btn-secondary" onclick="prevQuestion()" {% if forloop.first %}disabled style="opacity: 0.5;"{% endif %}>
+                                <i class="fa-solid fa-arrow-left"></i> Previous <span style="font-size: 11px; color: var(--text-muted); margin-left: 4px;">[P]</span>
+                            </button>
+
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="btn btn-ghost" onclick="clearCurrentSelection({{ forloop.counter }}, {{ q.id }})">
+                                    <i class="fa-solid fa-eraser"></i> Clear
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="toggleReview({{ forloop.counter }})" style="color: var(--accent-warning);">
+                                    <i class="fa-regular fa-bookmark"></i> Review Later <span style="font-size: 10.5px; color: var(--text-muted); margin-left: 2px;">[F]</span>
+                                </button>
+                            </div>
+
+                            {% if forloop.last %}
+                            <button type="button" class="btn btn-success" onclick="openSubmitModal()">
+                                Review & Submit <i class="fa-solid fa-check"></i>
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" onclick="nextQuestion()">
+                                Next Question <i class="fa-solid fa-arrow-right"></i> <span style="font-size: 11px; opacity: 0.8; margin-left: 4px;">[N]</span>
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Right Question Palette Pane -->
-        <div class="glass-card" style="padding: 22px; position: sticky; top: 80px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h4 style="font-size: 14.5px; color: var(--text-primary); margin: 0; font-weight: 700;">Question Navigator</h4>
-                <span id="markedBadge" class="badge badge-amber" style="display: none; font-size: 11px;">
-                    <span id="markedCount">0</span> Flagged
-                </span>
-            </div>
-
-            <!-- Legend -->
-            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle);">
-                <span style="display: flex; align-items: center; gap: 4px;">
-                    <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--accent-emerald);"></span> Answered
-                </span>
-                <span style="display: flex; align-items: center; gap: 4px;">
-                    <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--accent-amber);"></span> Flagged
-                </span>
-                <span style="display: flex; align-items: center; gap: 4px;">
-                    <span style="width: 10px; height: 10px; border-radius: 2px; background: #ffffff; border: 1px solid var(--border-medium);"></span> Empty
-                </span>
-            </div>
-
-            <!-- 30 Palette Grid -->
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 18px;">
-                {% for q in questions %}
-                    <button type="button" class="palette-btn {% if forloop.first %}active{% endif %}" id="palette_{{ forloop.counter }}" onclick="jumpToQuestion({{ forloop.counter }})">
-                        {{ forloop.counter }}
-                    </button>
-                {% endfor %}
-            </div>
-
-            <!-- Keyboard Navigation Helper -->
-            <div style="background: #f8fafc; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 10px 12px; font-size: 11.5px; color: var(--text-secondary);">
-                <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 4px;"><i class="fa-solid fa-keyboard me-1" style="color: var(--accent-teal);"></i> Shortcuts:</div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span><strong>1,2,3,4</strong> or <strong>A,B,C,D</strong></span>
-                    <span>Select Option</span>
+        <div class="card" style="position: sticky; top: 80px;">
+            <div class="card-body" style="padding: 22px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="font-size: 14.5px; color: var(--text-primary); margin: 0; font-weight: 700;">Question Navigator</h4>
+                    <span id="markedBadge" class="badge badge-amber" style="display: none; font-size: 11px;">
+                        <span id="markedCount">0</span> Flagged
+                    </span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 2px;">
-                    <span><strong>N / &rarr;</strong> Next &bull; <strong>P / &larr;</strong> Prev</span>
-                    <span>Navigate</span>
+
+                <!-- Legend -->
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--accent-success);"></span> Answered
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--accent-warning);"></span> Flagged
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--bg-surface); border: 1px solid var(--border);"></span> Empty
+                    </span>
+                </div>
+
+                <!-- 30 Palette Grid -->
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 18px;">
+                    {% for q in questions %}
+                        <button type="button" class="palette-btn {% if forloop.first %}active{% endif %}" id="palette_{{ forloop.counter }}" onclick="jumpToQuestion({{ forloop.counter }})">
+                            {{ forloop.counter }}
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <!-- Keyboard Navigation Helper -->
+                <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 11.5px; color: var(--text-secondary);">
+                    <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 4px;"><i class="fa-solid fa-keyboard me-1 text-accent"></i> Shortcuts:</div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span><strong>1,2,3,4</strong> or <strong>A,B,C,D</strong></span>
+                        <span>Select Option</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+                        <span><strong>N / &rarr;</strong> Next &bull; <strong>P / &larr;</strong> Prev</span>
+                        <span>Navigate</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -213,20 +257,20 @@
 <!-- SUBMIT CONFIRMATION MODAL -->
 <div id="submitModal" class="modal-overlay" style="display: none;">
     <div class="modal-card">
-        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-emerald-light); border: 1px solid var(--accent-emerald-border); display: flex; align-items: center; justify-content: center; color: #047857; font-size: 20px; margin-bottom: 14px;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-success-subtle); border: 1px solid var(--accent-success-border); display: flex; align-items: center; justify-content: center; color: var(--accent-success); font-size: 20px; margin-bottom: 14px;">
             <i class="fa-solid fa-check-double"></i>
         </div>
         <h3 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px;">Submit Technical Assessment?</h3>
         <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px;">
-            You have answered <strong id="modalAnsweredCount" style="color: var(--accent-teal);">0</strong> out of {{ total_count }} questions.
-            <span id="modalUnansweredNotice" style="display: block; margin-top: 4px; color: #b45309;"></span>
+            You have answered <strong id="modalAnsweredCount" class="text-accent">0</strong> out of {{ total_count }} questions.
+            <span id="modalUnansweredNotice" style="display: block; margin-top: 4px; color: var(--accent-warning);"></span>
         </p>
 
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button type="button" onclick="closeSubmitModal()" class="btn-secondary" style="height: 38px;">
+            <button type="button" onclick="closeSubmitModal()" class="btn btn-secondary">
                 Keep Reviewing
             </button>
-            <button type="button" onclick="executeSubmit()" class="btn-emerald" style="height: 38px; padding: 0 20px;">
+            <button type="button" onclick="executeSubmit()" class="btn btn-success">
                 Confirm & Submit <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
@@ -234,8 +278,8 @@
 </div>
 
 <!-- TAB SWITCH PROCTORING TOAST NOTIFICATION -->
-<div id="proctorToast" class="floating-toast" style="display: none; border-left: 4px solid var(--accent-rose);">
-    <div style="color: var(--accent-rose); font-size: 20px;">
+<div id="proctorToast" class="floating-toast" style="display: none; border-left: 4px solid var(--accent-danger);">
+    <div style="color: var(--accent-danger); font-size: 20px;">
         <i class="fa-solid fa-triangle-exclamation"></i>
     </div>
     <div>
@@ -317,75 +361,26 @@
             markedSet.add(qNum);
             btn.classList.add('marked');
         }
+
+        const count = markedSet.size;
         const badge = document.getElementById('markedBadge');
-        const count = document.getElementById('markedCount');
-        if (markedSet.size > 0) {
-            badge.style.display = 'inline-flex';
-            count.innerText = markedSet.size;
+        if (count > 0) {
+            badge.style.display = 'inline-block';
+            document.getElementById('markedCount').innerText = count;
         } else {
             badge.style.display = 'none';
         }
     }
 
-    // Keyboard Shortcuts
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-        const key = e.key.toLowerCase();
-        if (key === 'n' || e.key === 'ArrowRight') {
-            nextQuestion();
-        } else if (key === 'p' || e.key === 'ArrowLeft') {
-            prevQuestion();
-        } else if (key === 'f') {
-            toggleReview(currentQ);
-        } else if (['1', '2', '3', '4', 'a', 'b', 'c', 'd'].includes(key)) {
-            let optIdx = 0;
-            if (['1', 'a'].includes(key)) optIdx = 0;
-            else if (['2', 'b'].includes(key)) optIdx = 1;
-            else if (['3', 'c'].includes(key)) optIdx = 2;
-            else if (['4', 'd'].includes(key)) optIdx = 3;
-
-            const currentPane = document.getElementById(`q_pane_${currentQ}`);
-            const rows = currentPane.querySelectorAll('.option-row');
-            if (rows[optIdx]) {
-                rows[optIdx].click();
-            }
-        }
-    });
-
-    // Countdown Timer (30 minutes)
-    let timeLeft = 30 * 60;
-    const timerElem = document.getElementById('countdownTimer');
-    const timerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        timerElem.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-
-        if (timeLeft <= 300) {
-            timerElem.style.color = '#dc2626';
-        }
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            isSubmitting = true;
-            document.getElementById('examForm').submit();
-        }
-    }, 1000);
-
-    // Modal Submit Flow
     function openSubmitModal() {
-        const answered = answeredSet.size;
-        const unanswered = totalQ - answered;
-        document.getElementById('modalAnsweredCount').innerText = answered;
-        
+        document.getElementById('modalAnsweredCount').innerText = answeredSet.size;
+        const unanswered = totalQ - answeredSet.size;
         const notice = document.getElementById('modalUnansweredNotice');
         if (unanswered > 0) {
-            notice.innerText = `You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Unanswered questions receive 0 points.`;
+            notice.innerText = `Warning: You still have ${unanswered} unanswered question(s).`;
         } else {
-            notice.innerText = "All 30 questions answered! Great job.";
+            notice.innerText = "All 30 questions have been answered. Ready for scoring!";
         }
-
         document.getElementById('submitModal').style.display = 'flex';
     }
 
@@ -395,40 +390,92 @@
 
     function executeSubmit() {
         isSubmitting = true;
-        clearInterval(timerInterval);
         document.getElementById('examForm').submit();
     }
 
-    // Proctoring: Tab Switch Logging
-    let violations = 0;
-    document.addEventListener("visibilitychange", async function() {
-        if (document.hidden && !isSubmitting) {
-            violations++;
-            
-            // Show toast
-            const toast = document.getElementById('proctorToast');
-            const msg = document.getElementById('toastMessage');
-            msg.innerText = `Tab switch detected (${violations}/3 warnings). Multiple switches will automatically lock the test.`;
-            toast.style.display = 'flex';
-            setTimeout(() => { toast.style.display = 'none'; }, 5000);
+    // 30-Minute Countdown Timer
+    let secondsLeft = 30 * 60;
+    const timerElem = document.getElementById('countdownTimer');
+    const timerInterval = setInterval(() => {
+        if (isSubmitting) {
+            clearInterval(timerInterval);
+            return;
+        }
 
-            // Log to server
-            try {
-                const resp = await fetch(`/api/test/${testId}/violation/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    }
-                });
-                const data = await resp.json();
-                if (data.blocked && data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                }
-            } catch(e) {
-                console.error("Proctoring log error:", e);
-            }
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Time has expired! Automatically submitting your assessment now.");
+            executeSubmit();
+            return;
+        }
+
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        timerElem.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+
+        if (secondsLeft <= 300) {
+            timerElem.style.color = 'var(--accent-danger)';
+        }
+    }, 1000);
+
+    // Tab-Switch Proctoring Engine
+    let infractions = 0;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && !isSubmitting) {
+            infractions++;
+            fetch(`/log-infraction/${testId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ type: 'tab_switch', infraction_count: infractions })
+            }).then(r => r.json()).then(data => {
+                showProctorToast(infractions, data.max_allowed || 3);
+            }).catch(e => console.log('Infraction log failed', e));
         }
     });
+
+    function showProctorToast(count, maxAllowed) {
+        const toast = document.getElementById('proctorToast');
+        const msg = document.getElementById('toastMessage');
+        msg.innerText = `Tab switch detected (${count}/${maxAllowed} warnings). Stay on screen.`;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 5000);
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('submitModal').style.display === 'flex') {
+            if (e.key === 'Escape') closeSubmitModal();
+            return;
+        }
+
+        const key = e.key.toLowerCase();
+        if (key === 'n' || e.key === 'ArrowRight') {
+            nextQuestion();
+        } else if (key === 'p' || e.key === 'ArrowLeft') {
+            prevQuestion();
+        } else if (key === 'f') {
+            toggleReview(currentQ);
+        } else if (['1', 'a'].includes(key)) {
+            triggerOptionClick(1);
+        } else if (['2', 'b'].includes(key)) {
+            triggerOptionClick(2);
+        } else if (['3', 'c'].includes(key)) {
+            triggerOptionClick(3);
+        } else if (['4', 'd'].includes(key)) {
+            triggerOptionClick(4);
+        }
+    });
+
+    function triggerOptionClick(optIndex) {
+        const pane = document.getElementById(`q_pane_${currentQ}`);
+        const rows = pane.querySelectorAll('.option-row');
+        if (rows[optIndex - 1]) {
+            rows[optIndex - 1].click();
+        }
+    }
 </script>
 {% endblock %}

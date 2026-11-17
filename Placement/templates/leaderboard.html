@@ -6,7 +6,7 @@
 {% block content %}
 <div class="topbar">
     <div class="topbar-title">
-        <div class="badge badge-amber" style="margin-bottom: 6px;">
+        <div class="badge badge-amber" style="margin-bottom: 8px;">
             <i class="fa-solid fa-trophy"></i> Campus Readiness Benchmark
         </div>
         <h1>Candidate Placement Leaderboard</h1>
@@ -14,7 +14,7 @@
     </div>
     
     <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="{% url 'dashboard' %}" class="btn-secondary">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
             <i class="fa-solid fa-arrow-left"></i> Dashboard
         </a>
     </div>
@@ -23,88 +23,97 @@
 <!-- Top 3 Podium Showcase Cards -->
 <div class="grid-3" style="margin-bottom: 28px; align-items: stretch;">
     {% for p in top3 %}
-        <div class="glass-card" style="text-align: center; border-top: 3px solid {% if forloop.counter == 1 %}#f59e0b{% elif forloop.counter == 2 %}#64748b{% else %}#b45309{% endif %}; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 20px;">
-            <div>
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: {% if forloop.counter == 1 %}var(--accent-amber-light){% elif forloop.counter == 2 %}#f1f5f9{% else %}#fff7ed{% endif %}; border: 1px solid {% if forloop.counter == 1 %}var(--accent-amber-border){% elif forloop.counter == 2 %}#cbd5e1{% else %}#fed7aa{% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 20px; color: {% if forloop.counter == 1 %}#f59e0b{% elif forloop.counter == 2 %}#64748b{% else %}#b45309{% endif %};">
+        <div class="card" style="text-align: center; border-top: 3px solid {% if forloop.counter == 1 %}var(--accent-warning){% elif forloop.counter == 2 %}var(--text-muted){% else %}var(--accent-warning){% endif %}; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card-body">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: {% if forloop.counter == 1 %}var(--accent-warning-subtle){% elif forloop.counter == 2 %}var(--bg-surface-elevated){% else %}var(--accent-warning-subtle){% endif %}; border: 1px solid {% if forloop.counter == 1 %}var(--accent-warning-border){% elif forloop.counter == 2 %}var(--border){% else %}var(--accent-warning-border){% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 20px; color: {% if forloop.counter == 1 %}var(--accent-warning){% elif forloop.counter == 2 %}var(--text-muted){% else %}var(--accent-warning){% endif %};">
                     <i class="fa-solid fa-crown"></i>
                 </div>
                 <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Rank #{{ forloop.counter }}</div>
                 <h3 style="font-size: 17px; color: var(--text-primary); margin: 4px 0 8px; font-weight: 700;">{{ p.user.username }}</h3>
             </div>
             
-            <div>
-                <div style="font-size: 28px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: #059669; margin-bottom: 6px; line-height: 1;">
+            <div class="card-footer" style="flex-direction: column; gap: 6px;">
+                <div style="font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-success); line-height: 1;">
                     {{ p.overall_readiness }}%
                 </div>
                 
-                <div style="display: flex; justify-content: center; gap: 6px; font-size: 11.5px; color: var(--text-secondary); margin-top: 6px;">
+                <div style="display: flex; justify-content: center; gap: 6px; font-size: 11.5px; color: var(--text-secondary);">
                     <span>ATS: {{ p.resume_score }}%</span> &bull;
                     <span>MCQ: {{ p.mock_score }}%</span> &bull;
-                    <span>Interview: {{ p.interview_score }}%</span>
+                    <span>IV: {{ p.interview_score }}%</span>
                 </div>
             </div>
         </div>
     {% empty %}
-        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 32px;">
+        <div class="card" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 32px;">
             No candidates ranked yet. Complete all 3 preparation rounds to top the campus leaderboard!
         </div>
     {% endfor %}
 </div>
 
 <!-- Leaderboard Table -->
-<div class="glass-card" style="padding: 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-        <h3 style="font-size: 17px; color: var(--text-primary); margin: 0;">Complete Cohort Readiness Rankings</h3>
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary);">
+                Complete Cohort Readiness Rankings
+            </h3>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                Composite score updated upon every completed evaluation round.
+            </p>
+        </div>
         
-        <input type="text" id="leaderSearch" placeholder="Search candidate..." onkeyup="filterLeaderboard()" class="form-control" style="width: 220px; height: 34px; font-size: 12.5px;">
+        <input type="text" id="leaderSearch" placeholder="Search candidate..." onkeyup="filterLeaderboard()" class="form-input" style="width: 220px; height: 34px; font-size: 12.5px;">
     </div>
     
-    <div class="table-responsive">
-        <table id="leaderTable">
-            <thead>
-                <tr>
-                    <th style="width: 80px;">Rank</th>
-                    <th>Candidate</th>
-                    <th>Stage 1: ATS (25%)</th>
-                    <th>Stage 2: 30 MCQs (35%)</th>
-                    <th>Stage 3: AI Interview (40%)</th>
-                    <th style="text-align: right;">Overall Readiness</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in leaderboard %}
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="audit-table" id="leaderTable">
+                <thead>
                     <tr>
-                        <td style="font-weight: 700; color: {% if forloop.counter <= 3 %}#b45309{% else %}var(--text-muted){% endif %};">
-                            #{{ forloop.counter }}
-                        </td>
-                        <td style="font-weight: 600; color: var(--text-primary);">
-                            {{ p.user.username }}
-                            {% if p.user == request.user %}
-                                <span class="badge badge-teal" style="font-size: 10px; margin-left: 6px;">You</span>
-                            {% endif %}
-                        </td>
-                        <td style="color: var(--text-secondary);">
-                            {{ p.resume_score }}%
-                        </td>
-                        <td style="color: var(--text-secondary);">
-                            {{ p.mock_score }}%
-                        </td>
-                        <td style="color: var(--text-secondary);">
-                            {{ p.interview_score }}%
-                        </td>
-                        <td style="text-align: right; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: #059669;">
-                            {{ p.overall_readiness }}%
-                        </td>
+                        <th style="width: 80px;">Rank</th>
+                        <th>Candidate</th>
+                        <th>Stage 1: ATS (25%)</th>
+                        <th>Stage 2: 30 MCQs (35%)</th>
+                        <th>Stage 3: AI Interview (40%)</th>
+                        <th style="text-align: right;">Overall Readiness</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">
-                            No assessment records found.
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for p in leaderboard %}
+                        <tr>
+                            <td style="font-weight: 700; font-family: 'JetBrains Mono', monospace; color: {% if forloop.counter <= 3 %}var(--accent-warning){% else %}var(--text-muted){% endif %};">
+                                #{{ forloop.counter }}
+                            </td>
+                            <td style="font-weight: 600; color: var(--text-primary);">
+                                {{ p.user.username }}
+                                {% if p.user == request.user %}
+                                    <span class="badge badge-blue" style="font-size: 10px; margin-left: 6px;">You</span>
+                                {% endif %}
+                            </td>
+                            <td style="color: var(--text-secondary);">
+                                {{ p.resume_score }}%
+                            </td>
+                            <td style="color: var(--text-secondary);">
+                                {{ p.mock_score }}%
+                            </td>
+                            <td style="color: var(--text-secondary);">
+                                {{ p.interview_score }}%
+                            </td>
+                            <td style="text-align: right; font-weight: 800; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--accent-success);">
+                                {{ p.overall_readiness }}%
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                                No assessment records found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
