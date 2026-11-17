@@ -1996,3 +1996,279 @@ table tbody tr:hover td {
         padding: 30px 16px;
     }
 }
+
+/* =========================================================================
+   BENTO GRIDS DESIGN SYSTEM (APPLE MODULAR STYLE)
+   ========================================================================= */
+
+:root {
+  --canvas: #F5F5F7;
+  --tile: #FFFFFF;
+  --ink: #1D1D1F;
+  --blue: #007AFF; /* focus rings and icons; tiles with white text use #0066CC */
+  --blue-tile: #0066CC;
+  --green: #34C759;
+  --text-muted: #4B5563;
+}
+
+body {
+  background: var(--canvas) !important;
+  color: var(--ink) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(140px, auto);
+  gap: 1rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--tile);
+  color: var(--text-muted);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  position: relative;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Only tiles that link somewhere lift on hover */
+a.tile:hover,
+.tile:has(a, button):hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.08);
+}
+
+a.tile:focus-visible,
+.tile a:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.tile--wide {
+  grid-column: span 2;
+}
+
+/* Featured tile: 2x2 with a bold gradient */
+.tile--feature {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 2rem;
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+  color: #FFFFFF;
+}
+
+.tile--blue {
+  background: var(--blue-tile);
+  color: #FFFFFF;
+}
+
+.tile--green {
+  background: var(--green);
+  color: var(--ink);
+}
+
+.tile--dark {
+  background: var(--ink);
+  color: #FFFFFF;
+}
+
+.tile h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: inherit;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    gap: 0.75rem;
+  }
+}
+
+/* Content reveal: tiles rise in one after another */
+@media (prefers-reduced-motion: no-preference) {
+  .tile {
+    animation: reveal 500ms ease-out backwards;
+  }
+
+  .tile:nth-child(2) { animation-delay: 60ms; }
+  .tile:nth-child(3) { animation-delay: 120ms; }
+  .tile:nth-child(4) { animation-delay: 180ms; }
+  .tile:nth-child(n + 5) { animation-delay: 240ms; }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+}
+
+/* Apple Style Top Navigation */
+.apple-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.apple-nav-inner {
+  max-width: 64rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.apple-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.apple-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.apple-nav-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  transition: all 150ms ease;
+}
+
+.apple-nav-link:hover, .apple-nav-link.active {
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.apple-nav-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(0, 122, 255, 0.08);
+  color: var(--blue);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+/* Bento Button Utilities */
+.bento-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--blue);
+  color: #FFFFFF !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.bento-btn-primary:hover {
+  background: var(--blue-tile);
+  transform: translateY(-1px);
+}
+
+.bento-btn-primary:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.bento-btn-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #FFFFFF;
+  color: var(--ink) !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.bento-btn-white:hover {
+  background: #F0F0F2;
+  transform: translateY(-1px);
+}
+
+.bento-btn-white:focus-visible {
+  outline: 3px solid #FFFFFF;
+  outline-offset: 3px;
+}
+
+.bento-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.bento-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.bento-main {
+  min-height: calc(100vh - 52px);
+  padding: 2rem 1rem 4rem;
+  background: var(--canvas);
+  width: 100%;
+  box-sizing: border-box;
+}

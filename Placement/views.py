@@ -28,133 +28,16 @@ from .ai.gemini_engine import (
 # =========================================================================
 
 def home(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff or request.user.is_superuser:
-            return redirect('admin_home')
-        return redirect('dashboard')
-    return render(request, "home.html")
+    return redirect('dashboard')
 
 def register(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff or request.user.is_superuser:
-            return redirect('admin_home')
-        return redirect('dashboard')
-
-    if request.method == "POST":
-        username = request.POST.get("username", "").strip()
-        phone = request.POST.get("phone", "").strip()
-        password = request.POST.get("password", "")
-        confirm_password = request.POST.get("confirm_password", "")
-
-        if not phone or not password:
-            messages.error(request, "Phone Number and Password are required.")
-            return redirect("register")
-
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect("register")
-
-        clean_phone = "".join(c for c in phone if c.isdigit())
-        if not clean_phone:
-            clean_phone = phone
-
-        # Check if phone number is already registered
-        if StudentProfile.objects.filter(Q(phone=phone) | Q(phone=clean_phone)).exists():
-            messages.error(request, "This phone number is already registered. Please sign in.")
-            return redirect("login")
-
-        if not username:
-            username = f"candidate_{clean_phone[-6:] if len(clean_phone) >= 6 else clean_phone}"
-
-        # Ensure unique username in User model
-        final_username = username
-        if User.objects.filter(username=final_username).exists():
-            final_username = f"{username}_{clean_phone[-4:] if len(clean_phone) >= 4 else User.objects.count() + 1}"
-
-        user = User.objects.create_user(
-            username=final_username,
-            password=password,
-            email=f"{clean_phone}@nexus.local"
-        )
-
-        StudentProfile.objects.create(
-            user=user,
-            phone=phone,
-            technology="Software Development Engineer"
-        )
-
-        PlacementProgress.objects.create(user=user)
-
-        login(request, user)
-        messages.success(request, f"Welcome to Placement Nexus 360, {user.username}!")
-        return redirect("dashboard")
-
-    return render(request, "register.html")
+    return redirect('dashboard')
 
 def login_view(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff or request.user.is_superuser:
-            return redirect('admin_home')
-        return redirect('dashboard')
-
-    if request.method == "POST":
-        phone_input = request.POST.get("phone", "").strip()
-        password = request.POST.get("password", "")
-
-        # Unique Admin credential definitions (configurable via environment variables)
-        admin_phone = os.getenv("ADMIN_PHONE", "9999999999")
-        admin_username = os.getenv("ADMIN_USERNAME", "admin360")
-        admin_password = os.getenv("ADMIN_PASSWORD", "Nexus@Admin2025")
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@nexus360.com")
-
-        clean_phone = "".join(c for c in phone_input if c.isdigit())
-
-        # Automatic detection and provisioning of unique admin credentials
-        if (phone_input in [admin_phone, admin_username, admin_email] or (clean_phone and clean_phone == admin_phone)) and password == admin_password:
-            admin_obj, _ = User.objects.get_or_create(
-                username=admin_username,
-                defaults={"email": admin_email, "is_staff": True, "is_superuser": True}
-            )
-            admin_obj.set_password(admin_password)
-            admin_obj.is_staff = True
-            admin_obj.is_superuser = True
-            admin_obj.save()
-            admin_profile, _ = StudentProfile.objects.get_or_create(user=admin_obj)
-            admin_profile.phone = admin_phone
-            admin_profile.save()
-
-        user = None
-
-        # 1. Lookup student/user by phone number in StudentProfile
-        if clean_phone or phone_input:
-            profile = StudentProfile.objects.filter(
-                Q(phone=phone_input) | 
-                (Q(phone=clean_phone) if clean_phone else Q())
-            ).select_related('user').first()
-            if profile and profile.user:
-                user = authenticate(request, username=profile.user.username, password=password)
-
-        # 2. Fallback: try authenticating directly by username/admin username
-        if user is None and phone_input:
-            user = authenticate(request, username=phone_input, password=password)
-
-        if user is not None:
-            login(request, user)
-            PlacementProgress.objects.get_or_create(user=user)
-            # Automatic role-based routing: Admin directly to Admin Portal, students to Dashboard
-            if user.is_staff or user.is_superuser:
-                messages.success(request, f"Welcome back Administrator {user.username}. Logged into Admin Portal.")
-                return redirect("admin_home")
-            return redirect("dashboard")
-        else:
-            messages.error(request, "Invalid phone number or password. Please verify and try again.")
-
-    return render(request, "login.html")
+    return redirect('dashboard')
 
 def logout_view(request):
-    logout(request)
-    messages.success(request, "You have been logged out successfully.")
-    return redirect("login")
+    return redirect('dashboard')
 
 # =========================================================================
 # DASHBOARD & RESUME ATS ANALYSIS

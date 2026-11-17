@@ -24,116 +24,63 @@
 </head>
 <body>
 
-    {% if not user.is_authenticated and request.resolver_match.url_name != 'home' %}
-    <!-- Public Header for Guests (Ploy Modern Navbar Style for Login/Register) -->
-    <header class="top-navbar-public">
-        <div class="navbar-public-inner">
-            <!-- Brand Wordmark -->
-            <a href="{% url 'home' %}" class="brand-wordmark-link">
-                <span class="brand-wordmark-main">nexus</span><span class="brand-wordmark-sub">360</span>
+    <!-- Apple-Style Frosted Top Navigation (Login & Registration Removed) -->
+    <header class="apple-nav">
+        <div class="apple-nav-inner">
+            <a href="{% url 'dashboard' %}" class="apple-nav-brand">
+                <i class="fa-solid fa-cube" style="color: var(--blue);"></i>
+                <span>Placement Nexus 360</span>
             </a>
 
-            <!-- Center Navigation Links -->
-            <nav class="nav-links-center">
-                <a href="{% url 'home' %}#platform" class="nav-center-item">Platform</a>
-                <a href="{% url 'home' %}#stages" class="nav-center-item">Pipeline</a>
-                <a href="{% url 'home' %}#solutions" class="nav-center-item">Solutions</a>
-                <a href="{% url 'home' %}#integrity" class="nav-center-item">Integrity</a>
-                <a href="{% url 'leaderboard' %}" class="nav-center-item">Leaderboard</a>
-                <a href="{% url 'home' %}#the-360-effect" class="nav-center-item nav-highlight-link">The 360 Effect</a>
-            </nav>
-
-            <!-- Right Action Pills -->
-            <div class="nav-actions-right">
-                <a href="{% url 'login' %}" class="btn-pill-login">Log in</a>
-                <a href="{% url 'register' %}" class="btn-pill-start">Start Free</a>
-            </div>
-        </div>
-    </header>
-    {% endif %}
-
-    <div class="app-wrapper" style="{% if not user.is_authenticated %}flex-direction: column;{% endif %}">
-        {% if user.is_authenticated %}
-        <!-- Authenticated Sidebar Navigation -->
-        <aside class="sidebar">
-            <a href="{% url 'dashboard' %}" class="logo-container">
-                <div class="logo-icon">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <div>
-                    <div class="logo-text">Placement Nexus</div>
-                    <div class="logo-sub">360 Preparation</div>
-                </div>
-            </a>
-
-            <nav class="menu">
-                <div class="nav-section-title">Core Rounds</div>
-                <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+            <nav class="apple-nav-links">
+                <a href="{% url 'dashboard' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'dashboard,home' %}active{% endif %}">
+                    Dashboard
                 </a>
-                <a href="{% url 'dashboard' %}#resume-section" class="{% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
-                    <i class="fa-solid fa-file-shield"></i> 1. Resume ATS
+                <a href="{% url 'dashboard' %}#resume-section" class="apple-nav-link {% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
+                    1. Resume ATS
                 </a>
-                <a href="{% url 'select_tech' %}" class="{% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
-                    <i class="fa-solid fa-list-check"></i> 2. 30 MCQ Test
+                <a href="{% url 'select_tech' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
+                    2. 30 MCQ Test
                 </a>
-                <a href="{% url 'ai_interview' %}" class="{% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result,interview_discarded' %}active{% endif %}">
-                    <i class="fa-solid fa-video"></i> 3. AI Interview
+                <a href="{% url 'ai_interview' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result,interview_discarded' %}active{% endif %}">
+                    3. AI Interview
                 </a>
-
-                <div class="nav-section-title">Progress & Cohorts</div>
-                <a href="{% url 'leaderboard' %}" class="{% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
-                    <i class="fa-solid fa-trophy"></i> Leaderboard
+                <a href="{% url 'leaderboard' %}" class="apple-nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
+                    Leaderboard
                 </a>
 
                 {% if user.is_staff or user.is_superuser %}
-                    <div class="nav-section-title">Administration</div>
-                    <a href="{% url 'admin_home' %}" class="{% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
-                        <i class="fa-solid fa-sliders"></i> Admin Portal
-                    </a>
+                <a href="{% url 'admin_home' %}" class="apple-nav-link {% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
+                    Admin Portal
+                </a>
                 {% endif %}
             </nav>
 
-            <div class="sidebar-footer">
-                <div class="user-mini-card">
-                    <div class="user-mini-avatar">
-                        {{ user.username|slice:":1"|upper }}
-                    </div>
-                    <div class="user-mini-info">
-                        <div class="user-mini-name">{{ user.username }}</div>
-                        <div class="user-mini-role">
-                            {% if user.is_staff or user.is_superuser %}
-                                <span style="color: var(--accent-teal); font-weight: 600;">Admin</span>
-                            {% else %}
-                                {{ user.profile.technology|default:"Candidate"|truncatechars:18 }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <a href="{% url 'logout' %}" title="Sign Out" style="color: var(--text-muted); text-decoration: none; padding: 4px; font-size: 14px;">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </a>
-                </div>
+            <div>
+                <span class="apple-nav-badge">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>{{ user.profile.technology|default:"Software Engineering" }}</span>
+                </span>
             </div>
-        </aside>
+        </div>
+    </header>
+
+    <!-- Bento Canvas Main Container -->
+    <main class="bento-main">
+        <!-- Messages & Notifications -->
+        {% if messages %}
+            <div style="max-width: 64rem; margin: 0 auto 1.5rem;">
+                {% for message in messages %}
+                    <div style="background: #ffffff; border-radius: 1rem; padding: 0.85rem 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem; color: var(--ink);">
+                        <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation" style="color: #FF3B30;{% elif message.tags == 'success' %}fa-circle-check" style="color: var(--green);{% else %}fa-triangle-exclamation" style="color: #FF9500;{% endif %}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
-        <!-- Main Content Area -->
-        <main class="{% if user.is_authenticated %}main{% elif request.resolver_match.url_name == 'home' %}main-home-exact{% else %}main-public{% endif %}">
-            <!-- Messages & Notifications -->
-            {% if messages %}
-                <div class="messages-container" style="margin-bottom: 20px;">
-                    {% for message in messages %}
-                        <div class="alert-box {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-warning{% endif %}">
-                            <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% else %}fa-triangle-exclamation{% endif %}"></i>
-                            <span>{{ message }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% block content %}{% endblock %}
-        </main>
-    </div>
+        {% block content %}{% endblock %}
+    </main>
 
     {% block extra_scripts %}{% endblock %}
 </body>

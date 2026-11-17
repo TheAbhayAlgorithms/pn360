@@ -8,14 +8,12 @@ urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
 
-    # Authentication
-    path('', views.home, name='home'),
-    path('register/', views.register, name='register'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-
-    # Dashboard & Resume ATS
+    # Main Application (Direct to Dashboard - No Login / Registration Barrier)
+    path('', views.dashboard, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('register/', views.dashboard, name='register'),
+    path('login/', views.dashboard, name='login'),
+    path('logout/', views.dashboard, name='logout'),
     path('resume/<int:resume_id>/', views.resume_result, name='resume_result'),
 
     # Step 2: 30 MCQ Test (Gemini)
