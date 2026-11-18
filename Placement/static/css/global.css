@@ -68,6 +68,18 @@
     /* Charts */
     --chart-grid: rgba(226, 232, 240, 0.7);
     --chart-text: #64748b;
+
+    /* Hanging Corner Ceiling Lamp */
+    --lamp-wire: #71717a;
+    --lamp-cap: #71717a;
+    --lamp-shade: #e4e4e7;
+    --lamp-shade-border: #d4d4d8;
+    --lamp-bulb: #facc15;
+    --lamp-bulb-glow: drop-shadow(0 0 12px rgba(250, 204, 21, 0.9)) drop-shadow(0 0 25px rgba(250, 204, 21, 0.5));
+    --lamp-string: #71717a;
+    --lamp-bob: #18181b;
+    --lamp-bob-border: #27272a;
+    --lamp-bob-ring: #52525b;
 }
 
 [data-theme="dark"] {
@@ -122,6 +134,18 @@
     /* Charts */
     --chart-grid: rgba(30, 41, 59, 0.6);
     --chart-text: #94a3b8;
+
+    /* Hanging Corner Ceiling Lamp */
+    --lamp-wire: #3f3f46;
+    --lamp-cap: #3f3f46;
+    --lamp-shade: #27272a;
+    --lamp-shade-border: #3f3f46;
+    --lamp-bulb: #1c1c1f;
+    --lamp-bulb-glow: none;
+    --lamp-string: #a1a1aa;
+    --lamp-bob: #f4f4f5;
+    --lamp-bob-border: #ffffff;
+    --lamp-bob-ring: #d4d4d8;
 }
 
 /* =========================================================================
@@ -1182,4 +1206,86 @@ kbd {
 .text-danger {
     color: var(--accent-danger) !important;
 }
+
+/* =========================================================================
+   17. HANGING CEILING LAMP CORNER THEME TOGGLE
+   ========================================================================= */
+
+.corner-lamp-container {
+    position: fixed;
+    top: 0;
+    right: 28px;
+    width: 88px;
+    height: 170px;
+    z-index: 10002;
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.corner-lamp-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.lamp-pull-target {
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+    transition: filter 0.2s ease;
+}
+
+.lamp-pull-target:hover {
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+}
+
+.lamp-pull-target:active {
+    cursor: grabbing;
+}
+
+.lamp-tooltip {
+    position: absolute;
+    bottom: -16px;
+    right: 50%;
+    transform: translateX(50%);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.corner-lamp-container:hover .lamp-tooltip {
+    opacity: 0.9;
+    transform: translateX(50%) translateY(4px);
+}
+
+/* Expanding Circular Radial Mask Overlay */
+.lamp-ripple-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10000;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .corner-lamp-container {
+        right: 12px;
+        transform: scale(0.82);
+        transform-origin: top right;
+    }
+}
+
 
