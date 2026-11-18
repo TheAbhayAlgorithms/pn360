@@ -124,51 +124,11 @@
         </div>
     </footer>
 
-    <!-- Hanging Ceiling Lamp Corner Theme Switcher (as seen in reference video) -->
-    <div id="cornerLamp" class="corner-lamp-container" title="Pull cord to toggle Dark / Light mode">
-        <svg class="corner-lamp-svg" viewBox="0 0 100 160">
-            <!-- Ceiling Hanging Cable -->
-            <line x1="50" y1="0" x2="50" y2="24" stroke="var(--lamp-wire)" stroke-width="2" />
-            
-            <!-- Socket Collar -->
-            <rect x="44" y="24" width="12" height="7" rx="2" fill="var(--lamp-cap)" />
-            
-            <!-- Lightbulb (peaks out from under shade with warm glow in light mode, dark in dark mode) -->
-            <ellipse id="lampBulb" cx="50" cy="56" rx="14" ry="11" fill="var(--lamp-bulb)" style="filter: var(--lamp-bulb-glow); transition: fill 0.3s ease, filter 0.3s ease;" />
-            
-            <!-- Lampshade Dome Hood -->
-            <path d="M 14 56 C 14 26, 86 26, 86 56 Z" fill="var(--lamp-shade)" stroke="var(--lamp-shade-border)" stroke-width="1.5" style="transition: fill 0.3s ease, stroke 0.3s ease;" />
-
-            <!-- Pull String (stretches and oscillates with spring physics) -->
-            <path id="pullString" d="M 70 56 Q 73 82 70 108" stroke="var(--lamp-string)" stroke-width="1.6" fill="none" stroke-linecap="round" />
-
-            <!-- Interactive Pull Handle (Bob) Group (Draggable and Clickable) -->
-            <g id="pullBobGroup" class="lamp-pull-target" transform="translate(0, 0)">
-                <circle cx="70" cy="108" r="2.5" fill="var(--lamp-bob-ring)" />
-                <rect x="64" y="108" width="12" height="24" rx="6" fill="var(--lamp-bob)" stroke="var(--lamp-bob-border)" stroke-width="1.5" style="transition: fill 0.3s ease, stroke 0.3s ease;" />
-            </g>
-        </svg>
-        <div class="lamp-tooltip">Pull cord</div>
-    </div>
-
-    <!-- Expanding Circular Radial Mask Overlay (Wipe from Lamp Bulb) -->
-    <div id="lampThemeRipple" class="lamp-ripple-overlay"></div>
-
-    <!-- Interactive Lamp Physics & Theme Switcher Script -->
+    <!-- Dark / Light Mode Theme Script -->
     <script>
         (function() {
             const toggleBtn = document.getElementById('themeToggleBtn');
             const toggleIcon = document.getElementById('themeToggleIcon');
-            const pullBobGroup = document.getElementById('pullBobGroup');
-            const pullString = document.getElementById('pullString');
-            const lampBulb = document.getElementById('lampBulb');
-            const ripple = document.getElementById('lampThemeRipple');
-
-            let isSpringing = false;
-            let isDragging = false;
-            let startY = 0;
-            let dragStartTime = 0;
-            let currentPullY = 0;
 
             function updateIcon(theme) {
                 if (!toggleIcon) return;
@@ -181,186 +141,33 @@
                 }
             }
 
-            // Sync icon on initial load
+            // Sync icon with current theme
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             updateIcon(currentTheme);
 
-            // Realistic switch click audio synthesis (Web Audio API)
-            function playLampClick(isRelease) {
-                try {
-                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                    if (!AudioCtx) return;
-                    const ctx = new AudioCtx();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    const current = document.documentElement.getAttribute('data-theme') || 'light';
+                    const newTheme = current === 'dark' ? 'light' : 'dark';
 
-                    if (!isRelease) {
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(620, ctx.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.035);
-                        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.035);
+                    // Subtle micro-interaction
+                    toggleBtn.classList.add('animating');
+                    setTimeout(() => toggleBtn.classList.remove('animating'), 550);
+
+                    // Smooth transition support
+                    if (document.startViewTransition) {
+                        document.startViewTransition(() => {
+                            document.documentElement.setAttribute('data-theme', newTheme);
+                            localStorage.setItem('nexus_theme', newTheme);
+                            updateIcon(newTheme);
+                            document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
+                        });
                     } else {
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(420, ctx.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.025);
-                        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.025);
-                    }
-                } catch (e) {}
-            }
-
-            // Update SVG cord path and bob translation
-            function updateCordDisplay(dy, sway) {
-                if (!pullBobGroup || !pullString) return;
-                sway = sway || 0;
-                pullBobGroup.setAttribute('transform', 'translate(' + sway + ', ' + dy + ')');
-
-                const endX = 70 + sway;
-                const endY = 108 + dy;
-                const curveAmount = Math.max(0, 3 - dy * 0.1);
-                const midX = 70 + (sway * 0.5) + curveAmount;
-                const midY = 56 + (endY - 56) * 0.5;
-
-                pullString.setAttribute('d', 'M 70 56 Q ' + midX + ' ' + midY + ' ' + endX + ' ' + endY);
-            }
-
-            // Damped spring physics release
-            function releaseCord(initialPull) {
-                if (isSpringing) return;
-                isSpringing = true;
-                
-                const startTime = performance.now();
-                const duration = 820; // ms
-                const damping = 7.4;
-                const freq = 25;
-
-                function anim(now) {
-                    const t = (now - startTime) / 1000;
-                    if (t * 1000 >= duration) {
-                        updateCordDisplay(0, 0);
-                        isSpringing = false;
-                        return;
-                    }
-
-                    const y = initialPull * Math.exp(-damping * t) * Math.cos(freq * t);
-                    const sway = (initialPull * 0.14) * Math.exp(-3.5 * t) * Math.sin(freq * 0.5 * t);
-
-                    updateCordDisplay(y, sway);
-                    requestAnimationFrame(anim);
-                }
-
-                requestAnimationFrame(anim);
-            }
-
-            // Radial expanding circle transition from lamp bulb
-            function triggerThemeSwitch() {
-                playLampClick(false);
-                setTimeout(function() { playLampClick(true); }, 130);
-
-                const current = document.documentElement.getAttribute('data-theme') || 'light';
-                const newTheme = current === 'dark' ? 'light' : 'dark';
-
-                // Find bulb origin coordinates
-                const bulbRect = lampBulb ? lampBulb.getBoundingClientRect() : { left: window.innerWidth - 44, top: 54, width: 28, height: 22 };
-                const originX = Math.round(bulbRect.left + bulbRect.width / 2);
-                const originY = Math.round(bulbRect.top + bulbRect.height / 2);
-
-                const d1 = Math.hypot(originX, originY);
-                const d2 = Math.hypot(window.innerWidth - originX, originY);
-                const d3 = Math.hypot(originX, window.innerHeight - originY);
-                const d4 = Math.hypot(window.innerWidth - originX, window.innerHeight - originY);
-                const maxR = Math.ceil(Math.max(d1, d2, d3, d4)) + 60;
-
-                if (ripple && ripple.animate) {
-                    ripple.style.background = newTheme === 'dark' ? '#090d16' : '#f8fafc';
-                    ripple.style.display = 'block';
-
-                    const anim = ripple.animate(
-                        [
-                            { clipPath: 'circle(0px at ' + originX + 'px ' + originY + 'px)' },
-                            { clipPath: 'circle(' + maxR + 'px at ' + originX + 'px ' + originY + 'px)' }
-                        ],
-                        {
-                            duration: 620,
-                            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                            fill: 'forwards'
-                        }
-                    );
-
-                    setTimeout(function() {
                         document.documentElement.setAttribute('data-theme', newTheme);
                         localStorage.setItem('nexus_theme', newTheme);
                         updateIcon(newTheme);
                         document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
-                    }, 280);
-
-                    anim.onfinish = function() {
-                        ripple.style.display = 'none';
-                        anim.cancel();
-                    };
-                } else {
-                    document.documentElement.setAttribute('data-theme', newTheme);
-                    localStorage.setItem('nexus_theme', newTheme);
-                    updateIcon(newTheme);
-                    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
-                }
-            }
-
-            // Interactive Drag & Click Handlers on the Pull Bob
-            if (pullBobGroup) {
-                pullBobGroup.addEventListener('pointerdown', function(e) {
-                    if (isSpringing) return;
-                    isDragging = true;
-                    startY = e.clientY;
-                    dragStartTime = performance.now();
-                    currentPullY = 0;
-                    pullBobGroup.setPointerCapture(e.pointerId);
-                });
-
-                pullBobGroup.addEventListener('pointermove', function(e) {
-                    if (!isDragging) return;
-                    const deltaY = e.clientY - startY;
-                    currentPullY = Math.max(0, Math.min(50, deltaY));
-                    updateCordDisplay(currentPullY, 0);
-                });
-
-                const handlePointerEnd = function(e) {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    try { pullBobGroup.releasePointerCapture(e.pointerId); } catch(err) {}
-
-                    const elapsed = performance.now() - dragStartTime;
-                    // Trigger if dragged > 14px or clicked quickly (< 350ms)
-                    if (currentPullY >= 14 || elapsed < 350) {
-                        const pullReleaseAmount = Math.max(30, currentPullY);
-                        triggerThemeSwitch();
-                        releaseCord(pullReleaseAmount);
-                    } else {
-                        // Spring back without switching
-                        releaseCord(currentPullY);
                     }
-                    currentPullY = 0;
-                };
-
-                pullBobGroup.addEventListener('pointerup', handlePointerEnd);
-                pullBobGroup.addEventListener('pointercancel', handlePointerEnd);
-            }
-
-            // Also synchronize with navbar button if clicked
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
-                    if (isSpringing) return;
-                    triggerThemeSwitch();
-                    releaseCord(32);
                 });
             }
         })();
