@@ -72,8 +72,7 @@ export default function DiagnosticChart() {
             titleColor: '#FFFFFF',
             bodyColor: '#FFFFFF',
             cornerRadius: 4,
-            displayColors: true,
-            boxShadow: 'none'
+            displayColors: true
           }
         },
         scales: {
