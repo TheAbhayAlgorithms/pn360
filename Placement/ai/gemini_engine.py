@@ -185,7 +185,7 @@ def fallback_ats_analysis(resume_text, job_title, job_description):
     strengths.append("Structured format with identifiable project and education segments.")
 
     what_to_add = [f"Add high-impact keywords for {job_title}: {', '.join(missing_keywords[:3]).title()}"] if missing_keywords else ["Add quantifiable performance metrics (e.g. 'Reduced latency by 30%')."]
-    what_to_add.append("Include links to live demo deployments, GitHub repositories, or technical writeups.")
+    what_to_add.append("Include links to live demo deployments, code repositories, or technical writeups.")
     what_to_add.append(f"Tailor section headings explicitly matching the '{job_title}' job specifications.")
 
     what_to_remove = [
