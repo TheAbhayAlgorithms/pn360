@@ -1288,6 +1288,16 @@ kbd {
     color: var(--accent-danger) !important;
 }
 
+/* Smooth Curved Dashboard Cards */
+.smooth-box-card {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.smooth-box-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .button, .btn, .card, * {
         transition: none !important;

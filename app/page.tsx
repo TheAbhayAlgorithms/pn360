@@ -16,45 +16,48 @@ export default function Dashboard() {
       title: "START TECHNICAL ASSESSMENT",
       subtitle: "30 MCQs • Proctored Assessment",
       href: "/mcq-test",
-      colorClass: "icon-tile-blue",
-      btnClass: "button",
+      themeColor: "#3B82F6", // Lighter sky blue
+      lightBg: "rgba(59, 130, 246, 0.06)",
+      badgeBg: "rgba(59, 130, 246, 0.12)",
+      badgeColor: "#2563EB",
       icon: <ListChecks size={28} color="#FFFFFF" />,
       tag: "Stage 02",
-      tagClass: "badge-blue",
       btnText: "Start Assessment"
     },
     {
       title: "RESUME ATS",
       subtitle: "Gemini 2.5 • Keyword Gap Audit",
       href: "/resume-ats",
-      colorClass: "icon-tile-orange",
-      btnClass: "button button-danger",
+      themeColor: "#FB923C", // Lighter soft warm coral/orange
+      lightBg: "rgba(251, 146, 60, 0.06)",
+      badgeBg: "rgba(251, 146, 60, 0.12)",
+      badgeColor: "#EA580C",
       icon: <FileCheck size={28} color="#FFFFFF" />,
       tag: "Stage 01",
-      tagClass: "badge-orange",
       btnText: "Audit Resume"
     },
     {
       title: "AI INTERVIEW",
       subtitle: "Speech AI • STAR Rubric Evaluation",
       href: "/ai-interview",
-      colorClass: "icon-tile-purple",
-      btnClass: "button",
-      btnStyle: { background: 'var(--flat-purple)' },
+      themeColor: "#A855F7", // Lighter lavender/violet purple
+      lightBg: "rgba(168, 85, 247, 0.06)",
+      badgeBg: "rgba(168, 85, 247, 0.12)",
+      badgeColor: "#9333EA",
       icon: <Mic size={28} color="#FFFFFF" />,
       tag: "Stage 03",
-      tagClass: "badge-purple",
       btnText: "Enter Interview"
     },
     {
       title: "SCHEDULE",
       subtitle: "Practice Slots • Mock Testing",
       href: "/schedule",
-      colorClass: "icon-tile-green",
-      btnClass: "button button-success",
+      themeColor: "#34D399", // Lighter fresh mint/emerald green
+      lightBg: "rgba(52, 211, 153, 0.06)",
+      badgeBg: "rgba(52, 211, 153, 0.14)",
+      badgeColor: "#059669",
       icon: <CalendarCheck size={28} color="#FFFFFF" />,
       tag: "Booking",
-      tagClass: "badge-green",
       btnText: "Book Slot"
     }
   ];
@@ -68,24 +71,24 @@ export default function Dashboard() {
         alignItems: 'center',
         minHeight: 'calc(100vh - 180px)',
         width: '100%',
-        padding: '20px 0'
+        padding: '24px 0'
       }}
     >
-      {/* 4 Boxes Side by Side in the Center of the Screen */}
+      {/* 4 Smoothly Curved Boxes Side by Side in the Center of the Screen */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '20px',
+          gap: '24px',
           width: '100%',
-          maxWidth: '1160px'
+          maxWidth: '1200px'
         }}
       >
         {options.map((opt) => (
           <Link
             key={opt.title}
             href={opt.href}
-            className="card"
+            className="smooth-box-card"
             style={{
               textDecoration: 'none',
               display: 'flex',
@@ -93,29 +96,56 @@ export default function Dashboard() {
               justifyContent: 'space-between',
               alignItems: 'center',
               textAlign: 'center',
-              padding: '36px 20px',
-              minHeight: '320px',
+              padding: '38px 22px 28px',
+              minHeight: '340px',
               cursor: 'pointer',
-              border: '2px solid var(--flat-border)',
-              transition: 'border-color 150ms ease, background-color 150ms ease'
+              background: 'var(--flat-surface)',
+              borderRadius: '24px', // Smooth curves for the boxes
+              border: '1.5px solid var(--flat-border)',
+              boxShadow: 'none',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              <span className={`badge ${opt.tagClass}`} style={{ marginBottom: '16px', fontSize: '11px', textTransform: 'uppercase' }}>
+              {/* Smooth Pill Badge */}
+              <span
+                style={{
+                  marginBottom: '18px',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  padding: '5px 14px',
+                  borderRadius: '9999px', // Smooth pill curve
+                  background: opt.badgeBg,
+                  color: opt.badgeColor
+                }}
+              >
                 {opt.tag}
               </span>
 
-              {/* Solid 2D Flat Icon Tile */}
-              <div className={`icon-tile ${opt.colorClass}`} style={{ width: '64px', height: '64px', marginBottom: '20px', borderRadius: '8px' }}>
+              {/* Smooth Curved Icon Tile with Lighter Shade */}
+              <div
+                style={{
+                  width: '68px',
+                  height: '68px',
+                  marginBottom: '22px',
+                  borderRadius: '20px', // Smooth curve for icon tile
+                  background: opt.themeColor,
+                  display: 'grid',
+                  placeItems: 'center',
+                  color: '#FFFFFF'
+                }}
+              >
                 {opt.icon}
               </div>
 
               {/* Title */}
               <h2
                 style={{
-                  fontSize: '15.5px',
+                  fontSize: '15px',
                   fontWeight: 900,
-                  letterSpacing: '0.04em',
+                  letterSpacing: '0.03em',
                   color: 'var(--flat-text)',
                   marginBottom: '8px',
                   lineHeight: 1.35
@@ -137,21 +167,24 @@ export default function Dashboard() {
               </p>
             </div>
 
-            {/* Action Button */}
+            {/* Smooth Curved Action Button */}
             <div
-              className={opt.btnClass}
               style={{
                 width: '100%',
-                marginTop: '24px',
-                padding: '10px 14px',
+                marginTop: '26px',
+                padding: '12px 16px',
                 fontSize: '13.5px',
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                borderRadius: '6px',
-                ...opt.btnStyle
+                borderRadius: '14px', // Smooth curve for button
+                background: opt.themeColor,
+                color: '#FFFFFF',
+                border: 'none',
+                boxShadow: 'none',
+                transition: 'filter 0.15s ease'
               }}
             >
               <span>{opt.btnText}</span>
