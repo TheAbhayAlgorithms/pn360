@@ -65,7 +65,7 @@ export default function Dashboard() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 'calc(100vh - 180px)',
+        minHeight: 'calc(100vh - 120px)',
         width: '100%',
         padding: '24px 0'
       }}

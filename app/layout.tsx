@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Placement Nexus 360 - Diagnostic Placement Platform',
@@ -24,7 +23,6 @@ export default function RootLayout({
         <main className="app-container">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );
