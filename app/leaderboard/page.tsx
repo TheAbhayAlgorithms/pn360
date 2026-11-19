@@ -144,7 +144,7 @@ export default function LeaderboardPage() {
                 <th>Candidate Name</th>
                 <th>Engineering Track</th>
                 <th>Resume ATS (25%)</th>
-                <th>30 MCQs (35%)</th>
+                <th>MCQ Test (35%)</th>
                 <th>AI Interview (40%)</th>
                 <th>Overall Index</th>
                 <th>Recruiter Status</th>

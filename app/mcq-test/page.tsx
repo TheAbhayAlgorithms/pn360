@@ -168,9 +168,9 @@ export default function MCQTestPage() {
             <div className="badge badge-green" style={{ marginBottom: '8px' }}>
               <ListChecks size={13} /> STAGE 02: TECHNICAL ASSESSMENT
             </div>
-            <h1 style={{ fontSize: '24px', fontWeight: 800 }}>Configure Your 30 MCQ Placement Test</h1>
+            <h1 style={{ fontSize: '24px', fontWeight: 800 }}>Configure Your MCQ Placement Test</h1>
             <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', marginTop: '4px' }}>
-              Select target programming languages and computer science domains to generate your proctored 30-question diagnostic.
+              Select target programming languages and computer science domains to generate your proctored MCQ diagnostic.
             </p>
           </div>
           <Link href="/" className="button button-secondary">
@@ -183,11 +183,11 @@ export default function MCQTestPage() {
             <div>
               <h2 style={{ fontSize: '16px', fontWeight: 700 }}>Select Technology & Core CS Tracks</h2>
               <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
-                Toggle tracks to adjust curriculum balance. Exactly 30 questions are rendered for placement standard.
+                Toggle tracks to adjust curriculum balance. Standard MCQ questions are rendered for placement benchmark.
               </p>
             </div>
             <span className="badge badge-blue">
-              {selectedTracks.length} Tracks Active • 30 Questions
+              {selectedTracks.length} Tracks Active • MCQ Test
             </span>
           </div>
 
@@ -247,7 +247,7 @@ export default function MCQTestPage() {
               className="button button-lg"
               style={{ background: 'var(--scheme-deep)' }}
             >
-              <span>Launch 30 MCQ Proctored Test</span>
+              <span>Launch MCQ Proctored Test</span>
               <ArrowRight size={18} />
             </button>
           </div>
@@ -276,7 +276,7 @@ export default function MCQTestPage() {
               </span>
             )}
             <span style={{ fontSize: '13px', color: 'var(--flat-muted)' }}>
-              Question {currentIndex + 1} of 30
+              Question {currentIndex + 1} of {questions.length}
             </span>
           </div>
 
@@ -416,7 +416,7 @@ export default function MCQTestPage() {
           {/* Navigator Sidebar */}
           <div className="card" style={{ height: 'fit-content' }}>
             <h3 style={{ fontSize: '15px', fontWeight: 700, marginBottom: '12px' }}>
-              Question Palette (30)
+              Question Palette ({questions.length})
             </h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
@@ -478,7 +478,7 @@ export default function MCQTestPage() {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ width: '12px', height: '12px', background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '4px' }}></span>
-                <span>Unvisited ({30 - Object.keys(userAnswers).length})</span>
+                <span>Unvisited ({questions.length - Object.keys(userAnswers).length})</span>
               </div>
             </div>
           </div>

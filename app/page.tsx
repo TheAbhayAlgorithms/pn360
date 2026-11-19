@@ -14,7 +14,7 @@ export default function Dashboard() {
   const options = [
     {
       title: "START TECHNICAL ASSESSMENT",
-      subtitle: "30 MCQs • Proctored Assessment",
+      subtitle: "MCQ Test • Proctored Assessment",
       href: "/mcq-test",
       themeColor: "var(--scheme-deep)", // Scheme 1 Color 3: Deep Midnight Petrol Teal (#007086)
       icon: <ListChecks size={28} color="#FFFFFF" />,

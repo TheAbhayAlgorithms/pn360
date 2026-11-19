@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Configure 30 MCQ Test - Placement Nexus 360{% endblock %}
+{% block title %}Configure MCQ Test - Placement Nexus 360{% endblock %}
 
 {% block content %}
 <div class="topbar">
@@ -9,8 +9,8 @@
         <div class="badge badge-emerald" style="margin-bottom: 8px;">
             <i class="fa-solid fa-list-check"></i> Stage 2: Technical Assessment Round
         </div>
-        <h1>Configure Your 30 MCQ Placement Test</h1>
-        <p>Select programming languages and core CS domains to generate 30 placement-level MCQs with Gemini.</p>
+        <h1>Configure Your MCQ Placement Test</h1>
+        <p>Select programming languages and core CS domains to generate placement-level MCQs with Gemini.</p>
     </div>
     
     <div style="display: flex; gap: 10px; align-items: center;">
@@ -66,7 +66,7 @@
                                 {{ tech.desc }}
                             </p>
                             <div class="check-indicator" style="display: none; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); color: var(--accent-success); font-size: 12px; font-weight: 600;">
-                                <i class="fa-solid fa-circle-check"></i> Selected for 30 MCQs
+                                <i class="fa-solid fa-circle-check"></i> Selected for MCQ Test
                             </div>
                         </div>
                     </label>
@@ -81,7 +81,7 @@
             <div style="display: flex; gap: 28px; align-items: center; flex-wrap: wrap;">
                 <div>
                     <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Question Count</div>
-                    <div style="font-size: 15.5px; font-weight: 800; color: var(--text-primary);">30 MCQs (4 Options)</div>
+                    <div style="font-size: 15.5px; font-weight: 800; color: var(--text-primary);">MCQs (4 Options)</div>
                 </div>
                 <div>
                     <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Difficulty Level</div>
@@ -93,12 +93,12 @@
                 </div>
                 <div>
                     <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Passing Threshold</div>
-                    <div style="font-size: 15.5px; font-weight: 800; color: var(--accent-primary);">60% (18/30 Correct)</div>
+                    <div style="font-size: 15.5px; font-weight: 800; color: var(--accent-primary);">60% Benchmark</div>
                 </div>
             </div>
 
             <button type="submit" id="startBtn" class="btn btn-primary btn-lg">
-                <i class="fa-solid fa-bolt"></i> Generate 30 MCQs & Start Test
+                <i class="fa-solid fa-bolt"></i> Generate MCQs & Start Test
             </button>
         </div>
     </div>

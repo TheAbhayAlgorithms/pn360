@@ -42,7 +42,7 @@ export interface ScheduledTest {
 
 export interface AssessmentRecord {
   id: number;
-  type: '30 MCQ Technical' | 'AI Voice Interview';
+  type: 'MCQ Technical' | 'AI Voice Interview';
   technology: string;
   date: string;
   violations: number;

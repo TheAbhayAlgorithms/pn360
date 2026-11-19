@@ -43,7 +43,7 @@
             <i class="fa-solid fa-arrow-left"></i> Dashboard
         </a>
         <a href="{% url 'select_tech' %}?role={{ resume.job_title|urlencode }}" class="btn btn-primary">
-            Proceed to 30 MCQ Test <i class="fa-solid fa-arrow-right"></i>
+            Proceed to MCQ Test <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 </div>
@@ -78,7 +78,7 @@
 
         <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
             <a href="{% url 'select_tech' %}?role={{ resume.job_title|urlencode }}" class="btn btn-success btn-lg">
-                Practice Skills in 30 MCQs &rarr;
+                Practice Skills in MCQ Test &rarr;
             </a>
             <button type="button" onclick="copyRecommendations()" id="copyBtn" class="btn btn-ghost btn-sm">
                 <i class="fa-regular fa-copy"></i> Copy Recommendations
@@ -181,11 +181,11 @@
         <div>
             <h4 style="font-size: 16.5px; color: var(--text-primary); margin-bottom: 2px;">Stage 2: Technical Assessment</h4>
             <p style="color: var(--text-secondary); font-size: 13px; margin: 0;">
-                Now that your resume gaps are identified, take the 30 MCQ test specifically aligned with {{ resume.job_title }}.
+                Now that your resume gaps are identified, take the MCQ test specifically aligned with {{ resume.job_title }}.
             </p>
         </div>
         <a href="{% url 'select_tech' %}?role={{ resume.job_title|urlencode }}" class="btn btn-success btn-lg">
-            Start 30 MCQ Test <i class="fa-solid fa-arrow-right"></i>
+            Start MCQ Test <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 </div>

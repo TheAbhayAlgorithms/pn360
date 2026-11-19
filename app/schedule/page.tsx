@@ -16,7 +16,7 @@ import { ScheduledTest } from '@/lib/types';
 
 export default function SchedulePage() {
   const [scheduledList, setScheduledList] = useState<ScheduledTest[]>(initialScheduledTests);
-  const [schedType, setSchedType] = useState("30 MCQ Placement Test");
+  const [schedType, setSchedType] = useState("MCQ Placement Test");
   const [schedDate, setSchedDate] = useState("2026-11-25");
   const [schedTime, setSchedTime] = useState("11:00");
   const [schedSuccess, setSchedSuccess] = useState(false);
@@ -82,7 +82,7 @@ export default function SchedulePage() {
                 value={schedType}
                 onChange={(e) => setSchedType(e.target.value)}
               >
-                <option value="30 MCQ Placement Test">30 MCQ Technical Assessment</option>
+                <option value="MCQ Placement Test">MCQ Technical Assessment</option>
                 <option value="Proctored AI Voice Interview">Proctored AI Voice Interview</option>
                 <option value="Full Placement Simulation">Full 3-Stage Placement Simulation</option>
               </select>

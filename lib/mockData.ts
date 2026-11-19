@@ -28,13 +28,13 @@ export const defaultJobs: JobOpportunity[] = [
 
 export const initialScheduledTests: ScheduledTest[] = [
   { id: 1, test_type: "Full Placement Simulation", date: "Nov 22, 2026", time: "10:00 AM" },
-  { id: 2, test_type: "30 MCQ Technical Assessment", date: "Nov 24, 2026", time: "02:30 PM" }
+  { id: 2, test_type: "MCQ Technical Assessment", date: "Nov 24, 2026", time: "02:30 PM" }
 ];
 
 export const initialAssessmentRecords: AssessmentRecord[] = [
-  { id: 101, type: "30 MCQ Technical", technology: "Data Structures & Algorithms", date: "Nov 18, 2026 • 19:40", violations: 0, score: 80, passed: true },
+  { id: 101, type: "MCQ Technical", technology: "Data Structures & Algorithms", date: "Nov 18, 2026 • 19:40", violations: 0, score: 80, passed: true },
   { id: 102, type: "AI Voice Interview", technology: "System Architecture & Core CS", date: "Nov 17, 2026 • 14:15", violations: 0, score: 72, passed: true },
-  { id: 103, type: "30 MCQ Technical", technology: "Python & Backend Systems", date: "Nov 16, 2026 • 11:30", violations: 1, score: 58, passed: false },
+  { id: 103, type: "MCQ Technical", technology: "Python & Backend Systems", date: "Nov 16, 2026 • 11:30", violations: 1, score: 58, passed: false },
   { id: 104, type: "AI Voice Interview", technology: "Behavioral & STAR Leadership", date: "Nov 14, 2026 • 16:00", violations: 0, score: 78, passed: true }
 ];
 
