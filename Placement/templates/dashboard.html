@@ -5,16 +5,16 @@
 
 {% block content %}
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: calc(100vh - 180px); width: 100%; padding: 24px 0;">
-    <!-- 4 Smoothly Curved Boxes Side by Side in the Center of the Screen -->
+    <!-- 4 Professional & Educational Curved Boxes Side by Side -->
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; width: 100%; max-width: 1200px;">
         
         <!-- Box 1: START TECHNICAL ASSESSMENT -->
         <a href="{% url 'select_tech' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: rgba(59, 130, 246, 0.12); color: #2563EB;">
+                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-blue-badge-bg); color: var(--edu-blue);">
                     Stage 02
                 </span>
-                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: #3B82F6; display: grid; place-items: center; color: #FFFFFF;">
+                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-blue); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-list-check" style="font-size: 26px;"></i>
                 </div>
                 <h2 style="font-size: 15px; font-weight: 900; letter-spacing: 0.03em; color: var(--flat-text); margin-bottom: 8px; line-height: 1.35;">
@@ -24,7 +24,7 @@
                     30 MCQs &bull; Proctored Assessment
                 </p>
             </div>
-            <div style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: #3B82F6; color: #FFFFFF; border: none; box-shadow: none;">
+            <div class="edu-btn" style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: var(--edu-blue); color: #FFFFFF; border: none; box-shadow: none;">
                 <span>Start Assessment</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
@@ -33,10 +33,10 @@
         <!-- Box 2: RESUME ATS -->
         <a href="{% if latest_resume %}{% url 'resume_result' latest_resume.id %}{% else %}{% url 'select_tech' %}{% endif %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: rgba(251, 146, 60, 0.12); color: #EA580C;">
+                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-terracotta-badge-bg); color: var(--edu-terracotta);">
                     Stage 01
                 </span>
-                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: #FB923C; display: grid; place-items: center; color: #FFFFFF;">
+                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-terracotta); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-file-shield" style="font-size: 26px;"></i>
                 </div>
                 <h2 style="font-size: 15px; font-weight: 900; letter-spacing: 0.03em; color: var(--flat-text); margin-bottom: 8px; line-height: 1.35;">
@@ -46,7 +46,7 @@
                     Gemini 2.5 &bull; Keyword Gap Audit
                 </p>
             </div>
-            <div style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: #FB923C; color: #FFFFFF; border: none; box-shadow: none;">
+            <div class="edu-btn" style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: var(--edu-terracotta); color: #FFFFFF; border: none; box-shadow: none;">
                 <span>Audit Resume</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
@@ -55,10 +55,10 @@
         <!-- Box 3: AI INTERVIEW -->
         <a href="{% url 'ai_interview' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: rgba(168, 85, 247, 0.12); color: #9333EA;">
+                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-indigo-badge-bg); color: var(--edu-indigo);">
                     Stage 03
                 </span>
-                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: #A855F7; display: grid; place-items: center; color: #FFFFFF;">
+                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-indigo); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-microphone-lines" style="font-size: 26px;"></i>
                 </div>
                 <h2 style="font-size: 15px; font-weight: 900; letter-spacing: 0.03em; color: var(--flat-text); margin-bottom: 8px; line-height: 1.35;">
@@ -68,7 +68,7 @@
                     Speech AI &bull; STAR Rubric Evaluation
                 </p>
             </div>
-            <div style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: #A855F7; color: #FFFFFF; border: none; box-shadow: none;">
+            <div class="edu-btn" style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: var(--edu-indigo); color: #FFFFFF; border: none; box-shadow: none;">
                 <span>Enter Interview</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
@@ -77,10 +77,10 @@
         <!-- Box 4: SCHEDULE -->
         <a href="{% url 'schedule_test' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: rgba(52, 211, 153, 0.14); color: #059669;">
+                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-teal-badge-bg); color: var(--edu-teal);">
                     Booking
                 </span>
-                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: #34D399; display: grid; place-items: center; color: #FFFFFF;">
+                <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-teal); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-calendar-check" style="font-size: 26px;"></i>
                 </div>
                 <h2 style="font-size: 15px; font-weight: 900; letter-spacing: 0.03em; color: var(--flat-text); margin-bottom: 8px; line-height: 1.35;">
@@ -90,7 +90,7 @@
                     Practice Slots &bull; Mock Testing
                 </p>
             </div>
-            <div style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: #34D399; color: #FFFFFF; border: none; box-shadow: none;">
+            <div class="edu-btn" style="width: 100%; margin-top: 26px; padding: 12px 16px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: var(--edu-teal); color: #FFFFFF; border: none; box-shadow: none;">
                 <span>Book Slot</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>

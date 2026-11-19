@@ -21,6 +21,23 @@
   --flat-cyan-dark: #00838F;
   --flat-purple-dark: #6A1B9A;
 
+  /* Professional & Educational Academic Palette */
+  --edu-blue: #1D4ED8;
+  --edu-blue-badge-bg: rgba(29, 78, 216, 0.08);
+  --edu-blue-hover: #1E40AF;
+
+  --edu-terracotta: #C2410C;
+  --edu-terracotta-badge-bg: rgba(194, 65, 12, 0.08);
+  --edu-terracotta-hover: #9A3412;
+
+  --edu-indigo: #4338CA;
+  --edu-indigo-badge-bg: rgba(67, 56, 202, 0.08);
+  --edu-indigo-hover: #3730A3;
+
+  --edu-teal: #0F766E;
+  --edu-teal-badge-bg: rgba(15, 118, 110, 0.08);
+  --edu-teal-hover: #115E59;
+
   /* Surfaces & Neutral Canvas */
   --flat-bg: #F3F4F6;
   --flat-surface: #FFFFFF;
@@ -69,6 +86,23 @@
   --primary: #2196F3;
   --primary-hover: #42A5F5;
   --primary-active: #1E88E5;
+
+  /* Professional & Educational Dark Mode Accents */
+  --edu-blue: #3B82F6;
+  --edu-blue-badge-bg: rgba(59, 130, 246, 0.16);
+  --edu-blue-hover: #2563EB;
+
+  --edu-terracotta: #EA580C;
+  --edu-terracotta-badge-bg: rgba(234, 88, 12, 0.16);
+  --edu-terracotta-hover: #C2410C;
+
+  --edu-indigo: #6366F1;
+  --edu-indigo-badge-bg: rgba(99, 102, 241, 0.16);
+  --edu-indigo-hover: #4F46E5;
+
+  --edu-teal: #14B8A6;
+  --edu-teal-badge-bg: rgba(20, 184, 166, 0.16);
+  --edu-teal-hover: #0D9488;
 }
 
 /* =========================================================================
@@ -568,6 +602,18 @@ code, kbd, pre, .font-mono {
 .smooth-box-card:hover {
   transform: translateY(-4px);
   border-color: var(--flat-border-hover) !important;
+}
+
+.edu-btn {
+  transition: filter 0.15s ease, opacity 0.15s ease !important;
+}
+
+.edu-btn:hover {
+  filter: brightness(0.92);
+}
+
+[data-theme="dark"] .edu-btn:hover {
+  filter: brightness(1.12);
 }
 
 @media (prefers-reduced-motion: reduce) {
