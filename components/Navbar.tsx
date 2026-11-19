@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { GraduationCap, Sun, Moon, LayoutDashboard, ListChecks, Mic, Trophy } from 'lucide-react';
+import { GraduationCap, Sun, Moon, Trophy } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -34,56 +34,37 @@ export default function Navbar() {
   return (
     <header className="flat-navbar">
       <div className="flat-navbar-inner">
+        {/* Left-most: PN360 and in sub Placement Nexus 360 */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--flat-blue-dark)' }}>
-            <GraduationCap size={18} color="#FFFFFF" />
+          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--flat-blue-dark)', width: '38px', height: '38px', borderRadius: '6px' }}>
+            <GraduationCap size={20} color="#FFFFFF" />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--flat-text)', letterSpacing: '-0.02em' }}>
-              nexus<span style={{ color: 'var(--flat-blue)' }}>360</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-text)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+              PN360
             </span>
-            <span className="badge badge-blue" style={{ fontSize: '10px', padding: '2px 6px' }}>
-              PROCTORED
+            <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--flat-muted)', letterSpacing: '0.01em', lineHeight: 1.1, marginTop: '2px' }}>
+              Placement Nexus 360
             </span>
           </div>
         </Link>
 
-        <nav className="flat-nav-links">
-          <Link href="/" className={`flat-nav-link ${pathname === '/' ? 'active' : ''}`}>
-            <LayoutDashboard size={16} />
-            Dashboard
-          </Link>
-          <Link href="/mcq-test" className={`flat-nav-link ${pathname === '/mcq-test' ? 'active' : ''}`}>
-            <ListChecks size={16} />
-            Technical Assessment
-          </Link>
-          <Link href="/resume-ats" className={`flat-nav-link ${pathname === '/resume-ats' ? 'active' : ''}`}>
-            Resume ATS
-          </Link>
-          <Link href="/ai-interview" className={`flat-nav-link ${pathname === '/ai-interview' ? 'active' : ''}`}>
-            <Mic size={16} />
-            AI Interview
-          </Link>
-          <Link href="/schedule" className={`flat-nav-link ${pathname === '/schedule' ? 'active' : ''}`}>
-            Schedule
-          </Link>
-          <Link href="/leaderboard" className={`flat-nav-link ${pathname === '/leaderboard' ? 'active' : ''}`}>
-            <Trophy size={16} />
-            Leaderboard
-          </Link>
-        </nav>
-
+        {/* Right-most: Leaderboard option and Dark/Light mode button, thats it, nothing else */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div className="badge badge-gray" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--flat-green)' }}></span>
-            <span>Engineering Track</span>
-          </div>
+          <Link
+            href="/leaderboard"
+            className={`flat-nav-link ${pathname === '/leaderboard' ? 'active' : ''}`}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 600 }}
+          >
+            <Trophy size={16} />
+            <span>Leaderboard</span>
+          </Link>
 
           <button
             type="button"
             onClick={toggleTheme}
             className="button button-secondary"
-            style={{ width: '36px', height: '36px', padding: 0, borderRadius: '6px' }}
+            style={{ width: '36px', height: '36px', padding: 0, borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
             aria-label="Toggle dark / light mode"
             title="Toggle Flat Dark / Light mode"
           >

@@ -37,48 +37,30 @@
 </head>
 <body>
 
-    <!-- Professional Academic Minimal Navigation Bar (With Light/Dark Toggle) -->
+    <!-- Flat Navigation Bar -->
     <header class="nexus-navbar">
         <div class="nexus-navbar-inner">
-            <a href="{% url 'dashboard' %}" class="nexus-brand" aria-label="Placement Nexus 360 Dashboard">
-                <div class="nexus-brand-icon">
-                    <i class="fa-solid fa-graduation-cap"></i>
+            <!-- Left-most: PN360 and in sub Placement Nexus 360 -->
+            <a href="{% url 'dashboard' %}" class="nexus-brand" aria-label="PN360 Dashboard" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <div class="icon-tile icon-tile-sm" style="background: var(--flat-blue-dark); width: 38px; height: 38px; border-radius: 6px;">
+                    <i class="fa-solid fa-graduation-cap" style="color: #ffffff; font-size: 18px;"></i>
                 </div>
-                <div>
-                    <span class="nexus-brand-text">Placement Nexus 360</span>
-                    <span class="nexus-brand-badge">ACADEMIC</span>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 18px; font-weight: 900; color: var(--flat-text); letter-spacing: -0.02em; line-height: 1.1;">
+                        PN360
+                    </span>
+                    <span style="font-size: 11px; font-weight: 500; color: var(--flat-muted); letter-spacing: 0.01em; line-height: 1.1; margin-top: 2px;">
+                        Placement Nexus 360
+                    </span>
                 </div>
             </a>
 
-            <nav class="nexus-nav" aria-label="Primary Navigation">
-                <a href="{% url 'dashboard' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'dashboard,home' %}active{% endif %}">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+            <!-- Right-most: Leaderboard option and Dark/Light mode button, thats it, nothing else -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <a href="{% url 'leaderboard' %}" class="nexus-nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600;">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Leaderboard</span>
                 </a>
-                <a href="{% url 'dashboard' %}#resume-section" class="nexus-nav-link {% if request.resolver_match.url_name == 'resume_result' %}active{% endif %}">
-                    <i class="fa-solid fa-file-shield"></i> 1. Resume ATS
-                </a>
-                <a href="{% url 'select_tech' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'select_tech,take_test,test_result' %}active{% endif %}">
-                    <i class="fa-solid fa-list-check"></i> 2. 30 MCQ Test
-                </a>
-                <a href="{% url 'ai_interview' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'ai_interview,live_interview,interview_result,interview_discarded' %}active{% endif %}">
-                    <i class="fa-solid fa-video"></i> 3. AI Interview
-                </a>
-                <a href="{% url 'leaderboard' %}" class="nexus-nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">
-                    <i class="fa-solid fa-trophy"></i> Leaderboard
-                </a>
-
-                {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'admin_home' %}" class="nexus-nav-link {% if request.resolver_match.url_name in 'admin_home,add_job' %}active{% endif %}">
-                    <i class="fa-solid fa-shield-halved"></i> Admin
-                </a>
-                {% endif %}
-            </nav>
-
-            <div class="nexus-navbar-actions">
-                <span class="user-status-chip" title="Target Evaluation Track">
-                    <span class="user-status-dot"></span>
-                    <span>{{ user.profile.technology|default:"Engineering Track" }}</span>
-                </span>
 
                 <!-- Dark / Light Mode Switcher Button -->
                 <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Switch between light and dark theme" title="Toggle Light / Dark mode">
