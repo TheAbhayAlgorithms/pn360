@@ -59,11 +59,21 @@ export interface MCQQuestion {
   explanation: string;
 }
 
+export interface BuzzwordReplacement {
+  buzzword: string;
+  replacement: string;
+  reason: string;
+}
+
 export interface ATSResult {
   score: number;
   role: string;
+  matchTier?: string;
+  summary?: string;
   extractedSkills: string[];
   missingKeywords: string[];
+  improvementsNeeded: string[];
+  buzzwordsToAvoid: BuzzwordReplacement[];
   strengths: string[];
   whatToAdd: string[];
   whatToRemove: string[];
