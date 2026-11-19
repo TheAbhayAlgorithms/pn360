@@ -69,7 +69,7 @@ export default function SchedulePage() {
           </div>
 
           {schedSuccess && (
-            <div style={{ padding: '12px 16px', background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '6px', color: '#2E7D32', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ padding: '12px 16px', background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '14px', color: '#2E7D32', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle2 size={16} /> Appointment reserved successfully! Details logged to your schedule.
             </div>
           )}
@@ -142,7 +142,7 @@ export default function SchedulePage() {
                   padding: '12px 14px',
                   background: 'var(--flat-surface-subtle)',
                   border: '1px solid var(--flat-border)',
-                  borderRadius: '6px'
+                  borderRadius: '14px'
                 }}
               >
                 <div>

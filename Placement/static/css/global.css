@@ -95,11 +95,12 @@
     --shadow-md: none;
     --shadow-lg: none;
     
-    /* Radius */
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-    --radius-xl: 8px;
+    /* Smooth Curves Dimensions */
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
     --radius-pill: 9999px;
 
     /* Charts */
@@ -246,7 +247,7 @@ a:hover {
     place-items: center;
     width: 3rem;
     height: 3rem;
-    border-radius: 8px;
+    border-radius: 16px;
     background: var(--flat-blue);
     color: #FFFFFF;
     flex-shrink: 0;
@@ -266,7 +267,7 @@ a:hover {
 .button, .btn {
     padding: 0.65rem 1.25rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 12px;
     background: var(--flat-blue-dark);
     color: #FFFFFF !important;
     font-weight: 500;
@@ -388,7 +389,7 @@ kbd {
 .nexus-brand-icon {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 12px;
     background: var(--accent-primary);
     color: #ffffff;
     display: flex;
@@ -410,8 +411,8 @@ kbd {
 .nexus-brand-badge {
     font-size: 10.5px;
     font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
     background: var(--accent-primary-subtle);
     color: var(--accent-primary);
     margin-left: 6px;
@@ -600,7 +601,7 @@ kbd {
     padding: 1.5rem;
     background: var(--flat-surface);
     border: 1px solid var(--flat-border);
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: none !important;
     transition: border-color 150ms ease, background-color 150ms ease;
     overflow: hidden;
@@ -647,7 +648,7 @@ kbd {
     font-size: 13.5px;
     font-weight: 600;
     font-family: inherit;
-    border-radius: 6px;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
     display: inline-flex;

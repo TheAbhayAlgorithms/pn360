@@ -267,19 +267,19 @@ export default function AIInterviewPage() {
 
               {/* 4 Rubric Bars */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px', textAlign: 'center' }}>
-                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '10px' }}>
+                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>SITUATION</div>
                   <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-blue-dark)' }}>{evaluation.starBreakdown.situation}/25</div>
                 </div>
-                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '10px' }}>
+                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>TASK</div>
                   <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-green-dark)' }}>{evaluation.starBreakdown.task}/25</div>
                 </div>
-                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '10px' }}>
+                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>ACTION</div>
                   <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-orange-dark)' }}>{evaluation.starBreakdown.action}/25</div>
                 </div>
-                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '10px' }}>
+                <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>RESULT</div>
                   <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-purple)' }}>{evaluation.starBreakdown.result}/25</div>
                 </div>
@@ -290,7 +290,7 @@ export default function AIInterviewPage() {
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '6px', padding: '12px' }}>
+                <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '14px', padding: '12px' }}>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: '#2E7D32', marginBottom: '6px' }}>
                     KEY STRENGTHS:
                   </div>
@@ -301,7 +301,7 @@ export default function AIInterviewPage() {
                   ))}
                 </div>
 
-                <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '6px', padding: '12px' }}>
+                <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '14px', padding: '12px' }}>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: '#F57F17', marginBottom: '6px' }}>
                     SUGGESTED IMPROVEMENTS:
                   </div>
@@ -329,7 +329,7 @@ export default function AIInterviewPage() {
             </div>
 
             {/* Video Viewport */}
-            <div style={{ position: 'relative', width: '100%', height: '200px', background: '#000000', borderRadius: '6px', overflow: 'hidden', display: 'grid', placeItems: 'center' }}>
+            <div style={{ position: 'relative', width: '100%', height: '200px', background: '#000000', borderRadius: '16px', overflow: 'hidden', display: 'grid', placeItems: 'center' }}>
               <video
                 ref={videoRef}
                 autoPlay
@@ -346,17 +346,17 @@ export default function AIInterviewPage() {
             </div>
 
             <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12.5px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Head Alignment:</span>
                 <strong style={{ color: 'var(--flat-green-dark)' }}>Centered & Focus Confirmed</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Audio Stream:</span>
                 <strong style={{ color: isRecording ? 'var(--flat-orange-dark)' : 'var(--flat-muted)' }}>
                   {isRecording ? 'Listening (Input Active)' : 'Standby'}
                 </strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Session Proctoring Violations:</span>
                 <strong style={{ color: violations === 0 ? 'var(--flat-green-dark)' : 'var(--flat-orange-dark)' }}>
                   {violations}
