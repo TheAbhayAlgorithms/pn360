@@ -242,119 +242,80 @@
 </div>
 
 <!-- =========================================================================
-     SECTION 3: STEP 1 RESUME BENCHMARK & PERFORMANCE TREND
+     SECTION 3: STEP 1 RESUME BENCHMARK
      ========================================================================= -->
 <div class="section-block">
-    <div class="grid-split-work">
-        
-        <!-- Left: Step 1 Resume Benchmark Form -->
-        <div class="card" id="resume-section">
-            <div class="card-header">
-                <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
-                        Benchmark Resume with Gemini ATS
-                    </h3>
-                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
-                        Select your target role and upload your resume for keyword gap analysis.
-                    </p>
+    <div class="card" id="resume-section">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+                    Benchmark Resume with Gemini ATS
+                </h3>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                    Select your target role and upload your resume for keyword gap analysis.
+                </p>
+            </div>
+            {% if latest_resume %}
+                <span class="badge badge-blue">
+                    Latest: {{ latest_resume.ats_score }}%
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="upload_resume" value="1">
+
+                <div class="form-group">
+                    <label class="form-label">Target Role Specification</label>
+                    <select name="job_id" class="form-select">
+                        {% for job in jobs %}
+                            <option value="{{ job.id }}">{{ job.title }} &bull; {{ job.company }} ({{ job.salary }})</option>
+                        {% empty %}
+                            <option value="">Software Development Engineer</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                {% if latest_resume %}
-                    <span class="badge badge-blue">
-                        Latest: {{ latest_resume.ats_score }}%
+
+                <div class="form-group">
+                    <label class="form-label">Resume Document (.PDF, .DOCX)</label>
+                    <input type="file" name="resume" accept=".pdf,.docx,.doc,.txt" required class="form-input" style="padding-top: 8px;">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                    <span style="font-size: 12px; color: var(--text-muted);">
+                        <i class="fa-solid fa-lock"></i> Parsed securely in memory
                     </span>
-                {% endif %}
-            </div>
+                    <button type="submit" class="btn btn-primary" aria-label="Benchmark Resume">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Benchmark Resume
+                    </button>
+                </div>
+            </form>
 
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="hidden" name="upload_resume" value="1">
-
-                    <div class="form-group">
-                        <label class="form-label">Target Role Specification</label>
-                        <select name="job_id" class="form-select">
-                            {% for job in jobs %}
-                                <option value="{{ job.id }}">{{ job.title }} &bull; {{ job.company }} ({{ job.salary }})</option>
-                            {% empty %}
-                                <option value="">Software Development Engineer</option>
-                            {% endfor %}
-                        </select>
+            {% if resumes %}
+                <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
+                    <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        Previous Resume Audits
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Resume Document (.PDF, .DOCX)</label>
-                        <input type="file" name="resume" accept=".pdf,.docx,.doc,.txt" required class="form-input" style="padding-top: 8px;">
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                        <span style="font-size: 12px; color: var(--text-muted);">
-                            <i class="fa-solid fa-lock"></i> Parsed securely in memory
-                        </span>
-                        <button type="submit" class="btn btn-primary" aria-label="Benchmark Resume">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Benchmark Resume
-                        </button>
-                    </div>
-                </form>
-
-                {% if resumes %}
-                    <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
-                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
-                            Previous Resume Audits
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                            {% for r in resumes|slice:":2" %}
-                                <div class="list-item-row" style="padding: 8px 12px;">
-                                    <div style="font-size: 12.5px; color: var(--text-primary);">
-                                        <strong>{{ r.job_title|default:"Software Engineer" }}</strong>
-                                        <span style="color: var(--text-muted); font-size: 11.5px; margin-left: 6px;">{{ r.uploaded_at|date:"M d, Y" }}</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <span class="badge badge-emerald" style="font-size: 11px;">ATS {{ r.ats_score }}%</span>
-                                        <a href="{% url 'resume_result' r.id %}" class="btn btn-ghost btn-sm" style="height: 26px; padding: 0 8px; font-size: 11.5px;">View</a>
-                                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        {% for r in resumes|slice:":2" %}
+                            <div class="list-item-row" style="padding: 8px 12px;">
+                                <div style="font-size: 12.5px; color: var(--text-primary);">
+                                    <strong>{{ r.job_title|default:"Software Engineer" }}</strong>
+                                    <span style="color: var(--text-muted); font-size: 11.5px; margin-left: 6px;">{{ r.uploaded_at|date:"M d, Y" }}</span>
                                 </div>
-                            {% endfor %}
-                        </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span class="badge badge-emerald" style="font-size: 11px;">ATS {{ r.ats_score }}%</span>
+                                    <a href="{% url 'resume_result' r.id %}" class="btn btn-ghost btn-sm" style="height: 26px; padding: 0 8px; font-size: 11.5px;">View</a>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Right: Diagnostic Performance Trend Chart -->
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-chart-line text-accent"></i>
-                        Placement Diagnostic Trend
-                    </h3>
-                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
-                        Historical progress across 30 MCQs and Proctored Voice Interviews.
-                    </p>
                 </div>
-                <span class="badge badge-slate">
-                    Assessments
-                </span>
-            </div>
-
-            <div class="card-body">
-                <div style="position: relative; height: 240px; width: 100%;">
-                    <canvas id="progressChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <span style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 12px;">
-                    <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2563eb;"></span> 30 MCQs</span>
-                    <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #059669;"></span> AI Interview</span>
-                </span>
-                <span style="font-size: 12px; color: var(--text-muted);">
-                    Goal: <strong>&ge; 75%</strong>
-                </span>
-            </div>
+            {% endif %}
         </div>
-
     </div>
 </div>
 
@@ -598,106 +559,4 @@
 </div>
 {% endblock %}
 
-{% block extra_scripts %}
-<script>
-    (function() {
-        const ctx = document.getElementById('progressChart');
-        if (!ctx) return;
-
-        const mockScores = {{ mock_scores|safe }};
-        const interviewScores = {{ interview_scores|safe }};
-        const maxLen = Math.max(mockScores.length, interviewScores.length, 3);
-        const labels = Array.from({length: maxLen}, (_, i) => `Round ${i + 1}`);
-
-        function getThemeColors() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            return {
-                gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.06)',
-                textColor: isDark ? '#94a3b8' : '#64748b',
-                primaryLine: isDark ? '#60a5fa' : '#2563eb',
-                primaryFill: isDark ? 'rgba(96, 165, 250, 0.12)' : 'rgba(37, 99, 235, 0.08)',
-                successLine: isDark ? '#34d399' : '#059669',
-                successFill: isDark ? 'rgba(52, 211, 153, 0.12)' : 'rgba(5, 150, 105, 0.08)',
-            };
-        }
-
-        let colors = getThemeColors();
-
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '30 MCQ Technical %',
-                        data: mockScores,
-                        borderColor: colors.primaryLine,
-                        backgroundColor: colors.primaryFill,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: colors.primaryLine,
-                        fill: true,
-                        tension: 0.35
-                    },
-                    {
-                        label: 'AI Interview %',
-                        data: interviewScores,
-                        borderColor: colors.successLine,
-                        backgroundColor: colors.successFill,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: colors.successLine,
-                        fill: true,
-                        tension: 0.35
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            color: colors.textColor,
-                            font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' },
-                            boxWidth: 10,
-                            usePointStyle: true
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: colors.gridColor },
-                        ticks: { color: colors.textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }
-                    },
-                    y: {
-                        min: 0,
-                        max: 100,
-                        grid: { color: colors.gridColor },
-                        ticks: { color: colors.textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }
-                    }
-                }
-            }
-        });
-
-        // Dynamic theme synchronization
-        document.addEventListener('themeChanged', function() {
-            colors = getThemeColors();
-            chart.data.datasets[0].borderColor = colors.primaryLine;
-            chart.data.datasets[0].backgroundColor = colors.primaryFill;
-            chart.data.datasets[0].pointBackgroundColor = colors.primaryLine;
-            chart.data.datasets[1].borderColor = colors.successLine;
-            chart.data.datasets[1].backgroundColor = colors.successFill;
-            chart.data.datasets[1].pointBackgroundColor = colors.successLine;
-
-            chart.options.plugins.legend.labels.color = colors.textColor;
-            chart.options.scales.x.grid.color = colors.gridColor;
-            chart.options.scales.x.ticks.color = colors.textColor;
-            chart.options.scales.y.grid.color = colors.gridColor;
-            chart.options.scales.y.ticks.color = colors.textColor;
-            chart.update();
-        });
-    })();
-</script>
-{% endblock %}
+{% block extra_scripts %}{% endblock %}

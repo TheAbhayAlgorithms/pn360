@@ -20,7 +20,6 @@ import {
   Building2,
   CalendarPlus
 } from 'lucide-react';
-import DiagnosticChart from '@/components/DiagnosticChart';
 import { defaultJobs, initialAssessmentRecords, initialScheduledTests } from '@/lib/mockData';
 import { auditResumeATS } from '@/lib/gemini';
 import { ATSResult, ScheduledTest } from '@/lib/types';
@@ -286,10 +285,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* SECTION 3: RESUME AUDIT SECTION & DIAGNOSTIC TREND */}
-      <div className="grid-split-work" id="resume-audit-section">
-        
-        {/* Left: Resume ATS Benchmarker */}
+      {/* SECTION 3: RESUME AUDIT SECTION */}
+      <div id="resume-audit-section">
         <div className="card">
           <div className="card-header">
             <div>
@@ -392,40 +389,6 @@ export default function Dashboard() {
             </div>
           )}
         </div>
-
-        {/* Right: Placement Diagnostic Trend Chart */}
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--flat-text)' }}>
-                Placement Diagnostic Trend
-              </h3>
-              <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
-                Score trajectories across 30 MCQs and Proctored Voice Interviews.
-              </p>
-            </div>
-            <span className="badge badge-gray">4 Assessment Rounds</span>
-          </div>
-
-          <div style={{ padding: '8px 0' }}>
-            <DiagnosticChart />
-          </div>
-
-          <div className="card-footer">
-            <span style={{ fontSize: '12px', color: 'var(--flat-muted)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '10px', height: '10px', background: '#2196F3' }}></span> 30 MCQs
-              </span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '10px', height: '10px', background: '#4CAF50' }}></span> AI Interview
-              </span>
-            </span>
-            <span style={{ fontSize: '12px', color: 'var(--flat-muted)' }}>
-              Goal: <strong>≥ 75%</strong>
-            </span>
-          </div>
-        </div>
-
       </div>
 
       {/* SECTION 4: APPOINTMENT SCHEDULER & RECRUITER TECH OPENINGS */}
