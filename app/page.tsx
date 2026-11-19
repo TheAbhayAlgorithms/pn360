@@ -16,32 +16,36 @@ export default function Dashboard() {
       title: "START TECHNICAL ASSESSMENT",
       subtitle: "30 MCQs • Proctored Assessment",
       href: "/mcq-test",
-      themeColor: "var(--edu-blue)", // Academic Oxford Blue / Cobalt
+      themeColor: "var(--scheme-deep)", // Scheme 1 Color 3: Deep Midnight Petrol Teal (#007086)
       icon: <ListChecks size={28} color="#FFFFFF" />,
+      textColor: "#FFFFFF",
       btnText: "Start Assessment"
     },
     {
       title: "RESUME ATS",
       subtitle: "Gemini 2.5 • Keyword Gap Audit",
       href: "/resume-ats",
-      themeColor: "var(--edu-terracotta)", // Scholarly Warm Sienna / Terracotta
+      themeColor: "var(--scheme-coral)", // Scheme 1 Color 5: Warm Coral / Salmon (#FC7F73)
       icon: <FileCheck size={28} color="#FFFFFF" />,
+      textColor: "#FFFFFF",
       btnText: "Audit Resume"
     },
     {
       title: "AI INTERVIEW",
       subtitle: "Speech AI • STAR Rubric Evaluation",
       href: "/ai-interview",
-      themeColor: "var(--edu-indigo)", // Intellectual Deep Indigo / Royal Slate
+      themeColor: "var(--scheme-teal)", // Scheme 1 Color 2: Vibrant Ocean Teal (#00B4B3)
       icon: <Mic size={28} color="#FFFFFF" />,
+      textColor: "#FFFFFF",
       btnText: "Enter Interview"
     },
     {
       title: "SCHEDULE",
       subtitle: "Practice Slots • Mock Testing",
       href: "/schedule",
-      themeColor: "var(--edu-teal)", // Cambridge Spruce / Deep Academic Teal
-      icon: <CalendarCheck size={28} color="#FFFFFF" />,
+      themeColor: "var(--scheme-gold)", // Scheme 1 Color 4: Warm Saffron Gold (#FECD00)
+      icon: <CalendarCheck size={28} color="#1F2937" />,
+      textColor: "#1F2937",
       btnText: "Book Slot"
     }
   ];
@@ -58,7 +62,7 @@ export default function Dashboard() {
         padding: '24px 0'
       }}
     >
-      {/* 4 Professional & Educational Curved Boxes Side by Side */}
+      {/* 4 Scheme 1 Curved Boxes Side by Side */}
       <div
         style={{
           display: 'grid',
@@ -91,7 +95,7 @@ export default function Dashboard() {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              {/* Dignified Academic Icon Tile */}
+              {/* Scheme 1 Icon Tile */}
               <div
                 style={{
                   width: '68px',
@@ -101,7 +105,7 @@ export default function Dashboard() {
                   background: opt.themeColor,
                   display: 'grid',
                   placeItems: 'center',
-                  color: '#FFFFFF'
+                  color: opt.textColor
                 }}
               >
                 {opt.icon}
@@ -134,7 +138,7 @@ export default function Dashboard() {
               </p>
             </div>
 
-            {/* Professional Curved Action Button */}
+            {/* Scheme 1 Action Button */}
             <div
               className="edu-btn"
               style={{
@@ -142,20 +146,20 @@ export default function Dashboard() {
                 marginTop: '26px',
                 padding: '12px 16px',
                 fontSize: '13.5px',
-                fontWeight: 700,
+                fontWeight: 800,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
                 borderRadius: '14px',
                 background: opt.themeColor,
-                color: '#FFFFFF',
+                color: opt.textColor,
                 border: 'none',
                 boxShadow: 'none'
               }}
             >
               <span>{opt.btnText}</span>
-              <ArrowRight size={15} />
+              <ArrowRight size={15} color={opt.textColor} />
             </div>
           </Link>
         ))}

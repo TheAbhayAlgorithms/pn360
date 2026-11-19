@@ -53,39 +53,39 @@ export default function LeaderboardPage() {
       {/* Top 3 Podium Cards */}
       <div className="grid-3">
         <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
-          <div className="icon-tile icon-tile-amber" style={{ borderRadius: '16px' }}>
+          <div className="icon-tile" style={{ borderRadius: '16px', background: 'var(--scheme-gold)', color: '#1F2937' }}>
             <Trophy size={24} color="#1F2937" />
           </div>
           <div>
             <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--flat-muted)' }}>RANK #1</div>
             <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--flat-text)' }}>{mockLeaderboard[0].name}</div>
-            <div style={{ fontSize: '12px', color: 'var(--flat-green-dark)', fontWeight: 700 }}>
+            <div style={{ fontSize: '12px', color: 'var(--scheme-deep)', fontWeight: 800 }}>
               {mockLeaderboard[0].overall}% • {mockLeaderboard[0].status}
             </div>
           </div>
         </div>
 
         <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
-          <div className="icon-tile icon-tile-blue" style={{ borderRadius: '16px' }}>
+          <div className="icon-tile" style={{ borderRadius: '16px', background: 'var(--scheme-teal)', color: '#FFFFFF' }}>
             <Medal size={24} color="#FFFFFF" />
           </div>
           <div>
             <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--flat-muted)' }}>RANK #2</div>
             <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--flat-text)' }}>{mockLeaderboard[1].name}</div>
-            <div style={{ fontSize: '12px', color: 'var(--flat-blue-dark)', fontWeight: 700 }}>
+            <div style={{ fontSize: '12px', color: 'var(--scheme-teal-dark)', fontWeight: 800 }}>
               {mockLeaderboard[1].overall}% • {mockLeaderboard[1].status}
             </div>
           </div>
         </div>
 
         <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
-          <div className="icon-tile icon-tile-orange" style={{ borderRadius: '16px' }}>
+          <div className="icon-tile" style={{ borderRadius: '16px', background: 'var(--scheme-coral)', color: '#FFFFFF' }}>
             <Star size={24} color="#FFFFFF" />
           </div>
           <div>
             <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--flat-muted)' }}>RANK #3</div>
             <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--flat-text)' }}>{mockLeaderboard[2].name}</div>
-            <div style={{ fontSize: '12px', color: 'var(--flat-orange-dark)', fontWeight: 700 }}>
+            <div style={{ fontSize: '12px', color: 'var(--scheme-coral-dark)', fontWeight: 800 }}>
               {mockLeaderboard[2].overall}% • {mockLeaderboard[2].status}
             </div>
           </div>
@@ -99,21 +99,33 @@ export default function LeaderboardPage() {
             <button
               onClick={() => setFilter("all")}
               className={`button btn-sm ${filter === "all" ? "" : "button-secondary"}`}
-              style={{ borderRadius: '12px' }}
+              style={{
+                borderRadius: '12px',
+                background: filter === "all" ? 'var(--scheme-deep)' : undefined,
+                color: filter === "all" ? '#FFFFFF' : undefined
+              }}
             >
               All Tracks
             </button>
             <button
               onClick={() => setFilter("software")}
               className={`button btn-sm ${filter === "software" ? "" : "button-secondary"}`}
-              style={{ borderRadius: '12px' }}
+              style={{
+                borderRadius: '12px',
+                background: filter === "software" ? 'var(--scheme-deep)' : undefined,
+                color: filter === "software" ? '#FFFFFF' : undefined
+              }}
             >
               Software Engineering
             </button>
             <button
               onClick={() => setFilter("backend")}
               className={`button btn-sm ${filter === "backend" ? "" : "button-secondary"}`}
-              style={{ borderRadius: '12px' }}
+              style={{
+                borderRadius: '12px',
+                background: filter === "backend" ? 'var(--scheme-deep)' : undefined,
+                color: filter === "backend" ? '#FFFFFF' : undefined
+              }}
             >
               Backend & Systems
             </button>
@@ -149,7 +161,7 @@ export default function LeaderboardPage() {
                       </span>
                     </td>
                     <td>
-                      <strong style={{ color: isYou ? 'var(--flat-blue-dark)' : 'var(--flat-text)' }}>
+                      <strong style={{ color: isYou ? 'var(--scheme-deep)' : 'var(--flat-text)' }}>
                         {st.name}
                       </strong>
                     </td>
@@ -160,7 +172,7 @@ export default function LeaderboardPage() {
                     <td>{st.mcq}%</td>
                     <td>{st.interview}%</td>
                     <td>
-                      <strong style={{ fontSize: '15px', color: st.overall >= 75 ? 'var(--flat-green-dark)' : 'var(--flat-blue-dark)' }}>
+                      <strong style={{ fontSize: '15px', color: st.overall >= 75 ? 'var(--scheme-teal-dark)' : 'var(--scheme-deep)' }}>
                         {st.overall}%
                       </strong>
                     </td>

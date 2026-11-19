@@ -6,58 +6,78 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  /* Bright palette: icon tiles, fills and accents (pair with dark text) */
-  --flat-orange: #FF5722;
-  --flat-blue: #2196F3;
-  --flat-green: #4CAF50;
-  --flat-amber: #FFC107;
-  --flat-purple: #9C27B0;
-  --flat-cyan: #00BCD4;
+  /* Scheme 1 Master Palette */
+  --scheme-ice: #9EC4CC;       /* Color 1: Soft Ice / Slate Cyan */
+  --scheme-teal: #00B4B3;      /* Color 2: Vibrant Ocean Teal */
+  --scheme-deep: #007086;      /* Color 3: Deep Midnight Petrol Teal */
+  --scheme-gold: #FECD00;      /* Color 4: Warm Saffron Gold */
+  --scheme-coral: #FC7F73;     /* Color 5: Warm Coral / Salmon */
 
-  /* -dark variants: surfaces behind white text */
-  --flat-orange-dark: #BF360C;
-  --flat-blue-dark: #1976D2;
-  --flat-green-dark: #2E7D32;
-  --flat-cyan-dark: #00838F;
-  --flat-purple-dark: #6A1B9A;
+  /* Darker interactive variants */
+  --scheme-deep-dark: #00596B;
+  --scheme-teal-dark: #008F8E;
+  --scheme-gold-dark: #D4A700;
+  --scheme-coral-dark: #E06054;
+  --scheme-ice-dark: #7CA6B0;
 
-  /* Professional & Educational Academic Palette */
-  --edu-blue: #1D4ED8;
-  --edu-blue-badge-bg: rgba(29, 78, 216, 0.08);
-  --edu-blue-hover: #1E40AF;
+  /* Subtle background tints for badges & cards */
+  --scheme-deep-subtle: rgba(0, 112, 134, 0.10);
+  --scheme-teal-subtle: rgba(0, 180, 179, 0.12);
+  --scheme-gold-subtle: rgba(254, 205, 0, 0.16);
+  --scheme-coral-subtle: rgba(252, 127, 115, 0.14);
+  --scheme-ice-subtle: rgba(158, 196, 204, 0.22);
 
-  --edu-terracotta: #C2410C;
-  --edu-terracotta-badge-bg: rgba(194, 65, 12, 0.08);
-  --edu-terracotta-hover: #9A3412;
+  /* Semantic System Mappings mapped directly to Scheme 1 */
+  --primary: var(--scheme-deep);
+  --primary-hover: var(--scheme-deep-dark);
+  --primary-active: #004553;
 
-  --edu-indigo: #4338CA;
-  --edu-indigo-badge-bg: rgba(67, 56, 202, 0.08);
-  --edu-indigo-hover: #3730A3;
+  --success: var(--scheme-teal);
+  --success-hover: var(--scheme-teal-dark);
 
-  --edu-teal: #0F766E;
-  --edu-teal-badge-bg: rgba(15, 118, 110, 0.08);
-  --edu-teal-hover: #115E59;
+  --warning: var(--scheme-gold);
+  --warning-hover: var(--scheme-gold-dark);
 
-  /* Surfaces & Neutral Canvas */
-  --flat-bg: #F3F4F6;
+  --danger: var(--scheme-coral);
+  --danger-hover: var(--scheme-coral-dark);
+
+  /* Surfaces & Neutral Canvas in Cool Ice/Teal Harmony */
+  --flat-bg: #F4F8F9;
   --flat-surface: #FFFFFF;
-  --flat-surface-subtle: #F9FAFB;
-  --flat-surface-elevated: #E5E7EB;
-  --flat-border: #E5E7EB;
-  --flat-border-hover: #D1D5DB;
-  --flat-text: #1F2937;
-  --flat-muted: #4B5563;
-  --flat-subtle: #9CA3AF;
+  --flat-surface-subtle: #EDF5F7;
+  --flat-surface-elevated: #DCE8EB;
+  --flat-border: #D1E2E5;
+  --flat-border-hover: #9EC4CC;
+  --flat-text: #0E2A30;
+  --flat-muted: #4A6B73;
+  --flat-subtle: #7CA6B0;
 
-  /* Semantic Mappings */
-  --primary: var(--flat-blue-dark);
-  --primary-hover: #1565C0;
-  --primary-active: #0D47A1;
-  --success: var(--flat-green-dark);
-  --success-hover: #1B5E20;
-  --warning: var(--flat-amber);
-  --danger: var(--flat-orange-dark);
-  --danger-hover: #D32F2F;
+  /* Scheme 1 Legacy & Dashboard Mappings */
+  --flat-blue: var(--scheme-deep);
+  --flat-blue-dark: var(--scheme-deep);
+  --flat-green: var(--scheme-teal);
+  --flat-green-dark: var(--scheme-teal);
+  --flat-amber: var(--scheme-gold);
+  --flat-orange: var(--scheme-coral);
+  --flat-orange-dark: var(--scheme-coral);
+  --flat-purple: var(--scheme-deep);
+  --flat-cyan: var(--scheme-teal);
+
+  --edu-blue: var(--scheme-deep);
+  --edu-blue-badge-bg: var(--scheme-deep-subtle);
+  --edu-blue-hover: var(--scheme-deep-dark);
+
+  --edu-terracotta: var(--scheme-coral);
+  --edu-terracotta-badge-bg: var(--scheme-coral-subtle);
+  --edu-terracotta-hover: var(--scheme-coral-dark);
+
+  --edu-indigo: var(--scheme-teal);
+  --edu-indigo-badge-bg: var(--scheme-teal-subtle);
+  --edu-indigo-hover: var(--scheme-teal-dark);
+
+  --edu-teal: var(--scheme-gold);
+  --edu-teal-badge-bg: var(--scheme-gold-subtle);
+  --edu-teal-hover: var(--scheme-gold-dark);
 
   /* Smooth Curves Dimensions */
   --radius-xs: 8px;
@@ -69,41 +89,45 @@
 }
 
 [data-theme="dark"] {
-  --flat-bg: #121212;
-  --flat-surface: #1E1E1E;
-  --flat-surface-subtle: #181818;
-  --flat-surface-elevated: #2A2A2A;
-  --flat-border: #333333;
-  --flat-border-hover: #484848;
-  --flat-text: #F3F4F6;
-  --flat-muted: #9CA3AF;
-  --flat-subtle: #6B7280;
+  --flat-bg: #0A1618;
+  --flat-surface: #112226;
+  --flat-surface-subtle: #0E1D20;
+  --flat-surface-elevated: #182F34;
+  --flat-border: #1E3A41;
+  --flat-border-hover: #2D5660;
+  --flat-text: #EAF4F6;
+  --flat-muted: #9EC4CC;
+  --flat-subtle: #688E96;
 
-  --flat-blue-dark: #2196F3;
-  --flat-green-dark: #4CAF50;
-  --flat-orange-dark: #FF5722;
-  --flat-cyan-dark: #00BCD4;
+  --scheme-deep: #009BB8;
+  --scheme-deep-dark: #007086;
+  --scheme-teal: #00D5D4;
+  --scheme-teal-dark: #00B4B3;
+  --scheme-gold: #FED426;
+  --scheme-gold-dark: #D4A700;
+  --scheme-coral: #FD958C;
+  --scheme-coral-dark: #FC7F73;
+  --scheme-ice: #B8D6DD;
 
-  --primary: #2196F3;
-  --primary-hover: #42A5F5;
-  --primary-active: #1E88E5;
+  --primary: #009BB8;
+  --primary-hover: #00D5D4;
+  --primary-active: #007086;
 
-  /* Professional & Educational Dark Mode Accents */
-  --edu-blue: #3B82F6;
-  --edu-blue-badge-bg: rgba(59, 130, 246, 0.16);
-  --edu-blue-hover: #2563EB;
+  --edu-blue: #009BB8;
+  --edu-blue-badge-bg: rgba(0, 155, 184, 0.2);
+  --edu-blue-hover: #007086;
 
-  --edu-terracotta: #EA580C;
-  --edu-terracotta-badge-bg: rgba(234, 88, 12, 0.16);
-  --edu-terracotta-hover: #C2410C;
+  --edu-terracotta: #FD958C;
+  --edu-terracotta-badge-bg: rgba(253, 149, 140, 0.2);
+  --edu-terracotta-hover: #FC7F73;
 
-  --edu-indigo: #6366F1;
-  --edu-indigo-badge-bg: rgba(99, 102, 241, 0.16);
-  --edu-indigo-hover: #4F46E5;
+  --edu-indigo: #00D5D4;
+  --edu-indigo-badge-bg: rgba(0, 213, 212, 0.2);
+  --edu-indigo-hover: #00B4B3;
 
-  --edu-teal: #14B8A6;
-  --edu-teal-badge-bg: rgba(20, 184, 166, 0.16);
-  --edu-teal-hover: #0D9488;
+  --edu-teal: #FED426;
+  --edu-teal-badge-bg: rgba(254, 212, 38, 0.2);
+  --edu-teal-hover: #D4A700;
 }
 
 /* =========================================================================
@@ -217,7 +241,7 @@ code, kbd, pre, .font-mono {
   width: 3rem;
   height: 3rem;
   border-radius: 16px;
-  background: var(--flat-blue);
+  background: var(--scheme-deep);
   color: #FFFFFF;
   flex-shrink: 0;
 }
@@ -234,11 +258,12 @@ code, kbd, pre, .font-mono {
   border-radius: 18px;
 }
 
-.icon-tile-green { background: var(--flat-green); }
-.icon-tile-orange { background: var(--flat-orange); }
-.icon-tile-amber { background: var(--flat-amber); color: #1F2937; }
-.icon-tile-purple { background: var(--flat-purple); }
-.icon-tile-cyan { background: var(--flat-cyan); }
+.icon-tile-green { background: var(--scheme-teal); color: #FFFFFF; }
+.icon-tile-orange { background: var(--scheme-coral); color: #FFFFFF; }
+.icon-tile-amber { background: var(--scheme-gold); color: #1F2937; }
+.icon-tile-purple { background: var(--scheme-deep); color: #FFFFFF; }
+.icon-tile-cyan { background: var(--scheme-teal); color: #FFFFFF; }
+.icon-tile-blue { background: var(--scheme-deep); color: #FFFFFF; }
 .icon-tile-dark { background: var(--flat-text); color: var(--flat-surface); }
 
 /* Existing emoji icons: wrap them and flatten to a white silhouette */
@@ -254,9 +279,9 @@ code, kbd, pre, .font-mono {
   padding: 0.65rem 1.25rem;
   border: none;
   border-radius: 12px;
-  background: var(--flat-blue-dark);
+  background: var(--scheme-deep);
   color: #FFFFFF !important;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
   box-shadow: none;
   cursor: pointer;
@@ -266,17 +291,17 @@ code, kbd, pre, .font-mono {
   gap: 8px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 150ms ease;
+  transition: background-color 150ms ease, filter 150ms ease;
   font-family: inherit;
 }
 
 .button:hover, .btn:hover {
-  background: #1565C0;
+  background: var(--scheme-deep-dark);
   color: #FFFFFF !important;
 }
 
 .button:active, .btn:active {
-  background: #0D47A1;
+  background: #004553;
 }
 
 .button:focus-visible, .btn:focus-visible {
@@ -291,35 +316,35 @@ code, kbd, pre, .font-mono {
 }
 
 .button-secondary:hover, .btn-secondary:hover {
-  background: #D1D5DB;
+  background: #DCE8EB;
   color: var(--flat-text) !important;
 }
 
 .button-success, .btn-success {
-  background: var(--flat-green-dark);
+  background: var(--scheme-teal);
   color: #FFFFFF !important;
 }
 
 .button-success:hover, .btn-success:hover {
-  background: #1B5E20;
+  background: var(--scheme-teal-dark);
 }
 
 .button-danger, .btn-danger {
-  background: var(--flat-orange-dark);
+  background: var(--scheme-coral);
   color: #FFFFFF !important;
 }
 
 .button-danger:hover, .btn-danger:hover {
-  background: #D32F2F;
+  background: var(--scheme-coral-dark);
 }
 
 .button-amber, .btn-amber {
-  background: var(--flat-amber);
+  background: var(--scheme-gold);
   color: #1F2937 !important;
 }
 
 .button-amber:hover, .btn-amber:hover {
-  background: #FFA000;
+  background: var(--scheme-gold-dark);
 }
 
 .btn-sm, .button-sm {
@@ -335,7 +360,7 @@ code, kbd, pre, .font-mono {
 }
 
 /* =========================================================================
-   FLAT BADGES & LABELS
+   FLAT BADGES & LABELS (SCHEME 1 PALETTE)
    ========================================================================= */
 
 .badge {
@@ -351,33 +376,33 @@ code, kbd, pre, .font-mono {
 }
 
 .badge-blue {
-  background: #E3F2FD;
-  color: #1565C0;
-  border-color: #BBDEFB;
+  background: var(--scheme-deep-subtle);
+  color: var(--scheme-deep);
+  border-color: rgba(0, 112, 134, 0.22);
 }
 
 .badge-green {
-  background: #E8F5E9;
-  color: #2E7D32;
-  border-color: #C8E6C9;
+  background: var(--scheme-teal-subtle);
+  color: #007086;
+  border-color: rgba(0, 180, 179, 0.35);
 }
 
 .badge-orange {
-  background: #FBE9E7;
-  color: #D84315;
-  border-color: #FFCCBC;
+  background: var(--scheme-coral-subtle);
+  color: #C5463A;
+  border-color: rgba(252, 127, 115, 0.35);
 }
 
 .badge-amber {
-  background: #FFF8E1;
-  color: #F57F17;
-  border-color: #FFE082;
+  background: var(--scheme-gold-subtle);
+  color: #7A6000;
+  border-color: rgba(254, 205, 0, 0.45);
 }
 
 .badge-purple {
-  background: #F3E5F5;
-  color: #6A1B9A;
-  border-color: #E1BEE7;
+  background: var(--scheme-ice-subtle);
+  color: var(--scheme-deep);
+  border-color: rgba(158, 196, 204, 0.5);
 }
 
 .badge-gray {
@@ -387,28 +412,30 @@ code, kbd, pre, .font-mono {
 }
 
 [data-theme="dark"] .badge-blue {
-  background: #0D47A1;
-  color: #E3F2FD;
-  border-color: #1976D2;
+  background: rgba(0, 155, 184, 0.2);
+  color: #00D5D4;
+  border-color: rgba(0, 155, 184, 0.4);
 }
 [data-theme="dark"] .badge-green {
-  background: #1B5E20;
-  color: #E8F5E9;
-  border-color: #2E7D32;
+  background: rgba(0, 213, 212, 0.2);
+  color: #00D5D4;
+  border-color: rgba(0, 213, 212, 0.4);
 }
 [data-theme="dark"] .badge-orange {
-  background: #BF360C;
-  color: #FBE9E7;
-  border-color: #D84315;
+  background: rgba(253, 149, 140, 0.2);
+  color: #FD958C;
+  border-color: rgba(253, 149, 140, 0.4);
 }
 [data-theme="dark"] .badge-amber {
-  background: #F57F17;
-  color: #FFF8E1;
-  border-color: #FFB300;
+  background: rgba(254, 212, 38, 0.2);
+  color: #FED426;
+  border-color: rgba(254, 212, 38, 0.4);
 }
 [data-theme="dark"] .badge-purple {
-  background: #4A148C;
-  color: #F3E5F5;
+  background: rgba(184, 214, 221, 0.2);
+  color: #B8D6DD;
+  border-color: rgba(184, 214, 221, 0.4);
+}
   border-color: #7B1FA2;
 }
 
@@ -448,13 +475,13 @@ code, kbd, pre, .font-mono {
 }
 
 .flat-input:focus, .flat-select:focus, .flat-textarea:focus {
-  outline: 2px solid var(--flat-blue);
-  border-color: var(--flat-blue);
+  outline: 2px solid var(--scheme-deep);
+  border-color: var(--scheme-deep);
 }
 
 /* =========================================================================
    FLAT PROGRESS TRACK
-   ========================================================================= */
+   ======================================================================== */
 
 .flat-progress {
   width: 100%;
@@ -466,14 +493,14 @@ code, kbd, pre, .font-mono {
 
 .flat-progress-fill {
   height: 100%;
-  background: var(--flat-blue);
+  background: var(--scheme-deep);
   transition: width 300ms ease;
 }
 
-.flat-progress-fill.fill-green { background: var(--flat-green); }
-.flat-progress-fill.fill-orange { background: var(--flat-orange); }
-.flat-progress-fill.fill-amber { background: var(--flat-amber); }
-.flat-progress-fill.fill-purple { background: var(--flat-purple); }
+.flat-progress-fill.fill-green { background: var(--scheme-teal); }
+.flat-progress-fill.fill-orange { background: var(--scheme-coral); }
+.flat-progress-fill.fill-amber { background: var(--scheme-gold); }
+.flat-progress-fill.fill-purple { background: var(--scheme-deep); }
 
 /* =========================================================================
    FLAT DATA TABLES
@@ -558,7 +585,7 @@ code, kbd, pre, .font-mono {
 }
 
 .flat-nav-link.active {
-  background: var(--flat-blue-dark);
+  background: var(--scheme-deep);
   color: #FFFFFF !important;
 }
 

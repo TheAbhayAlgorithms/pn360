@@ -10,84 +10,101 @@
    ========================================================================= */
 
 :root, [data-theme="light"] {
-    /* Bright palette: icon tiles, fills and accents (pair with dark text) */
-    --flat-orange: #FF5722;
-    --flat-blue: #2196F3;
-    --flat-green: #4CAF50;
-    --flat-amber: #FFC107;
-    --flat-purple: #9C27B0;
-    --flat-cyan: #00BCD4;
+    /* Scheme 1 Master Palette */
+    --scheme-ice: #9EC4CC;       /* Color 1: Soft Ice / Slate Cyan */
+    --scheme-teal: #00B4B3;      /* Color 2: Vibrant Ocean Teal */
+    --scheme-deep: #007086;      /* Color 3: Deep Midnight Petrol Teal */
+    --scheme-gold: #FECD00;      /* Color 4: Warm Saffron Gold */
+    --scheme-coral: #FC7F73;     /* Color 5: Warm Coral / Salmon */
 
-    /* -dark variants: surfaces behind white text */
-    --flat-orange-dark: #BF360C;
-    --flat-blue-dark: #1976D2;
-    --flat-green-dark: #2E7D32;
-    --flat-cyan-dark: #00838F;
+    /* Darker interactive variants */
+    --scheme-deep-dark: #00596B;
+    --scheme-teal-dark: #008F8E;
+    --scheme-gold-dark: #D4A700;
+    --scheme-coral-dark: #E06054;
+    --scheme-ice-dark: #7CA6B0;
 
-    /* Professional & Educational Academic Palette */
-    --edu-blue: #1D4ED8;
-    --edu-blue-badge-bg: rgba(29, 78, 216, 0.08);
-    --edu-blue-hover: #1E40AF;
+    /* Subtle background tints for badges & cards */
+    --scheme-deep-subtle: rgba(0, 112, 134, 0.10);
+    --scheme-teal-subtle: rgba(0, 180, 179, 0.12);
+    --scheme-gold-subtle: rgba(254, 205, 0, 0.16);
+    --scheme-coral-subtle: rgba(252, 127, 115, 0.14);
+    --scheme-ice-subtle: rgba(158, 196, 204, 0.22);
 
-    --edu-terracotta: #C2410C;
-    --edu-terracotta-badge-bg: rgba(194, 65, 12, 0.08);
-    --edu-terracotta-hover: #9A3412;
+    /* Scheme 1 Mappings */
+    --flat-orange: var(--scheme-coral);
+    --flat-blue: var(--scheme-deep);
+    --flat-green: var(--scheme-teal);
+    --flat-amber: var(--scheme-gold);
+    --flat-purple: var(--scheme-deep);
+    --flat-cyan: var(--scheme-teal);
 
-    --edu-indigo: #4338CA;
-    --edu-indigo-badge-bg: rgba(67, 56, 202, 0.08);
-    --edu-indigo-hover: #3730A3;
+    --flat-orange-dark: var(--scheme-coral-dark);
+    --flat-blue-dark: var(--scheme-deep);
+    --flat-green-dark: var(--scheme-teal-dark);
+    --flat-cyan-dark: var(--scheme-deep);
 
-    --edu-teal: #0F766E;
-    --edu-teal-badge-bg: rgba(15, 118, 110, 0.08);
-    --edu-teal-hover: #115E59;
+    --edu-blue: var(--scheme-deep);
+    --edu-blue-badge-bg: var(--scheme-deep-subtle);
+    --edu-blue-hover: var(--scheme-deep-dark);
 
-    --flat-bg: #F3F4F6;
+    --edu-terracotta: var(--scheme-coral);
+    --edu-terracotta-badge-bg: var(--scheme-coral-subtle);
+    --edu-terracotta-hover: var(--scheme-coral-dark);
+
+    --edu-indigo: var(--scheme-teal);
+    --edu-indigo-badge-bg: var(--scheme-teal-subtle);
+    --edu-indigo-hover: var(--scheme-teal-dark);
+
+    --edu-teal: var(--scheme-gold);
+    --edu-teal-badge-bg: var(--scheme-gold-subtle);
+    --edu-teal-hover: var(--scheme-gold-dark);
+
+    --flat-bg: #F4F8F9;
     --flat-surface: #FFFFFF;
-    --flat-border: #E5E7EB;
-    --flat-text: #1F2937;
-    --flat-muted: #4B5563;
+    --flat-border: #D1E2E5;
+    --flat-text: #0E2A30;
+    --flat-muted: #4A6B73;
 
     --bg-page: var(--flat-bg);
     --bg-surface: var(--flat-surface);
-    --bg-surface-elevated: #E5E7EB;
-    --bg-surface-subtle: #F9FAFB;
+    --bg-surface-elevated: #DCE8EB;
+    --bg-surface-subtle: #EDF5F7;
     --bg-navbar: var(--flat-surface);
     
     --border: var(--flat-border);
-    --border-hover: #D1D5DB;
-    --border-focus: var(--flat-blue);
+    --border-hover: #9EC4CC;
+    --border-focus: var(--scheme-deep);
     
     --text-primary: var(--flat-text);
     --text-secondary: var(--flat-muted);
-    --text-muted: #6B7280;
-    --text-subtle: #9CA3AF;
+    --text-muted: #7CA6B0;
+    --text-subtle: #9EC4CC;
     
-    /* Flat Blue */
-    --accent-primary: var(--flat-blue-dark);
-    --accent-primary-hover: #1565C0;
-    --accent-primary-subtle: #E3F2FD;
-    --accent-primary-border: #BBDEFB;
+    /* Scheme 1 Accents */
+    --accent-primary: var(--scheme-deep);
+    --accent-primary-hover: var(--scheme-deep-dark);
+    --accent-primary-subtle: var(--scheme-deep-subtle);
+    --accent-primary-border: rgba(0, 112, 134, 0.3);
     
-    /* Flat Green */
-    --accent-success: var(--flat-green-dark);
-    --accent-success-hover: #1B5E20;
-    --accent-success-subtle: #E8F5E9;
-    --accent-success-border: #C8E6C9;
+    --accent-success: var(--scheme-teal);
+    --accent-success-hover: var(--scheme-teal-dark);
+    --accent-success-subtle: var(--scheme-teal-subtle);
+    --accent-success-border: rgba(0, 180, 179, 0.35);
     
-    /* Flat Amber */
-    --accent-warning: var(--flat-amber);
-    --accent-warning-subtle: #FFF8E1;
-    --accent-warning-border: #FFE082;
+    --accent-warning: var(--scheme-gold);
+    --accent-warning-hover: var(--scheme-gold-dark);
+    --accent-warning-subtle: var(--scheme-gold-subtle);
+    --accent-warning-border: rgba(254, 205, 0, 0.4);
     
-    /* Flat Orange / Danger */
-    --accent-danger: var(--flat-orange-dark);
-    --accent-danger-subtle: #FBE9E7;
-    --accent-danger-border: #FFCCBC;
+    --accent-danger: var(--scheme-coral);
+    --accent-danger-hover: var(--scheme-coral-dark);
+    --accent-danger-subtle: var(--scheme-coral-subtle);
+    --accent-danger-border: rgba(252, 127, 115, 0.35);
     
-    /* Flat Purple */
-    --accent-purple: var(--flat-purple);
-    --accent-purple-subtle: #F3E5F5;
-    --accent-purple-border: #E1BEE7;
+    --accent-purple: var(--scheme-ice);
+    --accent-purple-subtle: var(--scheme-ice-subtle);
+    --accent-purple-border: rgba(158, 196, 204, 0.45);
 
     /* Shadows: Pure 2D Flat - No Shadows */
     --shadow-xs: none;
@@ -104,40 +121,62 @@
     --radius-pill: 9999px;
 
     /* Charts */
-    --chart-grid: #E5E7EB;
-    --chart-text: #4B5563;
+    --chart-grid: #DCE8EB;
+    --chart-text: #4A6B73;
 }
 
 [data-theme="dark"] {
-    --flat-bg: #121212;
-    --flat-surface: #1E1E1E;
-    --flat-border: #333333;
-    --flat-text: #F3F4F6;
-    --flat-muted: #9CA3AF;
+    --flat-bg: #0A1618;
+    --flat-surface: #112226;
+    --flat-border: #1E3A41;
+    --flat-text: #EAF4F6;
+    --flat-muted: #9EC4CC;
 
     --bg-page: var(--flat-bg);
     --bg-surface: var(--flat-surface);
-    --bg-surface-elevated: #282828;
-    --bg-surface-subtle: #181818;
+    --bg-surface-elevated: #182F34;
+    --bg-surface-subtle: #0E1D20;
     --bg-navbar: var(--flat-surface);
     
     --border: var(--flat-border);
-    --border-hover: #484848;
-    --border-focus: var(--flat-blue);
+    --border-hover: #2D5660;
+    --border-focus: #00D5D4;
     
     --text-primary: var(--flat-text);
     --text-secondary: var(--flat-muted);
-    --text-muted: #9E9E9E;
-    --text-subtle: #757575;
+    --text-muted: #688E96;
+    --text-subtle: #9EC4CC;
+
+    --scheme-deep: #009BB8;
+    --scheme-deep-dark: #007086;
+    --scheme-teal: #00D5D4;
+    --scheme-teal-dark: #00B4B3;
+    --scheme-gold: #FED426;
+    --scheme-gold-dark: #D4A700;
+    --scheme-coral: #FD958C;
+    --scheme-coral-dark: #FC7F73;
+    --scheme-ice: #B8D6DD;
     
-    /* Flat Blue Dark */
-    --accent-primary: #2196F3;
-    --accent-primary-hover: #42A5F5;
-    --accent-primary-subtle: rgba(33, 150, 243, 0.18);
-    --accent-primary-border: #1976D2;
+    /* Flat Accents Dark */
+    --accent-primary: #009BB8;
+    --accent-primary-hover: #00D5D4;
+    --accent-primary-subtle: rgba(0, 155, 184, 0.2);
+    --accent-primary-border: #007086;
     
-    /* Flat Green Dark */
-    --accent-success: #4CAF50;
+    --accent-success: #00D5D4;
+    --accent-success-hover: #00B4B3;
+    --accent-success-subtle: rgba(0, 213, 212, 0.2);
+    --accent-success-border: #008F8E;
+    
+    --accent-warning: #FED426;
+    --accent-warning-hover: #D4A700;
+    --accent-warning-subtle: rgba(254, 212, 38, 0.2);
+    --accent-warning-border: #FFA000;
+    
+    --accent-danger: #FD958C;
+    --accent-danger-hover: #FC7F73;
+    --accent-danger-subtle: rgba(253, 149, 140, 0.2);
+    --accent-danger-border: #E06054;
     --accent-success-hover: #66BB6A;
     --accent-success-subtle: rgba(76, 175, 80, 0.18);
     --accent-success-border: #388E3C;

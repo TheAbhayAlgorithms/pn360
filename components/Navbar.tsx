@@ -36,7 +36,7 @@ export default function Navbar() {
       <div className="flat-navbar-inner">
         {/* Left-most: PN360 and in sub Placement Nexus 360 */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--flat-blue-dark)', width: '38px', height: '38px', borderRadius: '12px' }}>
+          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--scheme-deep)', width: '38px', height: '38px', borderRadius: '12px' }}>
             <GraduationCap size={20} color="#FFFFFF" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -68,7 +68,7 @@ export default function Navbar() {
             aria-label="Toggle dark / light mode"
             title="Toggle Flat Dark / Light mode"
           >
-            {theme === 'dark' ? <Sun size={17} color="#FFC107" /> : <Moon size={17} />}
+            {theme === 'dark' ? <Sun size={17} color="var(--scheme-gold)" /> : <Moon size={17} />}
           </button>
         </div>
       </div>
