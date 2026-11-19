@@ -179,7 +179,7 @@ export default function AIInterviewPage() {
                 onClick={speakQuestion}
                 className="button button-secondary button-sm"
               >
-                <Volume2 size={15} color="var(--flat-blue-dark)" /> Read Question Aloud
+                <Volume2 size={15} color="var(--scheme-deep)" /> Read Question Aloud
               </button>
             </div>
 
@@ -231,7 +231,7 @@ export default function AIInterviewPage() {
                   disabled={isEvaluating || !transcript.trim()}
                   onClick={handleEvaluate}
                   className="button"
-                  style={{ background: 'var(--flat-blue-dark)' }}
+                  style={{ background: 'var(--scheme-deep)' }}
                 >
                   <Send size={15} />
                   {isEvaluating ? 'Evaluating with STAR...' : 'Evaluate Answer'}
@@ -269,19 +269,19 @@ export default function AIInterviewPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px', textAlign: 'center' }}>
                 <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>SITUATION</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-blue-dark)' }}>{evaluation.starBreakdown.situation}/25</div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--scheme-deep)' }}>{evaluation.starBreakdown.situation}/25</div>
                 </div>
                 <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>TASK</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-green-dark)' }}>{evaluation.starBreakdown.task}/25</div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--scheme-teal-dark)' }}>{evaluation.starBreakdown.task}/25</div>
                 </div>
                 <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>ACTION</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-orange-dark)' }}>{evaluation.starBreakdown.action}/25</div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--scheme-gold-dark)' }}>{evaluation.starBreakdown.action}/25</div>
                 </div>
                 <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '10px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>RESULT</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--flat-purple)' }}>{evaluation.starBreakdown.result}/25</div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--scheme-coral)' }}>{evaluation.starBreakdown.result}/25</div>
                 </div>
               </div>
 
@@ -290,23 +290,23 @@ export default function AIInterviewPage() {
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '14px', padding: '12px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#2E7D32', marginBottom: '6px' }}>
+                <div style={{ background: 'var(--scheme-teal-subtle)', border: '1px solid rgba(0, 180, 179, 0.4)', borderRadius: '14px', padding: '12px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--scheme-deep)', marginBottom: '6px' }}>
                     KEY STRENGTHS:
                   </div>
                   {evaluation.strengths.map((st, i) => (
-                    <div key={i} style={{ fontSize: '12px', color: '#1B5E20', marginBottom: '4px' }}>
+                    <div key={i} style={{ fontSize: '12px', color: '#0E2A30', marginBottom: '4px' }}>
                       • {st}
                     </div>
                   ))}
                 </div>
 
-                <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '14px', padding: '12px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#F57F17', marginBottom: '6px' }}>
+                <div style={{ background: 'var(--scheme-gold-subtle)', border: '1px solid rgba(254, 205, 0, 0.5)', borderRadius: '14px', padding: '12px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#7A6000', marginBottom: '6px' }}>
                     SUGGESTED IMPROVEMENTS:
                   </div>
                   {evaluation.improvements.map((im, i) => (
-                    <div key={i} style={{ fontSize: '12px', color: '#E65100', marginBottom: '4px' }}>
+                    <div key={i} style={{ fontSize: '12px', color: '#3A2E00', marginBottom: '4px' }}>
                       • {im}
                     </div>
                   ))}
@@ -323,7 +323,7 @@ export default function AIInterviewPage() {
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <span style={{ fontWeight: 700, fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Video size={16} color="var(--flat-blue)" /> Proctoring Camera Stream
+                <Video size={16} color="var(--scheme-deep)" /> Proctoring Camera Stream
               </span>
               <span className="badge badge-green">LIVE MONITOR</span>
             </div>
@@ -348,17 +348,17 @@ export default function AIInterviewPage() {
             <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12.5px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Head Alignment:</span>
-                <strong style={{ color: 'var(--flat-green-dark)' }}>Centered & Focus Confirmed</strong>
+                <strong style={{ color: 'var(--scheme-teal-dark)' }}>Centered & Focus Confirmed</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Audio Stream:</span>
-                <strong style={{ color: isRecording ? 'var(--flat-orange-dark)' : 'var(--flat-muted)' }}>
+                <strong style={{ color: isRecording ? 'var(--scheme-coral)' : 'var(--flat-muted)' }}>
                   {isRecording ? 'Listening (Input Active)' : 'Standby'}
                 </strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: 'var(--flat-surface-subtle)', borderRadius: '10px' }}>
                 <span>Session Proctoring Violations:</span>
-                <strong style={{ color: violations === 0 ? 'var(--flat-green-dark)' : 'var(--flat-orange-dark)' }}>
+                <strong style={{ color: violations === 0 ? 'var(--scheme-teal-dark)' : 'var(--scheme-coral)' }}>
                   {violations}
                 </strong>
               </div>

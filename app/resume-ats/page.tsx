@@ -91,7 +91,7 @@ export default function ResumeATSPage() {
           <div className="form-group">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
               <label className="form-label" style={{ margin: 0 }}>Resume Document Content / Portfolio</label>
-              <label style={{ fontSize: '12px', color: 'var(--flat-blue-dark)', cursor: 'pointer', fontWeight: 700 }}>
+              <label style={{ fontSize: '12px', color: 'var(--scheme-deep)', cursor: 'pointer', fontWeight: 700 }}>
                 Upload (.txt, .md)
                 <input
                   type="file"
@@ -119,7 +119,7 @@ export default function ResumeATSPage() {
               type="submit"
               disabled={isAuditing}
               className="button button-lg"
-              style={{ background: 'var(--flat-orange-dark)' }}
+              style={{ background: 'var(--scheme-coral)' }}
             >
               <UploadCloud size={18} />
               {isAuditing ? 'Auditing Resume...' : 'Benchmark Resume with Gemini ATS'}
@@ -169,23 +169,23 @@ export default function ResumeATSPage() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#2E7D32', marginBottom: '6px' }}>
+              <div style={{ background: 'var(--scheme-teal-subtle)', border: '1px solid rgba(0, 180, 179, 0.4)', borderRadius: '14px', padding: '14px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--scheme-deep)', marginBottom: '6px' }}>
                   IDENTIFIED RESUME STRENGTHS:
                 </div>
                 {atsResult.strengths.map((str, i) => (
-                  <div key={i} style={{ fontSize: '12.5px', color: '#1B5E20', marginBottom: '4px' }}>
+                  <div key={i} style={{ fontSize: '12.5px', color: '#0E2A30', marginBottom: '4px' }}>
                     • {str}
                   </div>
                 ))}
               </div>
 
-              <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#F57F17', marginBottom: '6px' }}>
+              <div style={{ background: 'var(--scheme-gold-subtle)', border: '1px solid rgba(254, 205, 0, 0.5)', borderRadius: '14px', padding: '14px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#7A6000', marginBottom: '6px' }}>
                   RECOMMENDED ADDITIONS:
                 </div>
                 {atsResult.whatToAdd.map((add, i) => (
-                  <div key={i} style={{ fontSize: '12.5px', color: '#E65100', marginBottom: '4px' }}>
+                  <div key={i} style={{ fontSize: '12.5px', color: '#3A2E00', marginBottom: '4px' }}>
                     • {add}
                   </div>
                 ))}
