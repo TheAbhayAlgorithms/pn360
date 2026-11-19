@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import { AuthProvider } from '@/lib/authContext';
 
 export const metadata: Metadata = {
   title: 'Placement Nexus 360 - Diagnostic Placement Platform',
@@ -19,10 +20,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <Navbar />
-        <main className="app-container">
-          {children}
-        </main>
+        <AuthProvider>
+          <Navbar />
+          <main className="app-container">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );

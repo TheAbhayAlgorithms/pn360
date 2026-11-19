@@ -91,3 +91,34 @@ export interface InterviewEvaluation {
   strengths: string[];
   improvements: string[];
 }
+
+export interface GrowthPoint {
+  label: string;
+  mcq: number;
+  interview: number;
+  overall: number;
+  rank: number;
+}
+
+export interface StudentHistory {
+  weekly: GrowthPoint[];
+  monthly: GrowthPoint[];
+  yearly: GrowthPoint[];
+}
+
+export interface UserAccount {
+  id: string;
+  username: string;
+  name: string;
+  email: string;
+  password?: string;
+  track: string;
+  rank: number;
+  previousRank: number;
+  resumeScore: number;
+  mcqScore: number;
+  interviewScore: number;
+  overallScore: number;
+  status: string;
+  history: StudentHistory;
+}
