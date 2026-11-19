@@ -59,11 +59,12 @@
   --danger: var(--flat-orange-dark);
   --danger-hover: #D32F2F;
 
-  /* Flat Dimensions */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 8px;
+  /* Smooth Curves Dimensions */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
   --radius-pill: 9999px;
 }
 
@@ -178,9 +179,10 @@ code, kbd, pre, .font-mono {
   padding: 1.5rem;
   background: var(--flat-surface);
   border: 1px solid var(--flat-border);
-  border-radius: 8px;
+  border-radius: 20px;
   box-shadow: none;
   transition: border-color 150ms ease, background-color 150ms ease;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -214,7 +216,7 @@ code, kbd, pre, .font-mono {
   place-items: center;
   width: 3rem;
   height: 3rem;
-  border-radius: 8px;
+  border-radius: 16px;
   background: var(--flat-blue);
   color: #FFFFFF;
   flex-shrink: 0;
@@ -223,13 +225,13 @@ code, kbd, pre, .font-mono {
 .icon-tile.icon-tile-sm {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 6px;
+  border-radius: 12px;
 }
 
 .icon-tile.icon-tile-lg {
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 8px;
+  border-radius: 18px;
 }
 
 .icon-tile-green { background: var(--flat-green); }
@@ -251,7 +253,7 @@ code, kbd, pre, .font-mono {
 .button, .btn {
   padding: 0.65rem 1.25rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   background: var(--flat-blue-dark);
   color: #FFFFFF !important;
   font-weight: 500;
@@ -323,13 +325,13 @@ code, kbd, pre, .font-mono {
 .btn-sm, .button-sm {
   padding: 0.4rem 0.85rem;
   font-size: 12.5px;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .btn-lg, .button-lg {
   padding: 0.85rem 1.6rem;
   font-size: 15px;
-  border-radius: 8px;
+  border-radius: 16px;
 }
 
 /* =========================================================================
@@ -340,8 +342,8 @@ code, kbd, pre, .font-mono {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  border-radius: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -432,7 +434,7 @@ code, kbd, pre, .font-mono {
   padding: 0 12px;
   background: var(--flat-surface);
   border: 1px solid var(--flat-border);
-  border-radius: 6px;
+  border-radius: 12px;
   color: var(--flat-text);
   font-size: 14px;
   font-family: inherit;
@@ -458,7 +460,7 @@ code, kbd, pre, .font-mono {
   width: 100%;
   height: 10px;
   background: var(--flat-border);
-  border-radius: 4px;
+  border-radius: 9999px;
   overflow: hidden;
 }
 
@@ -543,7 +545,7 @@ code, kbd, pre, .font-mono {
   font-weight: 600;
   color: var(--flat-muted);
   padding: 8px 14px;
-  border-radius: 6px;
+  border-radius: 12px;
   transition: background-color 150ms ease, color 150ms ease;
   display: flex;
   align-items: center;

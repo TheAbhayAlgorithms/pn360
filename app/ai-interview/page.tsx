@@ -191,7 +191,7 @@ export default function AIInterviewPage() {
               &ldquo;{currentQ.question}&rdquo;
             </h2>
 
-            <div style={{ padding: '10px 14px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '6px', fontSize: '12.5px', color: 'var(--flat-muted)' }}>
+            <div style={{ padding: '10px 14px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '14px', fontSize: '12.5px', color: 'var(--flat-muted)' }}>
               <strong>STAR Evaluation Criteria:</strong> Structure your answer clearly with <em>Situation</em> (context), <em>Task</em> (responsibility), <em>Action</em> (technical decisions executed), and <em>Result</em> (quantifiable outcomes).
             </div>
           </div>

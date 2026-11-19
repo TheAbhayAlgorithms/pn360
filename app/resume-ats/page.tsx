@@ -129,7 +129,7 @@ export default function ResumeATSPage() {
 
         {/* Audit Results */}
         {atsResult && (
-          <div style={{ marginTop: '24px', padding: '20px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '6px' }}>
+          <div style={{ marginTop: '24px', padding: '20px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '18px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
               <div>
                 <span className="badge badge-green" style={{ fontSize: '12px' }}>
@@ -145,7 +145,7 @@ export default function ResumeATSPage() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-              <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '14px' }}>
+              <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '14px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--flat-muted)', display: 'block', marginBottom: '8px' }}>
                   EXTRACTED TECHNICAL COMPETENCIES:
                 </span>
@@ -156,7 +156,7 @@ export default function ResumeATSPage() {
                 </div>
               </div>
 
-              <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '14px' }}>
+              <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '14px', padding: '14px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--flat-muted)', display: 'block', marginBottom: '8px' }}>
                   MISSING HIGH-IMPACT KEYWORDS:
                 </span>
@@ -169,7 +169,7 @@ export default function ResumeATSPage() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '6px', padding: '14px' }}>
+              <div style={{ background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: '14px', padding: '14px' }}>
                 <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#2E7D32', marginBottom: '6px' }}>
                   IDENTIFIED RESUME STRENGTHS:
                 </div>
@@ -180,7 +180,7 @@ export default function ResumeATSPage() {
                 ))}
               </div>
 
-              <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '6px', padding: '14px' }}>
+              <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '14px', padding: '14px' }}>
                 <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#F57F17', marginBottom: '6px' }}>
                   RECOMMENDED ADDITIONS:
                 </div>

@@ -36,7 +36,7 @@ export default function Navbar() {
       <div className="flat-navbar-inner">
         {/* Left-most: PN360 and in sub Placement Nexus 360 */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--flat-blue-dark)', width: '38px', height: '38px', borderRadius: '6px' }}>
+          <div className="icon-tile icon-tile-sm" style={{ background: 'var(--flat-blue-dark)', width: '38px', height: '38px', borderRadius: '12px' }}>
             <GraduationCap size={20} color="#FFFFFF" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -64,7 +64,7 @@ export default function Navbar() {
             type="button"
             onClick={toggleTheme}
             className="button button-secondary"
-            style={{ width: '36px', height: '36px', padding: 0, borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ width: '36px', height: '36px', padding: 0, borderRadius: '12px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
             aria-label="Toggle dark / light mode"
             title="Toggle Flat Dark / Light mode"
           >

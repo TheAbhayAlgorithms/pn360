@@ -200,7 +200,7 @@ export default function MCQTestPage() {
                   onClick={() => toggleTrack(track.name)}
                   style={{
                     padding: '16px',
-                    borderRadius: '6px',
+                    borderRadius: '16px',
                     border: `2px solid ${active ? 'var(--flat-blue)' : 'var(--flat-border)'}`,
                     background: active ? 'var(--flat-surface-subtle)' : 'var(--flat-surface)',
                     cursor: 'pointer',
@@ -222,7 +222,7 @@ export default function MCQTestPage() {
                     style={{
                       width: '22px',
                       height: '22px',
-                      borderRadius: '4px',
+                      borderRadius: '8px',
                       border: `2px solid ${active ? 'var(--flat-blue)' : 'var(--flat-muted)'}`,
                       background: active ? 'var(--flat-blue)' : 'transparent',
                       display: 'grid',
@@ -265,7 +265,7 @@ export default function MCQTestPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
         {/* Proctoring Header Bar */}
-        <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '12px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+        <div style={{ background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '16px', padding: '12px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span className="badge badge-green">
               <Camera size={13} /> AI Proctoring Active
@@ -290,6 +290,7 @@ export default function MCQTestPage() {
               type="button"
               onClick={handleSubmitTest}
               className="button button-sm button-danger"
+              style={{ borderRadius: '12px' }}
             >
               Submit Test
             </button>
@@ -298,7 +299,7 @@ export default function MCQTestPage() {
 
         {/* Warning Toast */}
         {lastWarning && (
-          <div style={{ padding: '10px 14px', background: '#FBE9E7', border: '1px solid #FFCCBC', borderRadius: '6px', color: '#BF360C', fontSize: '13px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ padding: '10px 14px', background: '#FBE9E7', border: '1px solid #FFCCBC', borderRadius: '14px', color: '#BF360C', fontSize: '13px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <AlertTriangle size={16} /> {lastWarning}
             </div>
@@ -344,7 +345,7 @@ export default function MCQTestPage() {
                     onClick={() => handleSelectOption(optIdx)}
                     style={{
                       padding: '14px 16px',
-                      borderRadius: '6px',
+                      borderRadius: '14px',
                       border: `2px solid ${selected ? 'var(--flat-blue-dark)' : 'var(--flat-border)'}`,
                       background: selected ? 'var(--flat-surface-subtle)' : 'var(--flat-surface)',
                       cursor: 'pointer',
@@ -358,7 +359,7 @@ export default function MCQTestPage() {
                       style={{
                         width: '28px',
                         height: '28px',
-                        borderRadius: '4px',
+                        borderRadius: '8px',
                         background: selected ? 'var(--flat-blue-dark)' : 'var(--flat-border)',
                         color: selected ? '#FFFFFF' : 'var(--flat-text)',
                         fontWeight: 700,
@@ -447,7 +448,7 @@ export default function MCQTestPage() {
                     onClick={() => setCurrentIndex(idx)}
                     style={{
                       height: '36px',
-                      borderRadius: '4px',
+                      borderRadius: '8px',
                       background: bg,
                       color: color,
                       border: border,
@@ -466,15 +467,15 @@ export default function MCQTestPage() {
 
             <div style={{ marginTop: '16px', borderTop: '1px solid var(--flat-border)', paddingTop: '12px', fontSize: '11.5px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '12px', height: '12px', background: 'var(--flat-green-dark)', borderRadius: '2px' }}></span>
+                <span style={{ width: '12px', height: '12px', background: 'var(--flat-green-dark)', borderRadius: '4px' }}></span>
                 <span>Answered ({Object.keys(userAnswers).length})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '12px', height: '12px', background: 'var(--flat-amber)', borderRadius: '2px' }}></span>
+                <span style={{ width: '12px', height: '12px', background: 'var(--flat-amber)', borderRadius: '4px' }}></span>
                 <span>Flagged ({Object.keys(flagged).filter(k => flagged[Number(k)]).length})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '12px', height: '12px', background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '2px' }}></span>
+                <span style={{ width: '12px', height: '12px', background: 'var(--flat-surface)', border: '1px solid var(--flat-border)', borderRadius: '4px' }}></span>
                 <span>Unvisited ({30 - Object.keys(userAnswers).length})</span>
               </div>
             </div>
@@ -522,7 +523,7 @@ export default function MCQTestPage() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '6px', padding: '16px', margin: '20px 0', textAlign: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', background: 'var(--flat-surface-subtle)', border: '1px solid var(--flat-border)', borderRadius: '16px', padding: '16px', margin: '20px 0', textAlign: 'center' }}>
           <div>
             <div style={{ fontSize: '12px', color: 'var(--flat-muted)', fontWeight: 700 }}>ACCURACY</div>
             <div style={{ fontSize: '24px', fontWeight: 900, color: 'var(--flat-blue-dark)' }}>{score}%</div>
@@ -554,7 +555,7 @@ export default function MCQTestPage() {
                 key={idx}
                 style={{
                   padding: '14px 16px',
-                  borderRadius: '6px',
+                  borderRadius: '16px',
                   border: `1px solid ${isCorrect ? '#C8E6C9' : '#FFCCBC'}`,
                   background: isCorrect ? '#F9FBF9' : '#FFFBFB'
                 }}
@@ -578,7 +579,7 @@ export default function MCQTestPage() {
                   )}
                 </div>
 
-                <div style={{ fontSize: '12.5px', color: 'var(--flat-muted)', background: 'var(--flat-surface)', padding: '8px 12px', borderRadius: '4px', border: '1px solid var(--flat-border)' }}>
+                <div style={{ fontSize: '12.5px', color: 'var(--flat-muted)', background: 'var(--flat-surface)', padding: '10px 14px', borderRadius: '12px', border: '1px solid var(--flat-border)' }}>
                   <strong>Explanation:</strong> {q.explanation}
                 </div>
               </div>

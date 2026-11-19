@@ -45,15 +45,15 @@ export default function LeaderboardPage() {
             Real-time percentile rankings and proctored diagnostic performance across campus recruitment drives.
           </p>
         </div>
-        <Link href="/" className="button button-secondary">
+        <Link href="/" className="button button-secondary" style={{ borderRadius: '12px' }}>
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
       </div>
 
       {/* Top 3 Podium Cards */}
       <div className="grid-3">
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div className="icon-tile icon-tile-amber">
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
+          <div className="icon-tile icon-tile-amber" style={{ borderRadius: '16px' }}>
             <Trophy size={24} color="#1F2937" />
           </div>
           <div>
@@ -65,8 +65,8 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div className="icon-tile icon-tile-blue">
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
+          <div className="icon-tile icon-tile-blue" style={{ borderRadius: '16px' }}>
             <Medal size={24} color="#FFFFFF" />
           </div>
           <div>
@@ -78,8 +78,8 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div className="icon-tile icon-tile-orange">
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '20px' }}>
+          <div className="icon-tile icon-tile-orange" style={{ borderRadius: '16px' }}>
             <Star size={24} color="#FFFFFF" />
           </div>
           <div>
@@ -93,24 +93,27 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Table Card */}
-      <div className="card" style={{ padding: 0 }}>
+      <div className="card" style={{ padding: 0, borderRadius: '20px', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--flat-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setFilter("all")}
               className={`button btn-sm ${filter === "all" ? "" : "button-secondary"}`}
+              style={{ borderRadius: '12px' }}
             >
               All Tracks
             </button>
             <button
               onClick={() => setFilter("software")}
               className={`button btn-sm ${filter === "software" ? "" : "button-secondary"}`}
+              style={{ borderRadius: '12px' }}
             >
               Software Engineering
             </button>
             <button
               onClick={() => setFilter("backend")}
               className={`button btn-sm ${filter === "backend" ? "" : "button-secondary"}`}
+              style={{ borderRadius: '12px' }}
             >
               Backend & Systems
             </button>
