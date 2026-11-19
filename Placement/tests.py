@@ -54,8 +54,8 @@ class PlacementNexusWorkflowTestCase(TestCase):
         self.assertIn("strengths", result)
         self.assertGreater(len(result["what_to_add"]), 0)
 
-    def test_03_30_mcq_generation(self):
-        """Test that exactly 30 placement MCQs are generated with 4 options each"""
+    def test_03_mcq_generation(self):
+        """Test that placement MCQs are generated with 4 options each"""
         questions = generate_mcq_test(["Python", "Data Structures"], count=30)
         self.assertEqual(len(questions), 30)
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}30 MCQ Test Scorecard - Placement Nexus 360{% endblock %}
+{% block title %}MCQ Test Scorecard - Placement Nexus 360{% endblock %}
 
 {% block content %}
 <div class="topbar">
@@ -10,7 +10,7 @@
             <i class="fa-solid {% if passed %}fa-circle-check{% else %}fa-circle-xmark{% endif %}"></i>
             {% if passed %}Technical Cutoff Cleared (60% Minimum Met){% else %}Cutoff Not Reached (60% Required){% endif %}
         </div>
-        <h1>30 MCQ Test Scorecard</h1>
+        <h1>MCQ Test Scorecard</h1>
         <p>Technology Track: <strong class="text-accent">{{ test.technology }}</strong> &bull; Completed on {{ test.started_at|date:"M d, Y &bull; H:i" }}</p>
     </div>
     

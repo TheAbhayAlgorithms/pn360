@@ -16,7 +16,7 @@ urlpatterns = [
     path('logout/', views.dashboard, name='logout'),
     path('resume/<int:resume_id>/', views.resume_result, name='resume_result'),
 
-    # Step 2: 30 MCQ Test (Gemini)
+    # Step 2: MCQ Test (Gemini)
     path('mcq-test/', views.select_tech, name='select_tech'),
     path('start-test/', views.select_tech, name='start_test'), # alias
     path('take-test/<int:test_id>/', views.take_test, name='take_test'),

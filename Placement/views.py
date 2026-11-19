@@ -134,11 +134,11 @@ def dashboard(request):
     elif not progress.mock_passed:
         next_action = {
             "step": 2,
-            "title": "Stage 2: Clear the 30 MCQ Technical Assessment",
-            "desc": f"Your resume scored {progress.resume_score}% ATS match. Take the adaptive 30 MCQ technical exam to clear the 60% placement benchmark.",
+            "title": "Stage 2: Clear the MCQ Technical Assessment",
+            "desc": f"Your resume scored {progress.resume_score}% ATS match. Take the adaptive MCQ technical exam to clear the 60% placement benchmark.",
             "badge": "Step 2 Active",
             "badge_class": "badge-cyan",
-            "action_text": "Start 30 MCQ Test",
+            "action_text": "Start MCQ Test",
             "action_url": "/mcq-test/",
             "icon": "fa-list-check"
         }
@@ -357,7 +357,7 @@ def test_result(request, test_id):
 @login_required
 def api_test_violation(request, test_id):
     """
-    Records a tab-switch or screen loss violation during the 30 MCQ test.
+    Records a tab-switch or screen loss violation during the MCQ test.
     Automatically blocks test upon 3 warnings.
     """
     if request.method != "POST":

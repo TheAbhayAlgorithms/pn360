@@ -206,7 +206,7 @@ def fallback_ats_analysis(resume_text, job_title, job_description):
     }
 
 # =========================================================================
-# 2. 30 MCQ QUESTIONS GENERATION WITH GEMINI (PLACEMENT PREPARATION LEVEL)
+# 2. MCQ QUESTIONS GENERATION WITH GEMINI (PLACEMENT PREPARATION LEVEL)
 # =========================================================================
 
 def generate_mcq_test(languages, count=30):
