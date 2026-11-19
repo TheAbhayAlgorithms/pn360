@@ -55,11 +55,17 @@ export default function Navbar() {
           </Link>
           <Link href="/mcq-test" className={`flat-nav-link ${pathname === '/mcq-test' ? 'active' : ''}`}>
             <ListChecks size={16} />
-            30 MCQs
+            Technical Assessment
+          </Link>
+          <Link href="/resume-ats" className={`flat-nav-link ${pathname === '/resume-ats' ? 'active' : ''}`}>
+            Resume ATS
           </Link>
           <Link href="/ai-interview" className={`flat-nav-link ${pathname === '/ai-interview' ? 'active' : ''}`}>
             <Mic size={16} />
             AI Interview
+          </Link>
+          <Link href="/schedule" className={`flat-nav-link ${pathname === '/schedule' ? 'active' : ''}`}>
+            Schedule
           </Link>
           <Link href="/leaderboard" className={`flat-nav-link ${pathname === '/leaderboard' ? 'active' : ''}`}>
             <Trophy size={16} />
