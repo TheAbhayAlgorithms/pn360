@@ -9,11 +9,8 @@
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; width: 100%; max-width: 1200px;">
         
         <!-- Box 1: START TECHNICAL ASSESSMENT -->
-        <a href="{% url 'select_tech' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+        <a href="{% url 'select_tech' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 320px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-blue-badge-bg); color: var(--edu-blue);">
-                    Stage 02
-                </span>
                 <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-blue); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-list-check" style="font-size: 26px;"></i>
                 </div>
@@ -31,11 +28,8 @@
         </a>
 
         <!-- Box 2: RESUME ATS -->
-        <a href="{% if latest_resume %}{% url 'resume_result' latest_resume.id %}{% else %}{% url 'select_tech' %}{% endif %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+        <a href="{% if latest_resume %}{% url 'resume_result' latest_resume.id %}{% else %}{% url 'select_tech' %}{% endif %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 320px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-terracotta-badge-bg); color: var(--edu-terracotta);">
-                    Stage 01
-                </span>
                 <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-terracotta); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-file-shield" style="font-size: 26px;"></i>
                 </div>
@@ -53,11 +47,8 @@
         </a>
 
         <!-- Box 3: AI INTERVIEW -->
-        <a href="{% url 'ai_interview' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+        <a href="{% url 'ai_interview' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 320px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-indigo-badge-bg); color: var(--edu-indigo);">
-                    Stage 03
-                </span>
                 <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-indigo); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-microphone-lines" style="font-size: 26px;"></i>
                 </div>
@@ -75,11 +66,8 @@
         </a>
 
         <!-- Box 4: SCHEDULE -->
-        <a href="{% url 'schedule_test' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 340px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+        <a href="{% url 'schedule_test' %}" class="card smooth-box-card" style="text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 38px 22px 28px; min-height: 320px; cursor: pointer; border-radius: 24px; border: 1.5px solid var(--flat-border); background: var(--flat-surface); box-shadow: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <span style="margin-bottom: 18px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 14px; border-radius: 9999px; background: var(--edu-teal-badge-bg); color: var(--edu-teal);">
-                    Booking
-                </span>
                 <div style="width: 68px; height: 68px; margin-bottom: 22px; border-radius: 20px; background: var(--edu-teal); display: grid; place-items: center; color: #FFFFFF;">
                     <i class="fa-solid fa-calendar-check" style="font-size: 26px;"></i>
                 </div>

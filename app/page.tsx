@@ -17,10 +17,7 @@ export default function Dashboard() {
       subtitle: "30 MCQs • Proctored Assessment",
       href: "/mcq-test",
       themeColor: "var(--edu-blue)", // Academic Oxford Blue / Cobalt
-      badgeBg: "var(--edu-blue-badge-bg)",
-      badgeColor: "var(--edu-blue)",
       icon: <ListChecks size={28} color="#FFFFFF" />,
-      tag: "Stage 02",
       btnText: "Start Assessment"
     },
     {
@@ -28,10 +25,7 @@ export default function Dashboard() {
       subtitle: "Gemini 2.5 • Keyword Gap Audit",
       href: "/resume-ats",
       themeColor: "var(--edu-terracotta)", // Scholarly Warm Sienna / Terracotta
-      badgeBg: "var(--edu-terracotta-badge-bg)",
-      badgeColor: "var(--edu-terracotta)",
       icon: <FileCheck size={28} color="#FFFFFF" />,
-      tag: "Stage 01",
       btnText: "Audit Resume"
     },
     {
@@ -39,10 +33,7 @@ export default function Dashboard() {
       subtitle: "Speech AI • STAR Rubric Evaluation",
       href: "/ai-interview",
       themeColor: "var(--edu-indigo)", // Intellectual Deep Indigo / Royal Slate
-      badgeBg: "var(--edu-indigo-badge-bg)",
-      badgeColor: "var(--edu-indigo)",
       icon: <Mic size={28} color="#FFFFFF" />,
-      tag: "Stage 03",
       btnText: "Enter Interview"
     },
     {
@@ -50,10 +41,7 @@ export default function Dashboard() {
       subtitle: "Practice Slots • Mock Testing",
       href: "/schedule",
       themeColor: "var(--edu-teal)", // Cambridge Spruce / Deep Academic Teal
-      badgeBg: "var(--edu-teal-badge-bg)",
-      badgeColor: "var(--edu-teal)",
       icon: <CalendarCheck size={28} color="#FFFFFF" />,
-      tag: "Booking",
       btnText: "Book Slot"
     }
   ];
@@ -93,7 +81,7 @@ export default function Dashboard() {
               alignItems: 'center',
               textAlign: 'center',
               padding: '38px 22px 28px',
-              minHeight: '340px',
+              minHeight: '320px',
               cursor: 'pointer',
               background: 'var(--flat-surface)',
               borderRadius: '24px',
@@ -103,23 +91,6 @@ export default function Dashboard() {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              {/* Refined Academic Pill Badge */}
-              <span
-                style={{
-                  marginBottom: '18px',
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
-                  padding: '5px 14px',
-                  borderRadius: '9999px',
-                  background: opt.badgeBg,
-                  color: opt.badgeColor
-                }}
-              >
-                {opt.tag}
-              </span>
-
               {/* Dignified Academic Icon Tile */}
               <div
                 style={{
