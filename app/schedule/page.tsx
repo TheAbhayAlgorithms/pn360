@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   CalendarCheck,
@@ -8,32 +8,150 @@ import {
   ArrowLeft,
   CheckCircle2,
   Clock,
-  Layers,
-  Sparkles
+  Trash2,
+  CalendarX,
+  AlertCircle
 } from 'lucide-react';
 import { initialScheduledTests } from '@/lib/mockData';
 import { ScheduledTest } from '@/lib/types';
 
-export default function SchedulePage() {
-  const [scheduledList, setScheduledList] = useState<ScheduledTest[]>(initialScheduledTests);
-  const [schedType, setSchedType] = useState("MCQ Placement Test");
-  const [schedDate, setSchedDate] = useState("2026-11-25");
-  const [schedTime, setSchedTime] = useState("11:00");
-  const [schedSuccess, setSchedSuccess] = useState(false);
+// Reliably parse a date & time string into a Date object
+function parseScheduleDateTime(dateStr: string, timeStr: string): Date | null {
+  try {
+    let hours = 0;
+    let minutes = 0;
+    const ampmMatch = timeStr.trim().match(/(\d+):(\d+)\s*(AM|PM)?/i);
+    if (ampmMatch) {
+      hours = parseInt(ampmMatch[1], 10);
+      minutes = parseInt(ampmMatch[2], 10);
+      const ampm = ampmMatch[3]?.toUpperCase();
+      if (ampm === 'PM' && hours < 12) hours += 12;
+      if (ampm === 'AM' && hours === 12) hours = 0;
+    }
 
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) {
+      const direct = new Date(`${dateStr} ${timeStr}`);
+      if (!isNaN(direct.getTime())) return direct;
+      return null;
+    }
+    d.setHours(hours, minutes, 0, 0);
+    return d;
+  } catch {
+    return null;
+  }
+}
+
+// Check if a scheduled slot is still in the future
+function isScheduleActive(st: ScheduledTest): boolean {
+  const schedDate = parseScheduleDateTime(st.date, st.time);
+  if (!schedDate) return true; // keep if date cannot be parsed
+  return schedDate.getTime() > Date.now();
+}
+
+export default function SchedulePage() {
+  const [scheduledList, setScheduledList] = useState<ScheduledTest[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [schedType, setSchedType] = useState("MCQ Placement Test");
+  const [schedDate, setSchedDate] = useState("");
+  const [schedTime, setSchedTime] = useState("11:00");
+  const [schedSuccess, setSchedSuccess] = useState<string | null>(null);
+  const [schedError, setSchedError] = useState<string | null>(null);
+
+  // Initialize and automatically prune expired appointments
+  useEffect(() => {
+    // Default form date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    setSchedDate(tomorrow.toISOString().split('T')[0]);
+
+    // Load from localStorage or mock data
+    let initial: ScheduledTest[] = initialScheduledTests;
+    try {
+      const stored = localStorage.getItem('pn360_schedules');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          initial = parsed;
+        }
+      }
+    } catch (e) {
+      console.warn("Could not read stored schedules:", e);
+    }
+
+    // Automatically remove schedules that have passed the current date and time
+    const activeOnly = initial.filter(isScheduleActive);
+    setScheduledList(activeOnly);
+    setIsLoaded(true);
+    try {
+      localStorage.setItem('pn360_schedules', JSON.stringify(activeOnly));
+    } catch {}
+  }, []);
+
+  // Live timer check: periodically prune as soon as a slot passes
+  useEffect(() => {
+    if (!isLoaded) return;
+    const interval = setInterval(() => {
+      setScheduledList(prev => {
+        const activeOnly = prev.filter(isScheduleActive);
+        if (activeOnly.length !== prev.length) {
+          try {
+            localStorage.setItem('pn360_schedules', JSON.stringify(activeOnly));
+          } catch {}
+          return activeOnly;
+        }
+        return prev;
+      });
+    }, 15000); // Check every 15 seconds
+
+    return () => clearInterval(interval);
+  }, [isLoaded]);
+
+  // Delete single schedule manually
+  const handleDeleteSchedule = (id: number) => {
+    setScheduledList(prev => {
+      const updated = prev.filter(st => st.id !== id);
+      try {
+        localStorage.setItem('pn360_schedules', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    setSchedSuccess("Schedule appointment deleted.");
+    setTimeout(() => setSchedSuccess(null), 3000);
+  };
+
+  // Add new schedule
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSchedError(null);
+
     if (!schedDate || !schedTime) return;
+
+    // Validate that appointment is in the future
+    const targetDate = parseScheduleDateTime(schedDate, schedTime);
+    if (targetDate && targetDate.getTime() <= Date.now()) {
+      setSchedError("Cannot schedule a test slot in the past. Please select a future date and time.");
+      return;
+    }
+
     const newEntry: ScheduledTest = {
       id: Date.now(),
       test_type: schedType,
       date: schedDate,
       time: schedTime
     };
-    setScheduledList([newEntry, ...scheduledList]);
-    setSchedSuccess(true);
-    setTimeout(() => setSchedSuccess(false), 4000);
+
+    const updated = [newEntry, ...scheduledList.filter(isScheduleActive)];
+    setScheduledList(updated);
+    try {
+      localStorage.setItem('pn360_schedules', JSON.stringify(updated));
+    } catch {}
+
+    setSchedSuccess("Appointment reserved successfully! Details logged to your schedule.");
+    setTimeout(() => setSchedSuccess(null), 4000);
   };
+
+  const todayStr = new Date().toISOString().split('T')[0];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -49,28 +167,34 @@ export default function SchedulePage() {
             Book dedicated slots for proctored technical evaluations, mock voice interviews, and campus preparation rounds.
           </p>
         </div>
-        <Link href="/" className="button button-secondary">
+        <Link href="/" className="button button-secondary" style={{ borderRadius: '12px' }}>
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
         
-        {/* Form Card */}
-        <div className="card">
-          <div className="card-header">
+        {/* Form Card: Reserve Assessment Appointment */}
+        <div className="card" style={{ borderRadius: '24px', padding: '24px' }}>
+          <div className="card-header" style={{ marginBottom: '18px' }}>
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 700 }}>Reserve Assessment Appointment</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>Reserve Assessment Appointment</h2>
               <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
                 Select an assessment type, date, and preferred time window.
               </p>
             </div>
-            <span className="badge badge-gray">Slot Booking</span>
+            <span className="badge badge-gray font-mono">Slot Booking</span>
           </div>
 
           {schedSuccess && (
             <div style={{ padding: '12px 16px', background: 'var(--scheme-teal-subtle)', border: '1px solid rgba(0, 180, 179, 0.4)', borderRadius: '14px', color: 'var(--scheme-deep)', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} /> Appointment reserved successfully! Details logged to your schedule.
+              <CheckCircle2 size={16} /> {schedSuccess}
+            </div>
+          )}
+
+          {schedError && (
+            <div style={{ padding: '12px 16px', background: 'var(--scheme-coral-subtle)', border: '1px solid rgba(252, 127, 115, 0.4)', borderRadius: '14px', color: 'var(--scheme-coral-dark)', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={16} /> {schedError}
             </div>
           )}
 
@@ -94,8 +218,12 @@ export default function SchedulePage() {
                 <input
                   type="date"
                   className="flat-input"
+                  min={todayStr}
                   value={schedDate}
-                  onChange={(e) => setSchedDate(e.target.value)}
+                  onChange={(e) => {
+                    setSchedDate(e.target.value);
+                    setSchedError(null);
+                  }}
                   required
                 />
               </div>
@@ -105,14 +233,27 @@ export default function SchedulePage() {
                   type="time"
                   className="flat-input"
                   value={schedTime}
-                  onChange={(e) => setSchedTime(e.target.value)}
+                  onChange={(e) => {
+                    setSchedTime(e.target.value);
+                    setSchedError(null);
+                  }}
                   required
                 />
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-              <button type="submit" className="button button-lg" style={{ background: 'var(--scheme-teal)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <button
+                type="submit"
+                className="button button-lg"
+                style={{
+                  background: 'var(--scheme-teal)',
+                  borderRadius: '14px',
+                  fontWeight: 800,
+                  fontSize: '14px',
+                  padding: '12px 22px'
+                }}
+              >
                 <CalendarPlus size={16} /> Confirm Reservation
               </button>
             </div>
@@ -120,42 +261,98 @@ export default function SchedulePage() {
         </div>
 
         {/* Upcoming Appointments Card */}
-        <div className="card">
-          <div className="card-header">
+        <div className="card" style={{ borderRadius: '24px', padding: '24px' }}>
+          <div className="card-header" style={{ marginBottom: '18px' }}>
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 700 }}>Upcoming Schedule</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>Upcoming Schedule</h2>
               <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
-                Your registered testing sessions.
+                Your active sessions (expired slots auto-cleared).
               </p>
             </div>
-            <span className="badge badge-green">{scheduledList.length} Active</span>
+            <span className={`badge ${scheduledList.length > 0 ? 'badge-green' : 'badge-gray'}`} style={{ fontWeight: 800 }}>
+              {scheduledList.length} Active
+            </span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {scheduledList.map(st => (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {scheduledList.length === 0 ? (
               <div
-                key={st.id}
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '12px 14px',
+                  padding: '36px 16px',
+                  textAlign: 'center',
                   background: 'var(--flat-surface-subtle)',
-                  border: '1px solid var(--flat-border)',
-                  borderRadius: '14px'
+                  borderRadius: '16px',
+                  border: '1px dashed var(--flat-border)'
                 }}
               >
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '13.5px', color: 'var(--flat-text)' }}>
-                    {st.test_type}
+                <CalendarX size={34} color="var(--flat-muted)" style={{ margin: '0 auto 10px' }} />
+                <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--flat-text)', marginBottom: '4px' }}>
+                  No Upcoming Appointments
+                </h4>
+                <p style={{ fontSize: '12px', color: 'var(--flat-muted)', margin: 0, maxWidth: '280px', marginInline: 'auto' }}>
+                  All previous sessions have passed or concluded. Reserve a new test slot using the booking form.
+                </p>
+              </div>
+            ) : (
+              scheduledList.map(st => (
+                <div
+                  key={st.id}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '14px 16px',
+                    background: 'var(--flat-surface-subtle)',
+                    border: '1px solid var(--flat-border)',
+                    borderRadius: '16px',
+                    gap: '12px'
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 800, fontSize: '13.5px', color: 'var(--flat-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {st.test_type}
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--flat-muted)', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <Clock size={12} /> {st.time}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '12px', color: 'var(--flat-muted)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Clock size={12} /> {st.time}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                    <span className="badge badge-blue font-mono" style={{ fontSize: '11.5px', padding: '4px 10px' }}>
+                      {st.date}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSchedule(st.id)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--flat-muted)',
+                        cursor: 'pointer',
+                        padding: '6px',
+                        borderRadius: '8px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 150ms ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = 'var(--scheme-coral)';
+                        e.currentTarget.style.background = 'var(--scheme-coral-subtle)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--flat-muted)';
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                      title="Delete scheduled slot"
+                      aria-label={`Delete ${st.test_type} on ${st.date}`}
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
-                <span className="badge badge-blue">{st.date}</span>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
