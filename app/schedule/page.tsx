@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { initialScheduledTests } from '@/lib/mockData';
 import { ScheduledTest } from '@/lib/types';
+import { useAuth } from '@/lib/authContext';
 
 // Reliably parse a date & time string into a Date object
 function parseScheduleDateTime(dateStr: string, timeStr: string): Date | null {
@@ -50,6 +51,7 @@ function isScheduleActive(st: ScheduledTest): boolean {
 }
 
 export default function SchedulePage() {
+  const { currentUser } = useAuth();
   const [scheduledList, setScheduledList] = useState<ScheduledTest[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [schedType, setSchedType] = useState("MCQ Placement Test");
@@ -58,6 +60,8 @@ export default function SchedulePage() {
   const [schedSuccess, setSchedSuccess] = useState<string | null>(null);
   const [schedError, setSchedError] = useState<string | null>(null);
 
+  const storageKey = currentUser ? `pn360_schedules_${currentUser.id}` : 'pn360_schedules_guest';
+
   // Initialize and automatically prune expired appointments
   useEffect(() => {
     // Default form date to tomorrow
@@ -65,10 +69,13 @@ export default function SchedulePage() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     setSchedDate(tomorrow.toISOString().split('T')[0]);
 
-    // Load from localStorage or mock data
-    let initial: ScheduledTest[] = initialScheduledTests;
+    // Load from user-specific localStorage or mock data for Abhay
+    let initial: ScheduledTest[] = currentUser?.username === 'abhay' || !currentUser
+      ? initialScheduledTests
+      : [];
+
     try {
-      const stored = localStorage.getItem('pn360_schedules');
+      const stored = localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
@@ -84,9 +91,9 @@ export default function SchedulePage() {
     setScheduledList(activeOnly);
     setIsLoaded(true);
     try {
-      localStorage.setItem('pn360_schedules', JSON.stringify(activeOnly));
+      localStorage.setItem(storageKey, JSON.stringify(activeOnly));
     } catch {}
-  }, []);
+  }, [currentUser, storageKey]);
 
   // Live timer check: periodically prune as soon as a slot passes
   useEffect(() => {
@@ -96,7 +103,7 @@ export default function SchedulePage() {
         const activeOnly = prev.filter(isScheduleActive);
         if (activeOnly.length !== prev.length) {
           try {
-            localStorage.setItem('pn360_schedules', JSON.stringify(activeOnly));
+            localStorage.setItem(storageKey, JSON.stringify(activeOnly));
           } catch {}
           return activeOnly;
         }
@@ -105,14 +112,14 @@ export default function SchedulePage() {
     }, 15000); // Check every 15 seconds
 
     return () => clearInterval(interval);
-  }, [isLoaded]);
+  }, [isLoaded, storageKey]);
 
   // Delete single schedule manually
   const handleDeleteSchedule = (id: number) => {
     setScheduledList(prev => {
       const updated = prev.filter(st => st.id !== id);
       try {
-        localStorage.setItem('pn360_schedules', JSON.stringify(updated));
+        localStorage.setItem(storageKey, JSON.stringify(updated));
       } catch {}
       return updated;
     });
@@ -144,7 +151,7 @@ export default function SchedulePage() {
     const updated = [newEntry, ...scheduledList.filter(isScheduleActive)];
     setScheduledList(updated);
     try {
-      localStorage.setItem('pn360_schedules', JSON.stringify(updated));
+      localStorage.setItem(storageKey, JSON.stringify(updated));
     } catch {}
 
     setSchedSuccess("Appointment reserved successfully! Details logged to your schedule.");
@@ -264,9 +271,11 @@ export default function SchedulePage() {
         <div className="card" style={{ borderRadius: '24px', padding: '24px' }}>
           <div className="card-header" style={{ marginBottom: '18px' }}>
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>Upcoming Schedule</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>
+                {currentUser ? `${currentUser.name.split(' ')[0]}'s Upcoming Schedule` : 'Upcoming Schedule'}
+              </h2>
               <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
-                Your active sessions (expired slots auto-cleared).
+                Your private active sessions (past slots auto-cleared).
               </p>
             </div>
             <span className={`badge ${scheduledList.length > 0 ? 'badge-green' : 'badge-gray'}`} style={{ fontWeight: 800 }}>

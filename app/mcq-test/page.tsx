@@ -19,8 +19,10 @@ import {
 } from 'lucide-react';
 import { defaultQuestionsBank } from '@/lib/mockData';
 import { MCQQuestion } from '@/lib/types';
+import { useAuth } from '@/lib/authContext';
 
 export default function MCQTestPage() {
+  const { updateUserScore } = useAuth();
   const [stage, setStage] = useState<'config' | 'test' | 'result'>('config');
 
   // Configuration State
@@ -150,6 +152,7 @@ export default function MCQTestPage() {
     const finalScore = Math.round((correct / questions.length) * 100);
     setCorrectCount(correct);
     setScore(finalScore);
+    updateUserScore('mcq', finalScore);
     setStage('result');
   };
 

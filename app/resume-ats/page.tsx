@@ -21,11 +21,15 @@ import {
 } from 'lucide-react';
 import { auditResumeATS } from '@/lib/gemini';
 import { ATSResult } from '@/lib/types';
+import { useAuth } from '@/lib/authContext';
 
 export default function ResumeATSPage() {
+  const { currentUser, updateUserScore } = useAuth();
   const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string } | null>(null);
   const [resumeText, setResumeText] = useState(
-    "Abhay Raj Singh • B.Tech Computer Science (GPA 8.8)\nSkills: Python, Django, SQL, Data Structures, Algorithms, Docker, REST APIs, Git, Linux.\nProjects: Built scalable microservice for e-commerce catalog with Redis caching, reducing query latency by 35%.\nExperience: Engineering Intern working on distributed data pipelines. Responsible for developing backend APIs and working with team members."
+    currentUser
+      ? `${currentUser.name} • B.Tech Computer Science (GPA 8.8)\nSkills: Python, Django, SQL, Data Structures, Algorithms, Docker, REST APIs, Git, Linux.\nProjects: Built scalable microservice for e-commerce catalog with Redis caching, reducing query latency by 35%.\nExperience: Engineering Intern working on distributed data pipelines. Responsible for developing backend APIs and working with team members.`
+      : "Abhay Raj Singh • B.Tech Computer Science (GPA 8.8)\nSkills: Python, Django, SQL, Data Structures, Algorithms, Docker, REST APIs, Git, Linux.\nProjects: Built scalable microservice for e-commerce catalog with Redis caching, reducing query latency by 35%.\nExperience: Engineering Intern working on distributed data pipelines. Responsible for developing backend APIs and working with team members."
   );
   const [showPasteBox, setShowPasteBox] = useState(false);
   const [isAuditing, setIsAuditing] = useState(false);
@@ -92,6 +96,9 @@ export default function ResumeATSPage() {
     try {
       const result = await auditResumeATS(resumeText, "Software Development Engineer");
       setAtsResult(result);
+      if (result && typeof result.score === 'number') {
+        updateUserScore('resume', result.score);
+      }
     } catch (err) {
       console.error(err);
     } finally {

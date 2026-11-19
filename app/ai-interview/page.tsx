@@ -22,8 +22,10 @@ import {
 import { interviewQuestionsList } from '@/lib/mockData';
 import { evaluateInterviewSpeech } from '@/lib/gemini';
 import { InterviewEvaluation } from '@/lib/types';
+import { useAuth } from '@/lib/authContext';
 
 export default function AIInterviewPage() {
+  const { updateUserScore } = useAuth();
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -128,6 +130,9 @@ export default function AIInterviewPage() {
     try {
       const res = await evaluateInterviewSpeech(currentQ.question, transcript, currentQ.role);
       setEvaluation(res);
+      if (res && typeof res.overallScore === 'number') {
+        updateUserScore('interview', res.overallScore);
+      }
     } catch (err) {
       console.error(err);
     } finally {
