@@ -161,53 +161,83 @@ export default function SchedulePage() {
   const todayStr = new Date().toISOString().split('T')[0];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-        <div>
-          <div className="badge badge-green" style={{ marginBottom: '8px' }}>
+      {/* Standardized Page Header */}
+      <div className="page-header">
+        <div className="page-header-content">
+          <div className="eyebrow-badge">
             <CalendarCheck size={13} /> PLACEMENT APPOINTMENTS
           </div>
-          <h1 style={{ fontSize: '24px', fontWeight: 800 }}>Schedule Diagnostic Practice Slot</h1>
-          <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', marginTop: '4px' }}>
+          <h1 className="page-title">Schedule Diagnostic Practice Slot</h1>
+          <p className="page-subtitle">
             Book dedicated slots for proctored technical evaluations, mock voice interviews, and campus preparation rounds.
           </p>
         </div>
-        <Link href="/" className="button button-secondary" style={{ borderRadius: '12px' }}>
+        <Link href="/" className="button button-secondary page-header-back">
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
+      <div className="split-grid-main">
         
         {/* Form Card: Reserve Assessment Appointment */}
-        <div className="card" style={{ borderRadius: '24px', padding: '24px' }}>
-          <div className="card-header" style={{ marginBottom: '18px' }}>
+        <div className="card">
+          <div className="card-header">
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>Reserve Assessment Appointment</h2>
-              <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
+              <h2 style={{ fontSize: '16.5px', fontWeight: 700, color: 'var(--text)' }}>
+                Reserve Assessment Appointment
+              </h2>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>
                 Select an assessment type, date, and preferred time window.
               </p>
             </div>
-            <span className="badge badge-gray font-mono">Slot Booking</span>
+            <span className="badge badge-neutral font-mono">Slot Booking</span>
           </div>
 
           {schedSuccess && (
-            <div style={{ padding: '12px 16px', background: 'var(--scheme-teal-subtle)', border: '1px solid rgba(0, 180, 179, 0.4)', borderRadius: '14px', color: 'var(--scheme-deep)', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div
+              style={{
+                padding: '12px 14px',
+                background: 'var(--success-subtle)',
+                border: '1px solid var(--success-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--success-text)',
+                fontSize: '13px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
               <CheckCircle2 size={16} /> {schedSuccess}
             </div>
           )}
 
           {schedError && (
-            <div style={{ padding: '12px 16px', background: 'var(--scheme-coral-subtle)', border: '1px solid rgba(252, 127, 115, 0.4)', borderRadius: '14px', color: 'var(--scheme-coral-dark)', fontSize: '13.5px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div
+              style={{
+                padding: '12px 14px',
+                background: 'var(--danger-subtle)',
+                border: '1px solid var(--danger-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--danger-text)',
+                fontSize: '13px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
               <AlertCircle size={16} /> {schedError}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Assessment Type</label>
+              <label className="form-label">
+                Assessment Type <span style={{ color: 'var(--danger)' }}>*</span>
+              </label>
               <select
                 className="flat-select"
                 value={schedType}
@@ -219,9 +249,11 @@ export default function SchedulePage() {
               </select>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', marginBottom: '16px' }}>
               <div>
-                <label className="form-label">Date</label>
+                <label className="form-label">
+                  Date <span style={{ color: 'var(--danger)' }}>*</span>
+                </label>
                 <input
                   type="date"
                   className="flat-input"
@@ -235,7 +267,9 @@ export default function SchedulePage() {
                 />
               </div>
               <div>
-                <label className="form-label">Time</label>
+                <label className="form-label">
+                  Time <span style={{ color: 'var(--danger)' }}>*</span>
+                </label>
                 <input
                   type="time"
                   className="flat-input"
@@ -249,17 +283,10 @@ export default function SchedulePage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '22px' }}>
               <button
                 type="submit"
-                className="button button-lg"
-                style={{
-                  background: 'var(--scheme-teal)',
-                  borderRadius: '14px',
-                  fontWeight: 800,
-                  fontSize: '14px',
-                  padding: '12px 22px'
-                }}
+                className="button button-lg button-primary"
               >
                 <CalendarPlus size={16} /> Confirm Reservation
               </button>
@@ -268,17 +295,17 @@ export default function SchedulePage() {
         </div>
 
         {/* Upcoming Appointments Card */}
-        <div className="card" style={{ borderRadius: '24px', padding: '24px' }}>
-          <div className="card-header" style={{ marginBottom: '18px' }}>
+        <div className="card">
+          <div className="card-header">
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 800 }}>
+              <h2 style={{ fontSize: '16.5px', fontWeight: 700, color: 'var(--text)' }}>
                 {currentUser ? `${currentUser.name.split(' ')[0]}'s Upcoming Schedule` : 'Upcoming Schedule'}
               </h2>
-              <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
+              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
                 Your private active sessions (past slots auto-cleared).
               </p>
             </div>
-            <span className={`badge ${scheduledList.length > 0 ? 'badge-green' : 'badge-gray'}`} style={{ fontWeight: 800 }}>
+            <span className={`badge ${scheduledList.length > 0 ? 'badge-success' : 'badge-neutral'}`} style={{ fontWeight: 700 }}>
               {scheduledList.length} Active
             </span>
           </div>
@@ -289,16 +316,16 @@ export default function SchedulePage() {
                 style={{
                   padding: '36px 16px',
                   textAlign: 'center',
-                  background: 'var(--flat-surface-subtle)',
-                  borderRadius: '16px',
-                  border: '1px dashed var(--flat-border)'
+                  background: 'var(--surface-subtle)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px dashed var(--border)'
                 }}
               >
-                <CalendarX size={34} color="var(--flat-muted)" style={{ margin: '0 auto 10px' }} />
-                <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--flat-text)', marginBottom: '4px' }}>
+                <CalendarX size={32} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+                <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px' }}>
                   No Upcoming Appointments
                 </h4>
-                <p style={{ fontSize: '12px', color: 'var(--flat-muted)', margin: 0, maxWidth: '280px', marginInline: 'auto' }}>
+                <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', margin: 0, maxWidth: '280px', marginInline: 'auto' }}>
                   All previous sessions have passed or concluded. Reserve a new test slot using the booking form.
                 </p>
               </div>
@@ -310,24 +337,24 @@ export default function SchedulePage() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '14px 16px',
-                    background: 'var(--flat-surface-subtle)',
-                    border: '1px solid var(--flat-border)',
-                    borderRadius: '16px',
+                    padding: '12px 14px',
+                    background: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
                     gap: '12px'
                   }}
                 >
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 800, fontSize: '13.5px', color: 'var(--flat-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontWeight: 700, fontSize: '13.5px', color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {st.test_type}
                     </div>
-                    <div style={{ fontSize: '12px', color: 'var(--flat-muted)', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                       <Clock size={12} /> {st.time}
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                    <span className="badge badge-blue font-mono" style={{ fontSize: '11.5px', padding: '4px 10px' }}>
+                    <span className="badge badge-primary font-mono" style={{ fontSize: '11px', padding: '3px 8px' }}>
                       {st.date}
                     </span>
                     <button
@@ -336,27 +363,27 @@ export default function SchedulePage() {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: 'var(--flat-muted)',
+                        color: 'var(--text-muted)',
                         cursor: 'pointer',
                         padding: '6px',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-xs)',
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         transition: 'all 150ms ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = 'var(--scheme-coral)';
-                        e.currentTarget.style.background = 'var(--scheme-coral-subtle)';
+                        e.currentTarget.style.color = 'var(--danger)';
+                        e.currentTarget.style.background = 'var(--danger-subtle)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = 'var(--flat-muted)';
+                        e.currentTarget.style.color = 'var(--text-muted)';
                         e.currentTarget.style.background = 'transparent';
                       }}
                       title="Delete scheduled slot"
                       aria-label={`Delete ${st.test_type} on ${st.date}`}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   </div>
                 </div>

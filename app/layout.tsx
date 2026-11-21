@@ -5,7 +5,7 @@ import { AuthProvider } from '@/lib/authContext';
 
 export const metadata: Metadata = {
   title: 'Placement Nexus 360 - Diagnostic Placement Platform',
-  description: 'Proctored campus recruitment and diagnostic readiness platform powered by Gemini and STAR rubrics in 2010s Flat Design.',
+  description: 'Proctored campus recruitment and diagnostic readiness platform powered by Gemini and STAR rubrics.',
 };
 
 export default function RootLayout({

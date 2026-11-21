@@ -7,7 +7,9 @@ import {
   FileCheck,
   Mic,
   CalendarCheck,
-  ArrowRight
+  ArrowRight,
+  GraduationCap,
+  Sparkles
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -16,36 +18,36 @@ export default function Dashboard() {
       title: "START TECHNICAL ASSESSMENT",
       subtitle: "MCQ Test • Proctored Assessment",
       href: "/mcq-test",
-      themeColor: "var(--scheme-deep)", // Scheme 1 Color 3: Deep Midnight Petrol Teal (#007086)
-      icon: <ListChecks size={28} color="#FFFFFF" />,
-      textColor: "#FFFFFF",
+      iconBg: "var(--primary-subtle)",
+      iconColor: "var(--primary)",
+      icon: <ListChecks size={26} />,
       btnText: "Start Assessment"
     },
     {
       title: "RESUME ATS",
       subtitle: "Gemini 2.5 • Keyword Gap Audit",
       href: "/resume-ats",
-      themeColor: "var(--scheme-coral)", // Scheme 1 Color 5: Warm Coral / Salmon (#FC7F73)
-      icon: <FileCheck size={28} color="#FFFFFF" />,
-      textColor: "#FFFFFF",
+      iconBg: "var(--danger-subtle)",
+      iconColor: "var(--danger)",
+      icon: <FileCheck size={26} />,
       btnText: "Audit Resume"
     },
     {
       title: "AI INTERVIEW",
       subtitle: "Speech AI • STAR Rubric Evaluation",
       href: "/ai-interview",
-      themeColor: "var(--scheme-teal)", // Scheme 1 Color 2: Vibrant Ocean Teal (#00B4B3)
-      icon: <Mic size={28} color="#FFFFFF" />,
-      textColor: "#FFFFFF",
+      iconBg: "var(--info-subtle)",
+      iconColor: "var(--info)",
+      icon: <Mic size={26} />,
       btnText: "Enter Interview"
     },
     {
       title: "SCHEDULE",
       subtitle: "Practice Slots • Mock Testing",
       href: "/schedule",
-      themeColor: "var(--scheme-gold)", // Scheme 1 Color 4: Warm Saffron Gold (#FECD00)
-      icon: <CalendarCheck size={28} color="#1F2937" />,
-      textColor: "#1F2937",
+      iconBg: "var(--warning-subtle)",
+      iconColor: "var(--warning-hover)",
+      icon: <CalendarCheck size={26} />,
       btnText: "Book Slot"
     }
   ];
@@ -57,109 +59,82 @@ export default function Dashboard() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 'calc(100vh - 120px)',
+        minHeight: 'calc(100vh - 160px)',
         width: '100%',
-        padding: '24px 0'
+        padding: '24px 0 40px'
       }}
     >
-      {/* 4 Scheme 1 Curved Boxes Side by Side */}
+      {/* Simple Hero / Welcome Area with Existing Context */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '24px',
+          textAlign: 'center',
+          marginBottom: '36px',
+          maxWidth: '700px',
           width: '100%',
-          maxWidth: '1200px'
+          padding: '0 12px'
         }}
       >
+        <div className="eyebrow-badge" style={{ marginBottom: '14px' }}>
+          <GraduationCap size={13} /> CAMPUS READINESS PLATFORM
+        </div>
+        <h1
+          style={{
+            fontSize: 'clamp(1.75rem, 4vw, 2.35rem)',
+            fontWeight: 800,
+            color: 'var(--text)',
+            letterSpacing: '-0.03em',
+            lineHeight: 1.2
+          }}
+        >
+          Placement Nexus 360
+        </h1>
+        <p
+          style={{
+            fontSize: '14.5px',
+            color: 'var(--text-muted)',
+            marginTop: '8px',
+            lineHeight: 1.55
+          }}
+        >
+          Proctored diagnostic placement platform powered by Gemini and STAR rubrics. Select an evaluation module below to begin your placement audit.
+        </p>
+      </div>
+
+      {/* 4 Action Cards in Responsive Grid (4 Desktop / 2 Tablet / 1 Mobile) */}
+      <div className="home-grid">
         {options.map((opt) => (
           <Link
             key={opt.title}
             href={opt.href}
-            className="smooth-box-card"
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              textAlign: 'center',
-              padding: '38px 22px 28px',
-              minHeight: '320px',
-              cursor: 'pointer',
-              background: 'var(--flat-surface)',
-              borderRadius: '24px',
-              border: '1.5px solid var(--flat-border)',
-              boxShadow: 'none',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
+            className="home-action-card"
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              {/* Scheme 1 Icon Tile */}
+              {/* Refined Icon Tile */}
               <div
+                className="home-icon-tile"
                 style={{
-                  width: '68px',
-                  height: '68px',
-                  marginBottom: '22px',
-                  borderRadius: '20px',
-                  background: opt.themeColor,
-                  display: 'grid',
-                  placeItems: 'center',
-                  color: opt.textColor
+                  background: opt.iconBg,
+                  color: opt.iconColor
                 }}
               >
                 {opt.icon}
               </div>
 
-              {/* Title */}
-              <h2
-                style={{
-                  fontSize: '15px',
-                  fontWeight: 900,
-                  letterSpacing: '0.03em',
-                  color: 'var(--flat-text)',
-                  marginBottom: '8px',
-                  lineHeight: 1.35
-                }}
-              >
+              {/* Title in Caps */}
+              <h2 className="home-card-title">
                 {opt.title}
               </h2>
 
               {/* Subtitle */}
-              <p
-                style={{
-                  fontSize: '12.5px',
-                  color: 'var(--flat-muted)',
-                  lineHeight: 1.45,
-                  margin: 0
-                }}
-              >
+              <p className="home-card-subtitle">
                 {opt.subtitle}
               </p>
             </div>
 
-            {/* Scheme 1 Action Button */}
-            <div
-              className="edu-btn"
-              style={{
-                width: '100%',
-                marginTop: '26px',
-                padding: '12px 16px',
-                fontSize: '13.5px',
-                fontWeight: 800,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                borderRadius: '14px',
-                background: opt.themeColor,
-                color: opt.textColor,
-                border: 'none',
-                boxShadow: 'none'
-              }}
-            >
+            {/* Primary Action Button */}
+            <div className="home-card-button">
               <span>{opt.btnText}</span>
-              <ArrowRight size={15} color={opt.textColor} />
+              <ArrowRight size={15} />
             </div>
           </Link>
         ))}

@@ -5,19 +5,15 @@ import Link from 'next/link';
 import {
   UploadCloud,
   FileCheck,
-  CheckCircle2,
-  AlertCircle,
   ArrowLeft,
   Sparkles,
-  FileText,
   FileUp,
   AlertTriangle,
   Lightbulb,
   Check,
-  X,
   ArrowRight,
-  TrendingUp,
-  RotateCcw
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { auditResumeATS } from '@/lib/gemini';
 import { ATSResult } from '@/lib/types';
@@ -48,20 +44,13 @@ export default function ResumeATSPage() {
     reader.onload = (event) => {
       const content = event.target?.result as string;
       if (content && content.trim()) {
-        // If it's plain text or markdown
         setResumeText(content);
       } else {
-        // Fallback representation with filename and metadata
         setResumeText(`Candidate Resume: ${file.name}\nSize: ${file.size} bytes\nTechnical Profile: Computer Science Engineering & Software Development.`);
       }
     };
 
-    if (file.type.includes('text') || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
-      reader.readAsText(file);
-    } else {
-      // Read as text or extract ASCII content for binary resumes
-      reader.readAsText(file);
-    }
+    reader.readAsText(file);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,26 +103,26 @@ export default function ResumeATSPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
-      {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-        <div>
-          <div className="badge badge-orange" style={{ marginBottom: '8px' }}>
+      {/* Standardized Page Header */}
+      <div className="page-header">
+        <div className="page-header-content">
+          <div className="eyebrow-badge">
             <FileCheck size={13} /> STAGE 01: RESUME ATS BENCHMARK
           </div>
-          <h1 style={{ fontSize: '24px', fontWeight: 800 }}>Gemini ATS Resume Audit & Keyword Gap</h1>
-          <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', marginTop: '4px' }}>
+          <h1 className="page-title">Gemini ATS Resume Audit &amp; Keyword Gap</h1>
+          <p className="page-subtitle">
             Upload your technical resume to receive an automated Gemini ATS evaluation, buzzword analysis, and actionable replacements.
           </p>
         </div>
-        <Link href="/" className="button button-secondary" style={{ borderRadius: '12px' }}>
+        <Link href="/" className="button button-secondary page-header-back">
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
       </div>
 
-      {/* Single Section: Upload Your Resume */}
-      <div className="card" style={{ borderRadius: '24px', padding: '28px' }}>
+      {/* Upload Your Resume Card */}
+      <div className="card">
         <form onSubmit={handleBenchmark}>
           
           <input
@@ -152,46 +141,47 @@ export default function ResumeATSPage() {
             onDrop={handleDrop}
             style={{
               padding: '40px 24px',
-              border: `2px dashed ${isDragging ? 'var(--scheme-deep)' : uploadedFile ? 'var(--scheme-teal)' : 'var(--flat-border)'}`,
-              borderRadius: '20px',
-              background: isDragging
-                ? 'var(--scheme-deep-subtle)'
+              border: `2px dashed ${isDragging ? 'var(--primary)' : uploadedFile ? 'var(--success)' : 'var(--border-hover)'}`,
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: isDragging
+                ? 'var(--primary-subtle)'
                 : uploadedFile
-                ? 'var(--scheme-teal-subtle)'
-                : 'var(--flat-surface-subtle)',
+                ? 'var(--success-subtle)'
+                : 'var(--surface-subtle)',
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               textAlign: 'center',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+              transition: 'all 180ms ease'
             }}
           >
             <div
               style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '18px',
-                background: uploadedFile ? 'var(--scheme-teal)' : 'var(--scheme-deep)',
+                width: '56px',
+                height: '56px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: uploadedFile ? 'var(--success)' : 'var(--primary)',
                 display: 'grid',
                 placeItems: 'center',
                 color: '#FFFFFF',
-                marginBottom: '16px'
+                marginBottom: '16px',
+                boxShadow: 'var(--shadow-sm)'
               }}
             >
-              {uploadedFile ? <FileCheck size={32} /> : <FileUp size={32} />}
+              {uploadedFile ? <FileCheck size={28} /> : <FileUp size={28} />}
             </div>
 
             {uploadedFile ? (
               <div style={{ maxWidth: '480px' }}>
-                <span className="badge badge-green" style={{ marginBottom: '8px' }}>
+                <span className="badge badge-success" style={{ marginBottom: '8px' }}>
                   <Check size={12} /> File Selected
                 </span>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--flat-text)', marginBottom: '4px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text)', marginBottom: '4px' }}>
                   {uploadedFile.name}
                 </h3>
-                <p style={{ fontSize: '13px', color: 'var(--flat-muted)' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
                   {uploadedFile.size} • Ready for Gemini ATS parsing and keyword extraction
                 </p>
                 <button
@@ -202,11 +192,11 @@ export default function ResumeATSPage() {
                   }}
                   style={{
                     marginTop: '12px',
-                    fontSize: '12px',
-                    color: 'var(--scheme-coral)',
+                    fontSize: '12.5px',
+                    color: 'var(--danger)',
                     background: 'transparent',
                     border: 'none',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'underline'
                   }}
@@ -216,77 +206,83 @@ export default function ResumeATSPage() {
               </div>
             ) : (
               <div style={{ maxWidth: '440px' }}>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--flat-text)', marginBottom: '6px' }}>
+                <h3 style={{ fontSize: '16.5px', fontWeight: 800, color: 'var(--text)', marginBottom: '6px' }}>
                   Upload Your Resume
                 </h3>
-                <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', lineHeight: 1.45, marginBottom: '14px' }}>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.45, marginBottom: '14px' }}>
                   Drag and drop your resume file here, or click to browse from your device.
                 </p>
                 <div style={{ display: 'inline-flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  <span className="badge badge-gray font-mono">PDF</span>
-                  <span className="badge badge-gray font-mono">DOCX</span>
-                  <span className="badge badge-gray font-mono">TXT</span>
-                  <span className="badge badge-gray font-mono">MD</span>
+                  <span className="badge badge-neutral font-mono">PDF</span>
+                  <span className="badge badge-neutral font-mono">DOCX</span>
+                  <span className="badge badge-neutral font-mono">TXT</span>
+                  <span className="badge badge-neutral font-mono">MD</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Collapsible / Optional Textarea for Direct Text Inspection */}
-          <div style={{ marginTop: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {/* Collapsible Disclosure for Direct Text Inspection */}
+          <div style={{ marginTop: '18px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
               <button
                 type="button"
                 onClick={() => setShowPasteBox(!showPasteBox)}
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: 'var(--scheme-deep)',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
+                  color: 'var(--primary)',
+                  fontSize: '13px',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '6px',
+                  padding: 0
                 }}
               >
-                <span>{showPasteBox ? '▲ Hide raw resume text' : '▼ Or paste / inspect resume text directly'}</span>
+                {showPasteBox ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                <span>{showPasteBox ? 'Hide raw resume text' : 'Or paste / inspect resume text directly'}</span>
               </button>
-              <span style={{ fontSize: '12px', color: 'var(--flat-muted)' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                 {resumeText.trim().split(/\s+/).length} words ready for ATS audit
               </span>
             </div>
 
             {showPasteBox && (
               <textarea
-                className="flat-textarea"
-                rows={7}
+                className="flat-textarea font-mono"
+                rows={6}
                 value={resumeText}
                 onChange={(e) => setResumeText(e.target.value)}
                 placeholder="Paste your raw resume text here if you prefer not uploading a file..."
-                style={{ marginTop: '10px' }}
+                style={{ marginTop: '10px', fontSize: '13px' }}
               />
             )}
           </div>
 
-          {/* Action Trigger Button */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '22px', flexWrap: 'wrap', gap: '12px' }}>
-            <span style={{ fontSize: '12.5px', color: 'var(--flat-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Sparkles size={14} color="var(--scheme-gold-dark)" /> Evaluated with Gemini 2.5 ATS scoring engine
+          {/* Action Row */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '22px',
+              paddingTop: '16px',
+              borderTop: '1px solid var(--border)',
+              flexWrap: 'wrap',
+              gap: '12px'
+            }}
+          >
+            <span style={{ fontSize: '12.5px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Sparkles size={14} color="var(--warning)" /> Evaluated with Gemini 2.5 ATS scoring engine
             </span>
             <button
               type="submit"
               disabled={isAuditing}
-              className="button button-lg"
-              style={{
-                background: 'var(--scheme-coral)',
-                borderRadius: '14px',
-                fontWeight: 800,
-                fontSize: '14px',
-                padding: '12px 24px'
-              }}
+              className="button button-lg button-primary"
             >
-              <UploadCloud size={18} />
+              <UploadCloud size={17} />
               {isAuditing ? 'Auditing Resume with Gemini...' : 'Analyze Resume with Gemini ATS'}
             </button>
           </div>
@@ -298,51 +294,54 @@ export default function ResumeATSPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* Result Card 1: ATS Score & Benchmark Summary */}
-          <div className="card" style={{ borderRadius: '24px', padding: '26px' }}>
+          <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                  <span className="badge badge-green font-mono" style={{ fontSize: '12px' }}>
+                  <span className="badge badge-success font-mono" style={{ fontSize: '11px' }}>
                     AUDIT COMPLETE
                   </span>
-                  <span className={`badge ${atsResult.score >= 75 ? 'badge-green' : atsResult.score >= 60 ? 'badge-blue' : 'badge-orange'}`} style={{ fontSize: '12.5px', fontWeight: 800 }}>
+                  <span
+                    className={`badge ${atsResult.score >= 75 ? 'badge-success' : atsResult.score >= 60 ? 'badge-primary' : 'badge-danger'}`}
+                    style={{ fontSize: '12px', fontWeight: 700 }}
+                  >
                     {atsResult.matchTier || (atsResult.score >= 75 ? 'High Placement Fit' : atsResult.score >= 60 ? 'Competitive Match' : 'Optimization Needed')}
                   </span>
                 </div>
-                <h2 style={{ fontSize: '22px', fontWeight: 900, color: 'var(--flat-text)' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text)' }}>
                   Applicant Tracking System (ATS) Scorecard
                 </h2>
-                <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', marginTop: '4px', maxWidth: '680px', lineHeight: 1.45 }}>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginTop: '4px', maxWidth: '680px', lineHeight: 1.5 }}>
                   {atsResult.summary || "Your resume has been audited against standard campus recruitment filters, technical keyword indices, and recruiter parsing rubrics."}
                 </p>
               </div>
 
-              {/* Big Score Badge */}
+              {/* Score Display Card */}
               <div
                 style={{
-                  background: 'var(--flat-surface-subtle)',
-                  border: '1.5px solid var(--flat-border)',
-                  borderRadius: '20px',
-                  padding: '16px 26px',
+                  background: 'var(--surface-subtle)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '16px 24px',
                   textAlign: 'center',
-                  minWidth: '150px'
+                  minWidth: '140px'
                 }}
               >
-                <div style={{ fontSize: '11.5px', fontWeight: 800, color: 'var(--flat-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   ATS SCORE
                 </div>
                 <div
                   style={{
-                    fontSize: '44px',
-                    fontWeight: 900,
+                    fontSize: '40px',
+                    fontWeight: 800,
                     lineHeight: 1.05,
                     marginTop: '4px',
-                    color: atsResult.score >= 75 ? 'var(--scheme-deep)' : atsResult.score >= 60 ? 'var(--scheme-teal-dark)' : 'var(--scheme-coral)'
+                    color: atsResult.score >= 75 ? 'var(--success)' : atsResult.score >= 60 ? 'var(--primary)' : 'var(--danger)'
                   }}
                 >
                   {atsResult.score}%
                 </div>
-                <div style={{ fontSize: '11px', color: 'var(--flat-muted)', marginTop: '4px', fontWeight: 600 }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontWeight: 500 }}>
                   Passing Cutoff: ≥ 60%
                 </div>
               </div>
@@ -352,30 +351,30 @@ export default function ResumeATSPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                 gap: '12px',
-                background: 'var(--flat-surface-subtle)',
-                border: '1px solid var(--flat-border)',
-                borderRadius: '16px',
+                background: 'var(--surface-subtle)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
                 padding: '14px 18px',
                 textAlign: 'center'
               }}
             >
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>EXTRACTED SKILLS</div>
-                <div style={{ fontSize: '20px', fontWeight: 900, color: 'var(--scheme-deep)', marginTop: '2px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>EXTRACTED SKILLS</div>
+                <div style={{ fontSize: '19px', fontWeight: 800, color: 'var(--primary)', marginTop: '2px' }}>
                   {atsResult.extractedSkills.length} Detected
                 </div>
               </div>
-              <div style={{ borderLeft: '1px solid var(--flat-border)', borderRight: '1px solid var(--flat-border)' }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>KEYWORD GAPS</div>
-                <div style={{ fontSize: '20px', fontWeight: 900, color: 'var(--scheme-coral)', marginTop: '2px' }}>
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>KEYWORD GAPS</div>
+                <div style={{ fontSize: '19px', fontWeight: 800, color: 'var(--danger)', marginTop: '2px' }}>
                   {atsResult.missingKeywords.length} Missing
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--flat-muted)' }}>BUZZWORDS FLAGGED</div>
-                <div style={{ fontSize: '20px', fontWeight: 900, color: 'var(--scheme-gold-dark)', marginTop: '2px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>BUZZWORDS FLAGGED</div>
+                <div style={{ fontSize: '19px', fontWeight: 800, color: 'var(--warning)', marginTop: '2px' }}>
                   {atsResult.buzzwordsToAvoid?.length || 3} To Replace
                 </div>
               </div>
@@ -383,27 +382,27 @@ export default function ResumeATSPage() {
           </div>
 
           {/* Result Card 2: Improvements Needed */}
-          <div className="card" style={{ borderRadius: '24px', padding: '26px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+          <div className="card">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <div
                 style={{
                   width: '36px',
                   height: '36px',
-                  borderRadius: '10px',
-                  background: 'var(--scheme-gold)',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: 'var(--warning-subtle)',
+                  color: 'var(--warning-text)',
                   display: 'grid',
-                  placeItems: 'center',
-                  color: '#1F2937'
+                  placeItems: 'center'
                 }}
               >
-                <Lightbulb size={20} />
+                <Lightbulb size={18} />
               </div>
               <div>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--flat-text)' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)' }}>
                   Improvements Needed
                 </h3>
-                <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)' }}>
-                  High-priority recommendations to elevate this resume into the top 10th percentile of campus recruiters.
+                <p style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                  High-priority recommendations to elevate this resume into the top percentile of campus recruiters.
                 </p>
               </div>
             </div>
@@ -414,9 +413,9 @@ export default function ResumeATSPage() {
                   key={idx}
                   style={{
                     padding: '12px 16px',
-                    borderRadius: '14px',
-                    background: 'var(--flat-surface-subtle)',
-                    border: '1px solid var(--flat-border)',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '12px'
@@ -424,22 +423,22 @@ export default function ResumeATSPage() {
                 >
                   <div
                     style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '8px',
-                      background: 'var(--scheme-deep-subtle)',
-                      color: 'var(--scheme-deep)',
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: 'var(--radius-xs)',
+                      background: 'var(--primary-subtle)',
+                      color: 'var(--primary)',
                       display: 'grid',
                       placeItems: 'center',
-                      fontSize: '12px',
+                      fontSize: '11.5px',
                       fontWeight: 800,
                       flexShrink: 0,
-                      marginTop: '1px'
+                      marginTop: '2px'
                     }}
                   >
                     {idx + 1}
                   </div>
-                  <div style={{ fontSize: '13.5px', color: 'var(--flat-text)', lineHeight: 1.45 }}>
+                  <div style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.5 }}>
                     {imp}
                   </div>
                 </div>
@@ -448,27 +447,27 @@ export default function ResumeATSPage() {
           </div>
 
           {/* Result Card 3: Buzzwords to Avoid & What to Use Instead */}
-          <div className="card" style={{ borderRadius: '24px', padding: '26px' }}>
+          <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <div
                 style={{
                   width: '36px',
                   height: '36px',
-                  borderRadius: '10px',
-                  background: 'var(--scheme-coral)',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: 'var(--danger-subtle)',
+                  color: 'var(--danger)',
                   display: 'grid',
-                  placeItems: 'center',
-                  color: '#FFFFFF'
+                  placeItems: 'center'
                 }}
               >
-                <AlertTriangle size={20} />
+                <AlertTriangle size={18} />
               </div>
               <div>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--flat-text)' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)' }}>
                   Buzzwords to Avoid &amp; What to Use Instead
                 </h3>
-                <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)' }}>
-                  Vague buzzwords dilute your technical impact. Replace passive statements with active, verifiable power verbs.
+                <p style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                  Vague buzzwords dilute technical impact. Replace passive statements with active, verifiable power verbs.
                 </p>
               </div>
             </div>
@@ -478,48 +477,50 @@ export default function ResumeATSPage() {
                 <div
                   key={idx}
                   style={{
-                    padding: '16px 18px',
-                    borderRadius: '16px',
-                    border: '1px solid var(--flat-border)',
-                    background: 'var(--flat-surface)'
+                    padding: '16px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border)',
+                    background: 'var(--surface)'
                   }}
                 >
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1.3fr', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                      gap: '12px',
+                      alignItems: 'center'
+                    }}
+                  >
                     {/* Buzzword Column */}
                     <div
                       style={{
                         padding: '10px 14px',
-                        borderRadius: '12px',
-                        background: 'var(--scheme-coral-subtle)',
-                        border: '1px solid rgba(252, 127, 115, 0.35)'
+                        borderRadius: 'var(--radius-xs)',
+                        background: 'var(--danger-subtle)',
+                        border: '1px solid var(--danger-border)'
                       }}
                     >
-                      <span style={{ fontSize: '10.5px', fontWeight: 800, color: 'var(--scheme-coral-dark)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '3px' }}>
-                        ❌ AVOID BUZZWORD
+                      <span style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--danger-text)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '3px' }}>
+                        AVOID BUZZWORD
                       </span>
-                      <strong style={{ fontSize: '14px', color: '#B9382B' }}>
+                      <strong style={{ fontSize: '13.5px', color: 'var(--danger-text)' }}>
                         &ldquo;{bw.buzzword}&rdquo;
                       </strong>
-                    </div>
-
-                    {/* Arrow Indicator */}
-                    <div style={{ display: 'grid', placeItems: 'center', color: 'var(--scheme-deep)' }}>
-                      <ArrowRight size={20} />
                     </div>
 
                     {/* Replacement Column */}
                     <div
                       style={{
                         padding: '10px 14px',
-                        borderRadius: '12px',
-                        background: 'var(--scheme-teal-subtle)',
-                        border: '1px solid rgba(0, 180, 179, 0.35)'
+                        borderRadius: 'var(--radius-xs)',
+                        background: 'var(--success-subtle)',
+                        border: '1px solid var(--success-border)'
                       }}
                     >
-                      <span style={{ fontSize: '10.5px', fontWeight: 800, color: 'var(--scheme-teal-dark)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '3px' }}>
-                        ➔ USE INSTEAD (POWER VERB &amp; METRIC)
+                      <span style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--success-text)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '3px' }}>
+                        USE INSTEAD (POWER VERB)
                       </span>
-                      <strong style={{ fontSize: '14px', color: 'var(--scheme-deep)' }}>
+                      <strong style={{ fontSize: '13.5px', color: 'var(--success-text)' }}>
                         {bw.replacement}
                       </strong>
                     </div>
@@ -530,16 +531,16 @@ export default function ResumeATSPage() {
                     style={{
                       marginTop: '10px',
                       padding: '8px 12px',
-                      background: 'var(--flat-surface-subtle)',
-                      borderRadius: '10px',
+                      background: 'var(--surface-subtle)',
+                      borderRadius: 'var(--radius-xs)',
                       fontSize: '12px',
-                      color: 'var(--flat-muted)',
+                      color: 'var(--text-muted)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px'
                     }}
                   >
-                    <strong style={{ color: 'var(--flat-text)' }}>Recruiter Rationale:</strong>
+                    <strong style={{ color: 'var(--text)' }}>Recruiter Rationale:</strong>
                     <span>{bw.reason}</span>
                   </div>
                 </div>
@@ -548,26 +549,26 @@ export default function ResumeATSPage() {
           </div>
 
           {/* Result Card 4: Technical Competencies & Keyword Gaps */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             
-            <div className="card" style={{ borderRadius: '20px', padding: '20px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--scheme-deep)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '10px' }}>
+            <div className="card" style={{ padding: '20px' }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
                 EXTRACTED TECHNICAL COMPETENCIES ({atsResult.extractedSkills.length}):
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {atsResult.extractedSkills.map((sk, idx) => (
-                  <span key={idx} className="badge badge-blue">{sk}</span>
+                  <span key={idx} className="badge badge-primary">{sk}</span>
                 ))}
               </div>
             </div>
 
-            <div className="card" style={{ borderRadius: '20px', padding: '20px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--scheme-coral)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '10px' }}>
+            <div className="card" style={{ padding: '20px' }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--danger)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
                 MISSING HIGH-IMPACT KEYWORDS ({atsResult.missingKeywords.length}):
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {atsResult.missingKeywords.map((kw, idx) => (
-                  <span key={idx} className="badge badge-orange">{kw}</span>
+                  <span key={idx} className="badge badge-danger">{kw}</span>
                 ))}
               </div>
             </div>
@@ -578,36 +579,26 @@ export default function ResumeATSPage() {
           <div
             className="card"
             style={{
-              borderRadius: '20px',
               padding: '20px 24px',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
               gap: '14px',
-              background: 'var(--flat-surface-subtle)'
+              background: 'var(--surface-subtle)'
             }}
           >
             <div>
-              <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--flat-text)' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
                 Stage 02: Validate Your Technical Proficiency
               </h4>
-              <p style={{ fontSize: '12.5px', color: 'var(--flat-muted)', marginTop: '2px' }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>
                 Now that your resume benchmark is complete, take the timed proctored MCQ test to clear campus cutoffs.
               </p>
             </div>
             <Link
               href="/mcq-test"
-              className="button button-success"
-              style={{
-                borderRadius: '12px',
-                background: 'var(--scheme-teal)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontWeight: 800,
-                fontSize: '13.5px'
-              }}
+              className="button button-primary"
             >
               <span>Proceed to MCQ Test</span>
               <ArrowRight size={16} />

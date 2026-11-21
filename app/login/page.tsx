@@ -1,21 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  GraduationCap,
   LogIn,
   UserPlus,
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
-  User,
-  Lock,
-  Mail,
-  Layers
+  User
 } from 'lucide-react';
 import { useAuth } from '@/lib/authContext';
 
@@ -96,26 +90,37 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '640px', margin: '30px auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ maxWidth: '520px', margin: '32px auto 60px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
       {/* Header */}
       <div style={{ textAlign: 'center' }}>
-        <div className="badge badge-blue font-mono" style={{ marginBottom: '10px' }}>
+        <div className="eyebrow-badge" style={{ marginBottom: '12px' }}>
           <ShieldCheck size={13} /> PLACEMENT STUDENT AUTHENTICATION
         </div>
-        <h1 style={{ fontSize: '26px', fontWeight: 900, color: 'var(--flat-text)' }}>
+        <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.025em' }}>
           Placement Nexus 360 Portal
         </h1>
-        <p style={{ fontSize: '13.5px', color: 'var(--flat-muted)', marginTop: '4px' }}>
+        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px', lineHeight: 1.5 }}>
           Individual student authentication. Every student accesses their own private growth chart and diagnostics.
         </p>
       </div>
 
       {/* Auth Card */}
-      <div className="card" style={{ borderRadius: '24px', padding: '28px' }}>
+      <div className="card" style={{ padding: '30px 28px' }}>
         
-        {/* Sign In vs Register Tabs */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', background: 'var(--flat-surface-subtle)', padding: '6px', borderRadius: '16px', border: '1px solid var(--flat-border)', marginBottom: '22px' }}>
+        {/* Segmented Toggle: Sign In vs Create Account */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '4px',
+            background: 'var(--surface-subtle)',
+            padding: '4px',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border)',
+            marginBottom: '22px'
+          }}
+        >
           <button
             type="button"
             onClick={() => {
@@ -124,22 +129,23 @@ export default function LoginPage() {
               setSuccessMsg(null);
             }}
             style={{
-              padding: '10px',
-              borderRadius: '12px',
+              padding: '8px 14px',
+              borderRadius: 'var(--radius-xs)',
               border: 'none',
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: '13.5px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              background: mode === 'signin' ? 'var(--scheme-deep)' : 'transparent',
-              color: mode === 'signin' ? '#FFFFFF' : 'var(--flat-muted)',
-              transition: 'all 0.15s ease'
+              background: mode === 'signin' ? 'var(--surface)' : 'transparent',
+              color: mode === 'signin' ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: mode === 'signin' ? 'var(--shadow-sm)' : 'none',
+              transition: 'all 150ms ease'
             }}
           >
-            <LogIn size={15} /> Sign In
+            <LogIn size={14} /> Sign In
           </button>
 
           <button
@@ -150,34 +156,61 @@ export default function LoginPage() {
               setSuccessMsg(null);
             }}
             style={{
-              padding: '10px',
-              borderRadius: '12px',
+              padding: '8px 14px',
+              borderRadius: 'var(--radius-xs)',
               border: 'none',
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: '13.5px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              background: mode === 'register' ? 'var(--scheme-teal)' : 'transparent',
-              color: mode === 'register' ? '#FFFFFF' : 'var(--flat-muted)',
-              transition: 'all 0.15s ease'
+              background: mode === 'register' ? 'var(--surface)' : 'transparent',
+              color: mode === 'register' ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: mode === 'register' ? 'var(--shadow-sm)' : 'none',
+              transition: 'all 150ms ease'
             }}
           >
-            <UserPlus size={15} /> Create Account
+            <UserPlus size={14} /> Create Account
           </button>
         </div>
 
         {/* Error and Success Banners */}
         {errorMsg && (
-          <div style={{ padding: '12px 16px', background: 'var(--scheme-coral-subtle)', border: '1px solid rgba(252, 127, 115, 0.4)', borderRadius: '14px', color: 'var(--scheme-coral-dark)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px' }}>
+          <div
+            style={{
+              padding: '12px 14px',
+              background: 'var(--danger-subtle)',
+              border: '1px solid var(--danger-border)',
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--danger-text)',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '18px'
+            }}
+          >
             <AlertCircle size={16} /> {errorMsg}
           </div>
         )}
 
         {successMsg && (
-          <div style={{ padding: '12px 16px', background: 'var(--scheme-teal-subtle)', border: '1px solid rgba(0, 180, 179, 0.4)', borderRadius: '14px', color: 'var(--scheme-deep)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px' }}>
+          <div
+            style={{
+              padding: '12px 14px',
+              background: 'var(--success-subtle)',
+              border: '1px solid var(--success-border)',
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--success-text)',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '18px'
+            }}
+          >
             <CheckCircle2 size={16} /> {successMsg}
           </div>
         )}
@@ -187,16 +220,14 @@ export default function LoginPage() {
           <form onSubmit={handleSignInSubmit}>
             <div className="form-group">
               <label className="form-label">Username or Campus Email</label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type="text"
-                  className="flat-input"
-                  placeholder="e.g. abhay or abhay@nexus.edu"
-                  value={loginIdentifier}
-                  onChange={(e) => setLoginIdentifier(e.target.value)}
-                  required
-                />
-              </div>
+              <input
+                type="text"
+                className="flat-input"
+                placeholder="e.g. abhay or abhay@nexus.edu"
+                value={loginIdentifier}
+                onChange={(e) => setLoginIdentifier(e.target.value)}
+                required
+              />
             </div>
 
             <div className="form-group">
@@ -213,14 +244,12 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="button button-lg"
+              className="button button-lg button-primary"
               style={{
                 width: '100%',
-                marginTop: '10px',
-                borderRadius: '14px',
-                background: 'var(--scheme-deep)',
-                fontWeight: 800,
-                fontSize: '14px'
+                marginTop: '8px',
+                fontSize: '14px',
+                fontWeight: 700
               }}
             >
               <span>Sign In to Dashboard &amp; Leaderboard</span>
@@ -228,28 +257,44 @@ export default function LoginPage() {
             </button>
 
             {/* Quick Demo Student Switcher */}
-            <div style={{ marginTop: '26px', borderTop: '1px solid var(--flat-border)', paddingTop: '20px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--flat-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
+            <div style={{ marginTop: '26px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: 'var(--text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  marginBottom: '10px'
+                }}
+              >
                 Quick 1-Click Demo Login:
               </span>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '8px'
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => handleQuickDemoLogin('abhay')}
                   className="button button-secondary button-sm"
                   style={{
-                    borderRadius: '12px',
+                    borderRadius: 'var(--radius-sm)',
                     textAlign: 'left',
                     justifyContent: 'flex-start',
-                    padding: '10px 12px',
-                    background: currentUser?.username === 'abhay' ? 'var(--scheme-deep-subtle)' : undefined,
-                    border: currentUser?.username === 'abhay' ? '1.5px solid var(--scheme-deep)' : undefined
+                    padding: '8px 12px',
+                    background: currentUser?.username === 'abhay' ? 'var(--primary-subtle)' : 'var(--surface)',
+                    borderColor: currentUser?.username === 'abhay' ? 'var(--primary-border)' : 'var(--border)'
                   }}
                 >
-                  <User size={14} color="var(--scheme-deep)" />
+                  <User size={14} color="var(--primary)" />
                   <div>
-                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--flat-text)' }}>Abhay Raj Singh</strong>
-                    <span style={{ fontSize: '10.5px', color: 'var(--flat-muted)' }}>Rank #4 • Software Eng</span>
+                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--text)' }}>Abhay Raj Singh</strong>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Rank #4 • Software Eng</span>
                   </div>
                 </button>
 
@@ -258,18 +303,18 @@ export default function LoginPage() {
                   onClick={() => handleQuickDemoLogin('priya')}
                   className="button button-secondary button-sm"
                   style={{
-                    borderRadius: '12px',
+                    borderRadius: 'var(--radius-sm)',
                     textAlign: 'left',
                     justifyContent: 'flex-start',
-                    padding: '10px 12px',
-                    background: currentUser?.username === 'priya' ? 'var(--scheme-deep-subtle)' : undefined,
-                    border: currentUser?.username === 'priya' ? '1.5px solid var(--scheme-deep)' : undefined
+                    padding: '8px 12px',
+                    background: currentUser?.username === 'priya' ? 'var(--primary-subtle)' : 'var(--surface)',
+                    borderColor: currentUser?.username === 'priya' ? 'var(--primary-border)' : 'var(--border)'
                   }}
                 >
-                  <User size={14} color="var(--scheme-gold-dark)" />
+                  <User size={14} color="var(--warning)" />
                   <div>
-                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--flat-text)' }}>Priya Sharma</strong>
-                    <span style={{ fontSize: '10.5px', color: 'var(--flat-muted)' }}>Rank #1 • Google Offer</span>
+                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--text)' }}>Priya Sharma</strong>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Rank #1 • Google Offer</span>
                   </div>
                 </button>
 
@@ -278,18 +323,18 @@ export default function LoginPage() {
                   onClick={() => handleQuickDemoLogin('rohan')}
                   className="button button-secondary button-sm"
                   style={{
-                    borderRadius: '12px',
+                    borderRadius: 'var(--radius-sm)',
                     textAlign: 'left',
                     justifyContent: 'flex-start',
-                    padding: '10px 12px',
-                    background: currentUser?.username === 'rohan' ? 'var(--scheme-deep-subtle)' : undefined,
-                    border: currentUser?.username === 'rohan' ? '1.5px solid var(--scheme-deep)' : undefined
+                    padding: '8px 12px',
+                    background: currentUser?.username === 'rohan' ? 'var(--primary-subtle)' : 'var(--surface)',
+                    borderColor: currentUser?.username === 'rohan' ? 'var(--primary-border)' : 'var(--border)'
                   }}
                 >
-                  <User size={14} color="var(--scheme-teal-dark)" />
+                  <User size={14} color="var(--info)" />
                   <div>
-                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--flat-text)' }}>Rohan Verma</strong>
-                    <span style={{ fontSize: '10.5px', color: 'var(--flat-muted)' }}>Rank #2 • Microsoft</span>
+                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--text)' }}>Rohan Verma</strong>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Rank #2 • Microsoft</span>
                   </div>
                 </button>
 
@@ -298,18 +343,18 @@ export default function LoginPage() {
                   onClick={() => handleQuickDemoLogin('sneha')}
                   className="button button-secondary button-sm"
                   style={{
-                    borderRadius: '12px',
+                    borderRadius: 'var(--radius-sm)',
                     textAlign: 'left',
                     justifyContent: 'flex-start',
-                    padding: '10px 12px',
-                    background: currentUser?.username === 'sneha' ? 'var(--scheme-deep-subtle)' : undefined,
-                    border: currentUser?.username === 'sneha' ? '1.5px solid var(--scheme-deep)' : undefined
+                    padding: '8px 12px',
+                    background: currentUser?.username === 'sneha' ? 'var(--primary-subtle)' : 'var(--surface)',
+                    borderColor: currentUser?.username === 'sneha' ? 'var(--primary-border)' : 'var(--border)'
                   }}
                 >
-                  <User size={14} color="var(--scheme-coral)" />
+                  <User size={14} color="var(--danger)" />
                   <div>
-                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--flat-text)' }}>Sneha Patel</strong>
-                    <span style={{ fontSize: '10.5px', color: 'var(--flat-muted)' }}>Rank #3 • Amazon</span>
+                    <strong style={{ fontSize: '12px', display: 'block', color: 'var(--text)' }}>Sneha Patel</strong>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Rank #3 • Amazon</span>
                   </div>
                 </button>
               </div>
@@ -332,7 +377,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
               <div className="form-group">
                 <label className="form-label">Username</label>
                 <input
@@ -372,7 +417,7 @@ export default function LoginPage() {
               </select>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
               <div className="form-group">
                 <label className="form-label">Password</label>
                 <input
@@ -400,14 +445,12 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="button button-lg"
+              className="button button-lg button-primary"
               style={{
                 width: '100%',
                 marginTop: '10px',
-                borderRadius: '14px',
-                background: 'var(--scheme-teal)',
-                fontWeight: 800,
-                fontSize: '14px'
+                fontSize: '14px',
+                fontWeight: 700
               }}
             >
               <span>Create Placement Account &amp; Generate Profile</span>
